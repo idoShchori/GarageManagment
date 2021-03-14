@@ -7,16 +7,25 @@ public class OperationBoundary {
 	private OperationId operationId;
 	private String type;
 	private Item item;
-//	private InvokedBy ???
+	private User invokedBy;
 	private OperationAttributes operationAttributes;
-	
 	private Date createdTimestamp;
 	
 	public OperationBoundary() {
 		this.operationId = new OperationId();
 		this.setType("operationType");
 		this.item = new Item();
+		this.invokedBy = new User();
 		this.operationAttributes = new OperationAttributes();
+		this.createdTimestamp = new Date();
+	}
+
+	public User getInvokedBy() {
+		return invokedBy;
+	}
+
+	public void setInvokedBy(User invokedBy) {
+		this.invokedBy = invokedBy;
 	}
 
 	public OperationId getOperationId() {
