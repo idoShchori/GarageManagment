@@ -27,7 +27,7 @@ public class AdminController {
 			method = RequestMethod.DELETE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void deleteAllOperationsInSpace () {
-		// STUB IMPLEMENTATION
+		// STUB IMPLEMENTATION.
 		System.out.println("all operations deleted");
 	}
 	
