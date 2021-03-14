@@ -19,7 +19,7 @@ public class AdminController {
 			method = RequestMethod.DELETE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void deleteAllItemsInSpace () {
-		// STUB IMPLEMENTATION
+		// STUB IMPLEMENTATION.
 		System.out.println("all items deleted");
 	}
 	@RequestMapping(
