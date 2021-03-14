@@ -10,6 +10,16 @@ public class ItemId {
 		this.setId("46");
 	}
 	
+	
+	
+	public ItemId(String space, String id) {
+		super();
+		this.space = space;
+		this.id = id;
+	}
+
+
+
 	public String getSpace() {
 		return space;
 	}

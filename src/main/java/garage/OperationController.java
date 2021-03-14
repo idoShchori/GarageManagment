@@ -29,11 +29,7 @@ public class OperationController {
 	public OperationBoundary invokeOperationOnItemAsync (@RequestBody OperationBoundary input) {
 		// STUB IMPLEMENTATION
 		
-		input.setOperationId(new OperationId());
-//		input.setType(("operationType");
-//		input.setItem(new Item());
-//		input.setCreatedTimestamp(null);
-		
+		input.setOperationId(new OperationId());		
 		
 		return input;
 	}

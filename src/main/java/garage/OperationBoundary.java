@@ -1,24 +1,42 @@
 package garage;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OperationBoundary {
 	
 	private OperationId operationId;
 	private String type;
 	private Item item;
-	private User invokedBy;
-	private OperationAttributes operationAttributes;
 	private Date createdTimestamp;
+	private User invokedBy;
+	private Map<String, Object> operationAttributes;
+
 	
 	public OperationBoundary() {
 		this.operationId = new OperationId();
 		this.setType("operationType");
 		this.item = new Item();
-		this.invokedBy = new User();
-		this.operationAttributes = new OperationAttributes();
 		this.createdTimestamp = new Date();
+		this.invokedBy = new User();
+		this.operationAttributes = new HashMap<String, Object>();
 	}
+	
+	
+
+	public OperationBoundary(OperationId operationId, String type, Item item, Date createdTimestamp, User invokedBy,
+			Map<String, Object> operationAttributes) {
+		super();
+		this.operationId = operationId;
+		this.type = type;
+		this.item = item;
+		this.createdTimestamp = createdTimestamp;
+		this.invokedBy = invokedBy;
+		this.operationAttributes = operationAttributes;
+	}
+
+
 
 	public User getInvokedBy() {
 		return invokedBy;
@@ -52,11 +70,11 @@ public class OperationBoundary {
 		this.item = item;
 	}
 
-	public OperationAttributes getOperationAttributes() {
+	public Map<String, Object> getOperationAttributes() {
 		return operationAttributes;
 	}
 
-	public void setOperationAttributes(OperationAttributes operationAttributes) {
+	public void setOperationAttributes(Map<String, Object> operationAttributes) {
 		this.operationAttributes = operationAttributes;
 	}
 
