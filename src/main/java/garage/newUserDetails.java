@@ -50,8 +50,5 @@ public class newUserDetails {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-	
-	
-	
 
 }

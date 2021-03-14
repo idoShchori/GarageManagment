@@ -2,11 +2,11 @@ package garage;
 
 public class OperationAttributes {
 	private String key1;
-	private String key2;
+	private KeyAttribute key2;
 	
 	public OperationAttributes() {
 		this.setKey1("this is my key1");
-		this.setKey2("this is my key2");
+		this.key2 = new KeyAttribute();
 	}
 
 	public String getKey1() {
@@ -17,13 +17,12 @@ public class OperationAttributes {
 		this.key1 = key1;
 	}
 
-	public String getKey2() {
+	public KeyAttribute getKey2() {
 		return key2;
 	}
 
-	public void setKey2(String key2) {
+	public void setKey2(KeyAttribute key2) {
 		this.key2 = key2;
 	}
-	
 	
 }
