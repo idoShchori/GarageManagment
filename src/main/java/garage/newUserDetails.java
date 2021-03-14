@@ -4,7 +4,7 @@ public class newUserDetails {
 	
 	private String email;
 	private String role;
-	private String username;
+	private String userName;
 	private String avatar;
 	
 	
@@ -33,12 +33,12 @@ public class newUserDetails {
 
 
 	public String getUserName() {
-		return username;
+		return userName;
 	}
 
 
-	public void setUserName(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 

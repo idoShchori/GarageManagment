@@ -4,7 +4,7 @@ public class UserBoundary {
 	
 	private UserId userId;
 	private String role;
-	private String username;
+	private String userName;
 	private String avatar;
 	
 	public UserBoundary() {	}
@@ -33,11 +33,11 @@ public class UserBoundary {
 	}
 
 	public String getUserName() {
-		return username;
+		return userName;
 	}
 
-	public void setUserName(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getAvatar() {
