@@ -21,7 +21,7 @@ public class UserController {
 		UserBoundary user = new UserBoundary();
 		user.setUserId(new UserId("2021b.twins",input.getEmail()));
 		user.setRole(input.getRole());
-		user.setUserName(input.getUserName());
+		user.setUsername(input.getUsername());
 		user.setAvatar(input.getAvatar());
 		
 		return user;
@@ -36,7 +36,7 @@ public class UserController {
 		// STUB implementation
 		UserBoundary user= new UserBoundary(new UserId(space,email));
 		user.setRole("MANAGER");
-		user.setUserName("Demo User");
+		user.setUsername("Demo User");
 		user.setAvatar("J");
 		
 		return user;
