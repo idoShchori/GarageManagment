@@ -1,20 +1,20 @@
 package garage;
 
+
 public class UserBoundary {
-	
+
 	private UserId userId;
 	private String role;
-	private String username;
+	private String userName;
 	private String avatar;
-	
-	public UserBoundary() {	}
 
-	
+	public UserBoundary() {
+	}
+
 	public UserBoundary(UserId userId) {
 		this();
 		this.userId = userId;
 	}
-
 
 	public UserId getUserId() {
 		return userId;
@@ -32,16 +32,13 @@ public class UserBoundary {
 		this.role = role;
 	}
 
-
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return userName;
 	}
 
-
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
-
 
 	public String getAvatar() {
 		return avatar;
@@ -50,6 +47,5 @@ public class UserBoundary {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-	
 
 }

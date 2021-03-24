@@ -16,38 +16,39 @@ public class UserController {
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary invokeOperationOnItem (@RequestBody newUserDetails input) {
+	public UserBoundary invokeOperationOnItem(@RequestBody newUserDetails input) {
 		// STUB IMPLEMENTATION
 		UserBoundary user = new UserBoundary();
-		user.setUserId(new UserId("2021b.twins",input.getEmail()));
+		user.setUserId(new UserId("2021b.twins", input.getEmail()));
 		user.setRole(input.getRole());
-		user.setUsername(input.getUsername());
+		user.setUserName(input.getUserName());
 		user.setAvatar(input.getAvatar());
-		
+
 		return user;
 	}
-	
-	
+
 	@RequestMapping(
 			path = "/twins/users/login/{userSpace}/{userEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary getSingleMessage (@PathVariable("userSpace") String space,@PathVariable("userEmail")String email){
+	public UserBoundary getSingleMessage(@PathVariable("userSpace") String space,
+			@PathVariable("userEmail") String email) {
 		// STUB implementation
-		UserBoundary user= new UserBoundary(new UserId(space,email));
+		UserBoundary user = new UserBoundary(new UserId(space, email));
 		user.setRole("MANAGER");
-		user.setUsername("Demo User");
+		user.setUserName("Demo User");
 		user.setAvatar("J");
-		
+
 		return user;
 	}
-	
+
 	@RequestMapping(
 			path = "/twins/users/{userSpace}/{userEmail}",
 			method = RequestMethod.PUT,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-		public void updateData (@PathVariable("userSpace")String space,@PathVariable("userEmail")String email,@RequestBody UserBoundary update) {
-			// STUB implementation - do nothing
-		System.err.println("(STUB) successfully written data to database ---> "+space+" , "+email);
-		}
+	public void updateData(@PathVariable("userSpace") String space, @PathVariable("userEmail") String email,
+			@RequestBody UserBoundary update) {
+		// STUB implementation - do nothing
+		System.err.println("(STUB) successfully written data to database ---> " + space + " , " + email);
+	}
 }

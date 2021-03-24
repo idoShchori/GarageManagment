@@ -8,30 +8,31 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class OperationController {
-	
+
 	@RequestMapping(
 			path = "/twins/operations",
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public Object invokeOperationOnItem (@RequestBody OperationBoundary input) {
+	public Object invokeOperationOnItem(@RequestBody OperationBoundary input) {
 		// STUB IMPLEMENTATION
-		
-		return null;
+
+		OperationBoundary out = new OperationBoundary();
+		out.getOperationAttributes().put("Stub Example", "Attribute");
+		return out;
 	}
-	
-	
+
 	@RequestMapping(
 			path = "/twins/operations/async",
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public OperationBoundary invokeOperationOnItemAsync (@RequestBody OperationBoundary input) {
+	public OperationBoundary invokeOperationOnItemAsync(@RequestBody OperationBoundary input) {
 		// STUB IMPLEMENTATION
-		
-		input.setOperationId(new OperationId());		
-		
+
+		input.setOperationId(new OperationId());
+
 		return input;
 	}
-	
+
 }

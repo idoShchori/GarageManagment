@@ -4,8 +4,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class OperationBoundary {
-	
+
 	private OperationId operationId;
 	private String type;
 	private Item item;
@@ -13,7 +14,6 @@ public class OperationBoundary {
 	private User invokedBy;
 	private Map<String, Object> operationAttributes;
 
-	
 	public OperationBoundary() {
 		this.operationId = new OperationId();
 		this.setType("operationType");
@@ -22,11 +22,15 @@ public class OperationBoundary {
 		this.invokedBy = new User();
 		this.operationAttributes = new HashMap<String, Object>();
 	}
-	
-	
 
-	public OperationBoundary(OperationId operationId, String type, Item item, Date createdTimestamp, User invokedBy,
+	public OperationBoundary(
+			OperationId operationId,
+			String type,
+			Item item,
+			Date createdTimestamp,
+			User invokedBy,
 			Map<String, Object> operationAttributes) {
+		
 		super();
 		this.operationId = operationId;
 		this.type = type;
@@ -35,8 +39,6 @@ public class OperationBoundary {
 		this.invokedBy = invokedBy;
 		this.operationAttributes = operationAttributes;
 	}
-
-
 
 	public User getInvokedBy() {
 		return invokedBy;
@@ -85,6 +87,5 @@ public class OperationBoundary {
 	public void setCreatedTimestamp(Date createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
-	
-	
+
 }
