@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import garage.OperationBoundary;
+import garage.operations.OperationBoundary;
 import garage.users.UserBoundary;
 import garage.users.UserId;
 

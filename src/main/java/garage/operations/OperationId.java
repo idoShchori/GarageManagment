@@ -1,4 +1,4 @@
-package garage;
+package garage.operations;
 
 public class OperationId {
 	private String space;
