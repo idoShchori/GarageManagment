@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import garage.users.User;
+import garage.users.UserId;
+
 
 @RestController
 public class ItemConrtoller {

@@ -3,6 +3,8 @@ package garage;
 import java.util.Date;
 import java.util.HashMap;
 
+import garage.users.User;
+
 
 public class ItemBoundary {
 

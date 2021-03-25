@@ -1,4 +1,4 @@
-package garage;
+package garage.users;
 
 
 public class UserBoundary {
