@@ -1,9 +1,13 @@
-package garage;
+package garage.admin;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import garage.OperationBoundary;
+import garage.UserBoundary;
+import garage.UserId;
 
 
 @RestController
