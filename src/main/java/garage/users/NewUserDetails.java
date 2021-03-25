@@ -1,13 +1,13 @@
-package garage;
+package garage.users;
 
-public class newUserDetails {
+public class NewUserDetails {
 
 	private String email;
 	private String role;
 	private String userName;
 	private String avatar;
 
-	public newUserDetails() {
+	public NewUserDetails() {
 	}
 
 	public String getEmail() {

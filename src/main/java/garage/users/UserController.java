@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import garage.newUserDetails;
-
 @RestController
 public class UserController {
 
@@ -18,7 +16,7 @@ public class UserController {
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary invokeOperationOnItem(@RequestBody newUserDetails input) {
+	public UserBoundary invokeOperationOnItem(@RequestBody NewUserDetails input) {
 		// STUB IMPLEMENTATION
 		UserBoundary user = new UserBoundary();
 		user.setUserId(new UserId("2021b.twins", input.getEmail()));
