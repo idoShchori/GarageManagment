@@ -24,6 +24,7 @@ public class OperationBoundary {
 		this.createdTimestamp = new Date();
 		this.invokedBy = new User();
 		this.operationAttributes = new HashMap<String, Object>();
+		this.operationAttributes.put("ExampleAttribure", "example");
 	}
 
 	public OperationBoundary(
