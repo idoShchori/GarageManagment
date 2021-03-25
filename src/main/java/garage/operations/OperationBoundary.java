@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import garage.Item;
+import garage.items.Item;
 import garage.users.User;
 
 

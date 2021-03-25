@@ -1,4 +1,4 @@
-package garage;
+package garage.items;
 
 import java.util.Date;
 import java.util.HashMap;

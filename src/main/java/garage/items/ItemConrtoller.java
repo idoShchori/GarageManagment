@@ -1,4 +1,4 @@
-package garage;
+package garage.items;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;

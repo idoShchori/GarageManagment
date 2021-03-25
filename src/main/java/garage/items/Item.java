@@ -1,4 +1,4 @@
-package garage;
+package garage.items;
 
 public class Item {
 	private ItemId itemId;
