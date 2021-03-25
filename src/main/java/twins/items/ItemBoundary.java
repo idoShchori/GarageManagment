@@ -1,9 +1,9 @@
-package garage.items;
+package twins.items;
 
 import java.util.Date;
 import java.util.HashMap;
 
-import garage.users.User;
+import twins.users.User;
 
 
 public class ItemBoundary {

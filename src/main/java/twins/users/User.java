@@ -1,4 +1,4 @@
-package garage.users;
+package twins.users;
 
 
 public class User {

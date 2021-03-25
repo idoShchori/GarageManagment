@@ -1,4 +1,4 @@
-package garage.users;
+package twins.users;
 
 
 import org.springframework.http.MediaType;

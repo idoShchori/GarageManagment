@@ -1,21 +1,27 @@
-package garage.users;
+package twins.users;
 
-public class NewUserDetails {
 
-	private String email;
+public class UserBoundary {
+
+	private UserId userId;
 	private String role;
 	private String userName;
 	private String avatar;
 
-	public NewUserDetails() {
+	public UserBoundary() {
 	}
 
-	public String getEmail() {
-		return email;
+	public UserBoundary(UserId userId) {
+		this();
+		this.userId = userId;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public UserId getUserId() {
+		return userId;
+	}
+
+	public void setUserId(UserId userId) {
+		this.userId = userId;
 	}
 
 	public String getRole() {

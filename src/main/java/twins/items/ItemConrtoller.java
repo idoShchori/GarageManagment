@@ -1,4 +1,4 @@
-package garage.items;
+package twins.items;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import garage.users.User;
-import garage.users.UserId;
+import twins.users.User;
+import twins.users.UserId;
 
 
 @RestController
