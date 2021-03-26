@@ -1,6 +1,7 @@
 package twins.admin;
 
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +16,8 @@ public class AdminController {
 	@RequestMapping(
 			path = "/twins/admin/users/{userSpace}/{userEmail}",
 			method = RequestMethod.DELETE)
-	public void deleteAllUsersInSpace() {
+	public void deleteAllUsersInSpace(@PathVariable("userSpace") String space,
+			@PathVariable("userEmail") String email) {
 		// STUB IMPLEMENTATION
 		System.out.println("all users deleted");
 	}
@@ -23,7 +25,8 @@ public class AdminController {
 	@RequestMapping(
 			path = "/twins/admin/items/{userSpace}/{userEmail}",
 			method = RequestMethod.DELETE)
-	public void deleteAllItemsInSpace() {
+	public void deleteAllItemsInSpace(@PathVariable("userSpace") String space,
+			@PathVariable("userEmail") String email) {
 		// STUB IMPLEMENTATION.
 		System.out.println("all items deleted");
 	}
@@ -31,7 +34,8 @@ public class AdminController {
 	@RequestMapping(
 			path = "/twins/admin/operations/{userSpace}/{userEmail}",
 			method = RequestMethod.DELETE)
-	public void deleteAllOperationsInSpace() {
+	public void deleteAllOperationsInSpace(@PathVariable("userSpace") String space,
+			@PathVariable("userEmail") String email) {
 		// STUB IMPLEMENTATION.
 		System.out.println("all operations deleted");
 	}
@@ -56,7 +60,8 @@ public class AdminController {
 			path = "/twins/admin/operations/{userSpace}/{userEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public OperationBoundary[] exportAllOperations() {
+	public OperationBoundary[] exportAllOperations(@PathVariable("userSpace") String space,
+			@PathVariable("userEmail") String email) {
 		// STUB IMPLEMENTATION
 		OperationBoundary operations[] = new OperationBoundary[1];
 		operations[0] = new OperationBoundary();
