@@ -19,7 +19,9 @@ public class ItemConrtoller {
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ItemBoundary createNewItem(@RequestBody ItemBoundary input, @PathVariable("userSpace") String space,
+	public ItemBoundary createNewItem(
+			@RequestBody ItemBoundary input,
+			@PathVariable("userSpace") String space,
 			@PathVariable("userEmail") String email) {
 
 		input.setCreatedBy(new User(new UserId(space, email)));
@@ -32,9 +34,11 @@ public class ItemConrtoller {
 			path = "/twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}",
 			method = RequestMethod.PUT,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void updateItem(@RequestBody ItemBoundary input, @PathVariable("userSpace") String userSpace,
-			@PathVariable("userEmail") String email, @PathVariable("itemSpace") String itemSpace,
-			@PathVariable("userEmail") String itemId) {
+	public void updateItem(
+			@PathVariable("userSpace") String userSpace,
+			@PathVariable("userEmail") String email,
+			@PathVariable("itemSpace") String itemSpace,
+			@PathVariable("itemId") String itemId) {
 
 		// STUB
 		// Update the item into the database
@@ -45,9 +49,11 @@ public class ItemConrtoller {
 			path = "/twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ItemBoundary getItem(@RequestBody ItemBoundary input, @PathVariable("userSpace") String userSpace,
-			@PathVariable("userEmail") String email, @PathVariable("itemSpace") String itemSpace,
-			@PathVariable("userEmail") String itemId) {
+	public ItemBoundary getItem(
+			@PathVariable("userSpace") String userSpace,
+			@PathVariable("userEmail") String email,
+			@PathVariable("itemSpace") String itemSpace,
+			@PathVariable("itemId") String itemId) {
 
 		return new ItemBoundary();
 
@@ -57,7 +63,8 @@ public class ItemConrtoller {
 			path = "/twins/items/{userSpace}/{userEmail}/",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ItemBoundary[] getItem(@RequestBody ItemBoundary input, @PathVariable("userSpace") String userSpace,
+	public ItemBoundary[] getAllItems(
+			@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String email) {
 
 		return new ItemBoundary[] { new ItemBoundary() };
