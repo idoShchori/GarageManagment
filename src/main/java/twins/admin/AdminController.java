@@ -50,7 +50,7 @@ public class AdminController {
 		users[0] = new UserBoundary();
 		users[0].setUserId(new UserId("2021b.twins", "test@test.com"));
 		users[0].setRole("admin");
-		users[0].setUserName("admin");
+		users[0].setUsername("admin");
 		users[0].setAvatar("admin");
 
 		return users;
