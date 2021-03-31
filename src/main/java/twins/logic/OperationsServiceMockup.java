@@ -1,9 +1,11 @@
 package twins.logic;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +32,34 @@ public class OperationsServiceMockup implements OperationsService {
 
 	@Override
 	public Object invokeOperation(OperationBoundary operation) {
+		
 		OperationEntity entity = this.entityConverter.toEntity(operation);
-
-		//	TODO: add operation id and space, update date, and add to the map
-		return null;
+		
+		entity.setOperationSpace("2021b@guy.kabiri");
+		entity.setOperationId(UUID.randomUUID().toString());
+		entity.setCreatedTimestamp(new Date());
+		
+		String currId = entity.getOperationSpace().concat(entity.getOperationId());
+		
+		this.operations.put(currId, entity);
+		
+		return currId;
 	}
 
 	@Override
 	public OperationBoundary invokeAsynchronous(OperationBoundary operation) {
-//		TODO: add operation id and space, update date, and add to the map
-		return null;
+		
+		OperationEntity entity = this.entityConverter.toEntity(operation);
+		
+		entity.setOperationSpace("2021b@guy.kabiri");
+		entity.setOperationId(UUID.randomUUID().toString());
+		entity.setCreatedTimestamp(new Date());
+		
+		String currId = entity.getOperationSpace().concat(entity.getOperationId());
+		
+		this.operations.put(currId, entity);
+		
+		return this.entityConverter.toBoundary(entity);
 	}
 
 	@Override
