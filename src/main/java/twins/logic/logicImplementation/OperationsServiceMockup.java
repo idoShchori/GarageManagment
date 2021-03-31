@@ -1,4 +1,4 @@
-package twins.logic;
+package twins.logic.logicImplementation;
 
 import java.util.Collections;
 import java.util.Date;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import twins.data.OperationEntity;
+import twins.logic.OperationsService;
 import twins.operations.OperationBoundary;
 
 @Service
@@ -76,15 +77,21 @@ public class OperationsServiceMockup implements OperationsService {
 
 	@Override
 	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail) {
+		
+		// TODO: validate that `UserRole` == ADMIN, if not -> throwa an exception
+		
 		return this.operations
 				.values()
 				.stream()
-				.map(this.entityConverter::toBoundary)	// convert to Stream<OperationBoundary>
+				.map(this.entityConverter::toBoundary)	//	convert to Stream<OperationBoundary>
 				.collect(Collectors.toList());			//	convert to List<OperationBoundary>
 	}
 
 	@Override
 	public void deleteAllOperations(String adminSpace, String adminEmail) {
+		
+		// TODO: validate that `UserRole` == ADMIN, if not -> throwa an exception
+		
 		this.operations.clear();
 	}
 

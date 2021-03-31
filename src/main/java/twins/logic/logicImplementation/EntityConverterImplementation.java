@@ -1,13 +1,17 @@
-package twins.logic;
+package twins.logic.logicImplementation;
 
 import org.springframework.stereotype.Component;
 
+import twins.data.ItemEntity;
 import twins.data.OperationEntity;
+import twins.data.UserEntity;
 import twins.items.Item;
+import twins.items.ItemBoundary;
 import twins.items.ItemId;
 import twins.operations.OperationBoundary;
 import twins.operations.OperationId;
 import twins.users.User;
+import twins.users.UserBoundary;
 import twins.users.UserId;
 
 @Component
@@ -66,8 +70,27 @@ public class EntityConverterImplementation implements EntityConverter {
 		return output;
 	}
 
-//	TODO: add ItemBoundary converter
-//	TODO: add UserBoundary converter
-//	TODO: add ItemBoundary converter
+	@Override
+	public ItemBoundary toBoundary(ItemEntity oe) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+	@Override
+	public ItemEntity toEntity(ItemBoundary ob) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserBoundary toBoundary(UserEntity oe) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserEntity toEntity(UserBoundary ob) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

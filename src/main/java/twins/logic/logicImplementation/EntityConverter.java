@@ -1,4 +1,4 @@
-package twins.logic;
+package twins.logic.logicImplementation;
 
 import twins.data.ItemEntity;
 import twins.data.OperationEntity;
