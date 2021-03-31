@@ -46,7 +46,7 @@ public class OperationController {
 
 	
 	@RequestMapping(
-			path = "/twins/operations/async",
+			path = "/twins/operations/",
 			method = RequestMethod.GET,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
@@ -64,7 +64,7 @@ public class OperationController {
 	
 	
 	@RequestMapping(
-			path = "/twins/operations/async",
+			path = "/twins/operations/",
 			method = RequestMethod.DELETE,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
