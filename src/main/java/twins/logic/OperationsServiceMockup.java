@@ -33,6 +33,12 @@ public class OperationsServiceMockup implements OperationsService {
 	@Override
 	public Object invokeOperation(OperationBoundary operation) {
 		
+		if (operation.getInvokedBy().getUserId() == null)
+			throw new RuntimeException("An operation must be performed by a valid user");
+		
+		if (operation.getItem().getItemId() == null)
+			throw new RuntimeException("An operation must be performed on a valid item");
+
 		OperationEntity entity = this.entityConverter.toEntity(operation);
 		
 		entity.setOperationSpace("2021b@guy.kabiri");
@@ -48,7 +54,13 @@ public class OperationsServiceMockup implements OperationsService {
 
 	@Override
 	public OperationBoundary invokeAsynchronous(OperationBoundary operation) {
+
+		if (operation.getInvokedBy().getUserId() == null)
+			throw new RuntimeException("An operation must be performed by a valid user");
 		
+		if (operation.getItem().getItemId() == null)
+			throw new RuntimeException("An operation must be performed on a valid item");
+
 		OperationEntity entity = this.entityConverter.toEntity(operation);
 		
 		entity.setOperationSpace("2021b@guy.kabiri");
