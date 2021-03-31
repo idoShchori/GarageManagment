@@ -68,7 +68,7 @@ public class OperationController {
 			method = RequestMethod.DELETE,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public void deleteAllOperations( UserBoundary admin) {
+	public void deleteAllOperations(@RequestBody  UserBoundary admin) {
 		
 		UserId userId = admin.getUserId();
 		
