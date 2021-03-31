@@ -18,8 +18,8 @@ public class EntityConverterImplementation implements EntityConverter {
 		OperationBoundary output = new OperationBoundary();
 
 		OperationId opId = new OperationId(
-				oe.getOperationId(), 
-				oe.getOperationSpace());
+				oe.getOperationSpace(),
+				oe.getOperationId());
 		output.setOperationId(opId);
 
 		ItemId itId = new ItemId(
