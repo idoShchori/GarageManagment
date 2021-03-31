@@ -6,6 +6,10 @@ public class Item {
 	public Item() {
 		this.itemId = new ItemId();
 	}
+	
+	public Item(ItemId id) {
+		this.setItemId(id);
+	}
 
 	public ItemId getItemId() {
 		return itemId;

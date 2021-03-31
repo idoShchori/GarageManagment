@@ -8,6 +8,11 @@ public class OperationId {
 		this.setSpace("2021b.twins");
 		this.setId("535");
 	}
+	
+	public OperationId(String space, String id) {
+		this.setSpace(space);
+		this.setId(id);
+	}
 
 	public String getSpace() {
 		return space;
