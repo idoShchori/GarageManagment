@@ -39,7 +39,7 @@ public class OperationsServiceMockup implements OperationsService {
 		entity.setOperationId(UUID.randomUUID().toString());
 		entity.setCreatedTimestamp(new Date());
 		
-		String currId = entity.getOperationSpace().concat(entity.getOperationId());
+		String currId = entity.getOperationSpace().concat('/' + entity.getOperationId());
 		
 		this.operations.put(currId, entity);
 		
