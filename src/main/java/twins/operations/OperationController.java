@@ -66,8 +66,7 @@ public class OperationController {
 	@RequestMapping(
 			path = "/twins/operations/",
 			method = RequestMethod.DELETE,
-			consumes = MediaType.APPLICATION_JSON_VALUE,
-			produces = MediaType.APPLICATION_JSON_VALUE)
+			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void deleteAllOperations(@RequestBody  UserBoundary admin) {
 		
 		UserId userId = admin.getUserId();
