@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import twins.data.UserRole;
 import twins.operations.OperationBoundary;
 import twins.users.UserBoundary;
 import twins.users.UserId;
+
 
 
 @RestController
@@ -49,7 +51,7 @@ public class AdminController {
 		UserBoundary users[] = new UserBoundary[1];
 		users[0] = new UserBoundary();
 		users[0].setUserId(new UserId("2021b.twins", "test@test.com"));
-		users[0].setRole("admin");
+		users[0].setRole(UserRole.ADMIN);
 		users[0].setUsername("admin");
 		users[0].setAvatar("admin");
 

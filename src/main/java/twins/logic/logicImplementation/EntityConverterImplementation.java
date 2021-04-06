@@ -14,6 +14,7 @@ import twins.users.User;
 import twins.users.UserBoundary;
 import twins.users.UserId;
 
+
 @Component
 public class EntityConverterImplementation implements EntityConverter {
 
@@ -84,13 +85,25 @@ public class EntityConverterImplementation implements EntityConverter {
 
 	@Override
 	public UserBoundary toBoundary(UserEntity oe) {
-		// TODO Auto-generated method stub
-		return null;
+		UserBoundary rv = new UserBoundary();
+		
+		rv.setUsername(oe.getUsername());
+		rv.setUserId(oe.getUserId());
+		rv.setAvatar(oe.getAvatar());
+		rv.setRole(oe.getRole());
+		
+		return rv;
 	}
 
 	@Override
 	public UserEntity toEntity(UserBoundary ob) {
-		// TODO Auto-generated method stub
-		return null;
+		UserEntity rv = new UserEntity();
+		
+		rv.setUsername(ob.getUsername());
+		rv.setUserId(ob.getUserId());
+		rv.setAvatar(ob.getAvatar());
+		rv.setRole(ob.getRole());
+		
+		return rv;
 	}
 }

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import twins.data.UserRole;
+
 @RestController
 public class UserController {
 
@@ -20,7 +22,7 @@ public class UserController {
 		// STUB IMPLEMENTATION
 		UserBoundary user = new UserBoundary();
 		user.setUserId(new UserId("2021b.twins", input.getEmail()));
-		user.setRole(input.getRole());
+		user.setRole(UserRole.valueOf(input.getRole()));
 		user.setUsername(input.getUsername());
 		user.setAvatar(input.getAvatar());
 
@@ -36,7 +38,7 @@ public class UserController {
 			@PathVariable("userEmail") String email) {
 		// STUB implementation
 		UserBoundary user = new UserBoundary(new UserId(space, email));
-		user.setRole("MANAGER");
+		user.setRole(UserRole.valueOf("MANAGER"));
 		user.setUsername("Demo User");
 		user.setAvatar("J");
 
