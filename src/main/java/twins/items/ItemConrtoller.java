@@ -7,13 +7,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import twins.users.User;
-import twins.users.UserId;
+import twins.logic.logicImplementation.ItemServiceMockup;
 
 
 @RestController
 public class ItemConrtoller {
-
+	private ItemServiceMockup itemService;
+	
+	public ItemConrtoller(ItemServiceMockup itemService) {
+		this.itemService=itemService;
+	}
+	
 	@RequestMapping(
 			path = "/twins/items/{userSpace}/{userEmail}",
 			method = RequestMethod.POST,
@@ -24,10 +28,7 @@ public class ItemConrtoller {
 			@PathVariable("userSpace") String space,
 			@PathVariable("userEmail") String email) {
 
-		input.setCreatedBy(new User(new UserId(space, email)));
-		input.setItemId(new ItemId());
-
-		return input;
+		return itemService.createItem(space, email, input);
 	}
 
 	@RequestMapping(
@@ -39,10 +40,8 @@ public class ItemConrtoller {
 			@PathVariable("userEmail") String email,
 			@PathVariable("itemSpace") String itemSpace,
 			@PathVariable("itemId") String itemId) {
-
-		// STUB
-		// Update the item into the database
-
+///////////////////??????????????????????????????????
+		itemService.updateItem(userSpace, email, itemSpace, itemId, itemService.getSpecificItem(userSpace, email, itemSpace, itemId));
 	}
 
 	@RequestMapping(
@@ -55,7 +54,7 @@ public class ItemConrtoller {
 			@PathVariable("itemSpace") String itemSpace,
 			@PathVariable("itemId") String itemId) {
 
-		return new ItemBoundary();
+		return  itemService.getSpecificItem(userSpace, email, itemSpace, itemId);
 
 	}
 
@@ -67,7 +66,7 @@ public class ItemConrtoller {
 			@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String email) {
 
-		return new ItemBoundary[] { new ItemBoundary() };
+		return itemService.getAllItems(userSpace, email).toArray(new ItemBoundary[0]);
 
 	}
 
