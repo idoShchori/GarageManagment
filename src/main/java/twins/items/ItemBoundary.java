@@ -11,7 +11,7 @@ public class ItemBoundary {
 	private ItemId itemId;
 	private String type;
 	private String name;
-	private boolean active;
+	private Boolean active;
 	private Date createdTimestamp;
 	private User createdBy;
 	private Location location;
@@ -76,11 +76,11 @@ public class ItemBoundary {
 		this.name = name;
 	}
 
-	public boolean isActive() {
+	public Boolean isActive() {
 		return active;
 	}
 
-	public void setActive(boolean active) {
+	public void setActive(Boolean active) {
 		this.active = active;
 	}
 

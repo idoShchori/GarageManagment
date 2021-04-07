@@ -73,14 +73,34 @@ public class EntityConverterImplementation implements EntityConverter {
 
 	@Override
 	public ItemBoundary toBoundary(ItemEntity oe) {
-		// TODO Auto-generated method stub
-		return null;
+		ItemBoundary rv = new ItemBoundary();
+		
+		rv.setItemId(oe.getItemId());
+		rv.setType(oe.getType());
+		rv.setName(oe.getName());
+		rv.setActive(oe.isActive());
+		rv.setCreatedTimestamp(oe.getCreatedTimestamp());
+		rv.setCreatedBy(oe.getCreatedBy());
+		rv.setLocation(oe.getLocation());
+		rv.setItemAttributes(oe.getItemAttributes());
+		
+		return rv;
 	}
 
 	@Override
 	public ItemEntity toEntity(ItemBoundary ob) {
-		// TODO Auto-generated method stub
-		return null;
+		ItemEntity rv = new ItemEntity();
+		
+		rv.setItemId(ob.getItemId());
+		rv.setType(ob.getType());
+		rv.setName(ob.getName());
+		rv.setActive(ob.isActive());
+		rv.setCreatedTimestamp(ob.getCreatedTimestamp());
+		rv.setCreatedBy(ob.getCreatedBy());
+		rv.setLocation(ob.getLocation());
+		rv.setItemAttributes(ob.getItemAttributes());
+		
+		return rv;
 	}
 
 	@Override
