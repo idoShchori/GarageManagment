@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import twins.data.OperationEntity;
@@ -19,12 +20,17 @@ import twins.operations.OperationBoundary;
 public class OperationsServiceMockup implements OperationsService {
 	private Map<String, OperationEntity> operations;
 	private EntityConverter entityConverter;
+	private String springApplicatioName;
 	
 	public OperationsServiceMockup() {
 		// thread-safe map
 		this.operations = Collections.synchronizedMap(new HashMap<>());
 	}
 	
+	@Value("${spring.application.name:defaultName}")
+	public void setSpringApplicatioName(String springApplicatioName) {
+		this.springApplicatioName = springApplicatioName;
+	}
 	
 	@Autowired
 	public void setEntityConverter(EntityConverter entityConverter) {
