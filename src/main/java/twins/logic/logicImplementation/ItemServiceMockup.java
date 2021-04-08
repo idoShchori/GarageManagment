@@ -4,13 +4,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import twins.data.ItemEntity;
 import twins.items.ItemBoundary;
+import twins.items.ItemId;
 import twins.logic.ItemsService;
 
 
@@ -18,6 +21,8 @@ import twins.logic.ItemsService;
 public class ItemServiceMockup implements ItemsService{
 	private Map<String,ItemEntity> items;
 	private EntityConverter entityConverter;
+	private String springApplicatioName;
+
 	
 	public ItemServiceMockup() {
 		// create a thread safe collection
@@ -29,13 +34,19 @@ public class ItemServiceMockup implements ItemsService{
 		this.entityConverter = entityConverter;
 	}
 	
+	@Value("${spring.application.name:defaultName}")
+	public void setSpringApplicatioName(String springApplicatioName) {
+		this.springApplicatioName = springApplicatioName;
+	}
+
 	
 	@Override
 	public ItemBoundary createItem(String userSpace, String userEmail, ItemBoundary item) {
 		// MOCKUP
 		ItemEntity entity = this.entityConverter.toEntity(item);
-
-		this.items.put(userSpace + "/" + userEmail + "/" + item.getItemId().getSpace() + "/" + item.getItemId().getId(),
+		entity.setItemId(new ItemId(springApplicatioName,  UUID.randomUUID().toString()));
+	
+		this.items.put(userSpace + "/" + userEmail + "/" + springApplicatioName + "/" +entity.getItemId().getId(),
 				entity);
 
 		return this.entityConverter.toBoundary(entity);
@@ -101,9 +112,8 @@ public class ItemServiceMockup implements ItemsService{
 
 	@Override
 	public List<ItemBoundary> getAllItems(String userSpace, String userEmail) {
-
-		return this.items
-				.values()
+		//TODO: find specific user
+		return this.items.values()
 				.stream()
 				.map(this.entityConverter::toBoundary)
 				.collect(Collectors.toList());
@@ -122,6 +132,7 @@ public class ItemServiceMockup implements ItemsService{
 
 	@Override
 	public void deleteAllItems(String adminSpace, String adminEmail) {
+		//TODO: check if user is admin
 		this.items.clear();
 	}
 

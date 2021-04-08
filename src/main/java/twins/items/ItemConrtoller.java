@@ -36,12 +36,12 @@ public class ItemConrtoller {
 			method = RequestMethod.PUT,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void updateItem(
+			@RequestBody ItemBoundary update,
 			@PathVariable("userSpace") String userSpace,
 			@PathVariable("userEmail") String email,
 			@PathVariable("itemSpace") String itemSpace,
 			@PathVariable("itemId") String itemId) {
-///////////////////??????????????????????????????????
-		itemService.updateItem(userSpace, email, itemSpace, itemId, itemService.getSpecificItem(userSpace, email, itemSpace, itemId));
+		itemService.updateItem(userSpace, email, itemSpace, itemId,update);
 	}
 
 	@RequestMapping(
