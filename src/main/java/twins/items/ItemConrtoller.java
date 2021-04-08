@@ -69,5 +69,13 @@ public class ItemConrtoller {
 		return itemService.getAllItems(userSpace, email).toArray(new ItemBoundary[0]);
 
 	}
+	
+	@RequestMapping(
+			path = "/twins/admin/operations/{adminSpace}/{adminEmail}",
+			method = RequestMethod.DELETE)
+	public void deleteAllItems(@PathVariable("adminSpace") String space,
+			@PathVariable("adminEmail") String email) {
+		this.itemService.deleteAllItems(space, email);
+	}
 
 }
