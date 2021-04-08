@@ -70,12 +70,4 @@ public class ItemConrtoller {
 
 	}
 	
-	@RequestMapping(
-			path = "/twins/items/{adminSpace}/{adminEmail}",
-			method = RequestMethod.DELETE)
-	public void deleteAllItems(@PathVariable("adminSpace") String space,
-			@PathVariable("adminEmail") String email) {
-		this.itemService.deleteAllItems(space, email);
-	}
-
 }

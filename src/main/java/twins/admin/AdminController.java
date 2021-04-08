@@ -1,20 +1,41 @@
 package twins.admin;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import twins.data.UserRole;
+import twins.logic.ItemsService;
+import twins.logic.OperationsService;
+import twins.logic.UsersService;
 import twins.operations.OperationBoundary;
 import twins.users.UserBoundary;
 import twins.users.UserId;
 
 
 
+
 @RestController
 public class AdminController {
+	
+	private UsersService userService;
+	private OperationsService operationService;
+	private ItemsService itemService;
+	
+	
+	@Autowired
+	public AdminController(UsersService userService,OperationsService operationService,
+			ItemsService itemService ) {
+		this.userService = userService;
+		this.operationService = operationService;
+		this.itemService = itemService;
+	}
 	@RequestMapping(
 			path = "/twins/admin/users/{userSpace}/{userEmail}",
 			method = RequestMethod.DELETE)
@@ -22,6 +43,7 @@ public class AdminController {
 			@PathVariable("userEmail") String email) {
 		// STUB IMPLEMENTATION
 		System.out.println("all users deleted");
+		this.userService.deleteAllUsers(space, email);
 	}
 
 	@RequestMapping(
@@ -31,6 +53,7 @@ public class AdminController {
 			@PathVariable("userEmail") String email) {
 		// STUB IMPLEMENTATION.
 		System.out.println("all items deleted");
+		this.itemService.deleteAllItems(space, email);
 	}
 
 	@RequestMapping(
@@ -40,23 +63,18 @@ public class AdminController {
 			@PathVariable("userEmail") String email) {
 		// STUB IMPLEMENTATION.
 		System.out.println("all operations deleted");
+		this.operationService.deleteAllOperations(space, email);
 	}
 
 	@RequestMapping(
 			path = "/twins/admin/users/{userSpace}/{userEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary[] exportAllUsers() {
-		// STUB IMPLEMENTATION
-		UserBoundary users[] = new UserBoundary[1];
-		users[0] = new UserBoundary();
-		users[0].setUserId(new UserId("2021b.twins", "test@test.com"));
-		users[0].setRole("ADMIN");
-		users[0].setUsername("admin");
-		users[0].setAvatar("admin");
-
-		return users;
+	public UserBoundary[] exportAllUsers(@PathVariable("userSpace") String space,
+			@PathVariable("userEmail") String email) {
+		return this.userService.getAllUsers(space, email).toArray(new UserBoundary[0]);
 	}
+	
 
 	@RequestMapping(
 			path = "/twins/admin/operations/{userSpace}/{userEmail}",
@@ -64,11 +82,16 @@ public class AdminController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public OperationBoundary[] exportAllOperations(@PathVariable("userSpace") String space,
 			@PathVariable("userEmail") String email) {
-		// STUB IMPLEMENTATION
-		OperationBoundary operations[] = new OperationBoundary[1];
-		operations[0] = new OperationBoundary();
-		operations[0].setType("type");
-		return operations;
+		
+		List<OperationBoundary> allOperations = 
+				this.operationService
+				.getAllOperations(space,email);
+		
+		return allOperations
+				.toArray(new OperationBoundary[0]);
 	}
+	
+	//TODO: get Items of all USERS
+
 
 }
