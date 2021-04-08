@@ -59,7 +59,7 @@ public class ItemConrtoller {
 	}
 
 	@RequestMapping(
-			path = "/twins/items/{userSpace}/{userEmail}/",
+			path = "/twins/items/{userSpace}/{userEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary[] getAllItems(
@@ -71,7 +71,7 @@ public class ItemConrtoller {
 	}
 	
 	@RequestMapping(
-			path = "/twins/admin/operations/{adminSpace}/{adminEmail}",
+			path = "/twins/items/{adminSpace}/{adminEmail}",
 			method = RequestMethod.DELETE)
 	public void deleteAllItems(@PathVariable("adminSpace") String space,
 			@PathVariable("adminEmail") String email) {
