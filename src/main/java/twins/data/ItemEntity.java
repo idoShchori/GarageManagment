@@ -18,8 +18,7 @@ public class ItemEntity {
 	private Location location;
 	private HashMap<String, Object> itemAttributes;
 
-	public ItemEntity(){
-		
+	public ItemEntity(){	
 	}
 
 	public ItemId getItemId() {
