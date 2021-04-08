@@ -1,6 +1,8 @@
 package twins.users;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,5 +48,20 @@ public class UserController {
 	public void updateUserDetails(@PathVariable("userSpace") String space, @PathVariable("userEmail") String email,
 			@RequestBody UserBoundary update) {
 		this.userService.updateUser(space, email, update);
+	}
+	
+	@RequestMapping(
+			path = "/twins/users/{adminSpace}/{adminEmail}",
+			method = RequestMethod.GET,
+			produces= MediaType.APPLICATION_JSON_VALUE)
+	public UserBoundary[] getAllUsers(@PathVariable("adminSpace") String space, @PathVariable("adminEmail") String email) {
+		return this.userService.getAllUsers(space, email).toArray(new UserBoundary[0]);
+	}
+	
+	@RequestMapping(
+			path = "/twins/users/{adminSpace}/{adminEmail}",
+			method = RequestMethod.DELETE)
+	public void deleteAllUsers(@PathVariable("adminSpace") String space, @PathVariable("adminEmail") String email) {
+		this.userService.deleteAllUsers(space, email);
 	}
 }
