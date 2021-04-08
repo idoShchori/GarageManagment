@@ -26,14 +26,7 @@ public class UserController {
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary createNewUser(@RequestBody NewUserDetails input) {
-		// STUB IMPLEMENTATION
-		UserBoundary user = new UserBoundary();
-		user.setUserId(new UserId("2021b.twins", input.getEmail()));
-		user.setRole(input.getRole());
-		user.setUsername(input.getUsername());
-		user.setAvatar(input.getAvatar());
-
-		return this.userService.createUser(user);
+		return this.userService.createUser(new UserBoundary(input));
 	}
 
 	@RequestMapping(
@@ -43,12 +36,6 @@ public class UserController {
 	public UserBoundary loginUser(
 			@PathVariable("userSpace") String space,
 			@PathVariable("userEmail") String email) {
-//		// STUB implementation
-//		UserBoundary user = new UserBoundary(new UserId(space, email));
-//		user.setRole(UserRole.valueOf("MANAGER"));
-//		user.setUsername("Demo User");
-//		user.setAvatar("J");
-
 		return this.userService.login(space, email);
 	}
 
@@ -58,8 +45,6 @@ public class UserController {
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void updateUserDetails(@PathVariable("userSpace") String space, @PathVariable("userEmail") String email,
 			@RequestBody UserBoundary update) {
-//		// STUB implementation - do nothing
-//		System.err.println("(STUB) successfully written data to database ---> " + space + " , " + email);
 		this.userService.updateUser(space, email, update);
 	}
 }

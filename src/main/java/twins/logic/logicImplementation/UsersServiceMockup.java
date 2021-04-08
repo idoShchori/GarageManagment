@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import twins.logic.UsersService;
@@ -19,10 +22,16 @@ public class UsersServiceMockup implements UsersService {
 	
 	private Map<String, UserEntity> users;
 	private EntityConverter entityConverter;
+	private String springApplicatioName;
 	
 	public UsersServiceMockup() {
 		// create a thread safe collection
 		this.users = Collections.synchronizedMap(new HashMap<>());
+	}
+	
+	@Value("${spring.application.name:defaultName}")
+	public void setSpringApplicatioName(String springApplicatioName) {
+		this.springApplicatioName = springApplicatioName;
 	}
 	
 	@Autowired
@@ -30,11 +39,17 @@ public class UsersServiceMockup implements UsersService {
 		this.entityConverter = entityConverter;
 	}
 	
+	@PostConstruct
+	public void init() {
+		System.err.println("spring application name = " + this.springApplicatioName);
+	}
+	
 
 	@Override
 	public UserBoundary createUser(UserBoundary user) {
 		//MOCKUP
 		UserEntity entity = this.entityConverter.toEntity(user);
+		entity.getUserId().setSpace(springApplicatioName);
 		
 		this.users.put(user.getUserId().getSpace()+"/"+user.getUserId().getEmail(), entity);
 		
@@ -44,7 +59,7 @@ public class UsersServiceMockup implements UsersService {
 	@Override
 	public UserBoundary login(String userSpace, String userEmail) {
 		// MOCKUP
-		UserEntity entity = this.users.get(userSpace+"/"+userEmail);
+		UserEntity entity = this.users.get(userSpace+"/"+userEmail);//Making sure that users from other spaces can login into system
 		if (entity != null) {
 			UserBoundary boundary = entityConverter.toBoundary (entity);
 			return boundary;
