@@ -27,14 +27,14 @@ public class OperationsServiceMockup implements OperationsService {
 		this.operations = Collections.synchronizedMap(new HashMap<>());
 	}
 	
-	@Value("${spring.application.name:defaultName}")
-	public void setSpringApplicatioName(String springApplicatioName) {
-		this.springApplicatioName = springApplicatioName;
-	}
-	
 	@Autowired
 	public void setEntityConverter(EntityConverter entityConverter) {
 		this.entityConverter = entityConverter;
+	}
+	
+	@Value("${spring.application.name:defaultName}")
+	public void setSpringApplicatioName(String springApplicatioName) {
+		this.springApplicatioName = springApplicatioName;
 	}
 
 	@Override
@@ -48,11 +48,11 @@ public class OperationsServiceMockup implements OperationsService {
 
 		OperationEntity entity = this.entityConverter.toEntity(operation);
 		
-		entity.setOperationSpace("2021b@guy.kabiri");
+		entity.setOperationSpace(this.springApplicatioName);
 		entity.setOperationId(UUID.randomUUID().toString());
 		entity.setCreatedTimestamp(new Date());
 		
-		String currId = entity.getOperationSpace().concat('/' + entity.getOperationId());
+		String currId = this.springApplicatioName.concat('/' + entity.getOperationId());
 		
 		this.operations.put(currId, entity);
 		
@@ -84,7 +84,7 @@ public class OperationsServiceMockup implements OperationsService {
 	@Override
 	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail) {
 		
-		// TODO: validate that `UserRole` == ADMIN, if not -> throwa an exception
+		// TODO: validate that `UserRole` == ADMIN, if not -> throws an exception
 		
 		return this.operations
 				.values()
@@ -96,7 +96,7 @@ public class OperationsServiceMockup implements OperationsService {
 	@Override
 	public void deleteAllOperations(String adminSpace, String adminEmail) {
 		
-		// TODO: validate that `UserRole` == ADMIN, if not -> throwa an exception
+		// TODO: validate that `UserRole` == ADMIN, if not -> throws an exception
 		
 		this.operations.clear();
 	}
