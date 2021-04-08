@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import twins.data.ItemEntity;
 import twins.data.OperationEntity;
 import twins.data.UserEntity;
+import twins.data.UserRole;
 import twins.items.Item;
 import twins.items.ItemBoundary;
 import twins.items.ItemId;
@@ -110,7 +111,7 @@ public class EntityConverterImplementation implements EntityConverter {
 		rv.setUsername(oe.getUsername());
 		rv.setUserId(oe.getUserId());
 		rv.setAvatar(oe.getAvatar());
-		rv.setRole(oe.getRole());
+		rv.setRole(oe.getRole().name());
 		
 		return rv;
 	}
@@ -122,7 +123,7 @@ public class EntityConverterImplementation implements EntityConverter {
 		rv.setUsername(ob.getUsername());
 		rv.setUserId(ob.getUserId());
 		rv.setAvatar(ob.getAvatar());
-		rv.setRole(ob.getRole());
+		rv.setRole(UserRole.valueOf(ob.getRole()));
 		
 		return rv;
 	}

@@ -51,7 +51,7 @@ public class AdminController {
 		UserBoundary users[] = new UserBoundary[1];
 		users[0] = new UserBoundary();
 		users[0].setUserId(new UserId("2021b.twins", "test@test.com"));
-		users[0].setRole(UserRole.ADMIN);
+		users[0].setRole("ADMIN");
 		users[0].setUsername("admin");
 		users[0].setAvatar("admin");
 

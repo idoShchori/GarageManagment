@@ -1,11 +1,11 @@
 package twins.users;
 
-import twins.data.UserRole;
+
 
 public class UserBoundary {
 
 	private UserId userId;
-	private UserRole role;
+	private String role;
 	private String username;
 	private String avatar;
 
@@ -25,11 +25,11 @@ public class UserBoundary {
 		this.userId = userId;
 	}
 
-	public UserRole getRole() {
+	public String getRole() {
 		return role;
 	}
 
-	public void setRole(UserRole role) {
+	public void setRole(String role) {
 		this.role = role;
 	}
 
