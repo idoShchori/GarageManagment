@@ -16,7 +16,13 @@ public class UserBoundary {
 		this();
 		this.userId = userId;
 	}
-
+	
+	public UserBoundary(NewUserDetails input) {
+		this.setUserId(new UserId(null, input.getEmail()));
+		this.setRole(input.getRole());
+		this.setUsername(input.getUsername());
+		this.setAvatar(input.getAvatar());
+	}
 	public UserId getUserId() {
 		return userId;
 	}
