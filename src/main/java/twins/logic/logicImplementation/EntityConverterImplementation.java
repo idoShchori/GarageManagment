@@ -15,116 +15,146 @@ import twins.users.User;
 import twins.users.UserBoundary;
 import twins.users.UserId;
 
-
 @Component
 public class EntityConverterImplementation implements EntityConverter {
 
 	@Override
-	public OperationBoundary toBoundary(OperationEntity oe) {
-		OperationBoundary output = new OperationBoundary();
+	public OperationBoundary toBoundary(OperationEntity input) {
+		OperationBoundary rv = new OperationBoundary();
 
-		OperationId opId = new OperationId(
-				oe.getOperationSpace(),
-				oe.getOperationId());
-		output.setOperationId(opId);
+		OperationId opId = new OperationId(input.getOperationSpace(), input.getOperationId());
+		rv.setOperationId(opId);
 
-		ItemId itId = new ItemId(
-				oe.getItemSpace(), 
-				oe.getItemId());
-		output.setItem(new Item(itId));
+		ItemId itId = new ItemId(input.getItemSpace(), input.getItemId());
+		rv.setItem(new Item(itId));
 
-		UserId usId = new UserId(
-				oe.getUserSpace(), 
-				oe.getUserEmail());
-		output.setInvokedBy(new User(usId));
+		UserId usId = new UserId(input.getUserSpace(), input.getUserEmail());
+		rv.setInvokedBy(new User(usId));
 
-		output.setType(oe.getType());
+		rv.setType(input.getType());
 
-		output.setCreatedTimestamp(oe.getCreatedTimestamp());
+		rv.setCreatedTimestamp(input.getCreatedTimestamp());
 
-		output.setOperationAttributes(oe.getOperationAttributes());
+		rv.setOperationAttributes(input.getOperationAttributes());
 
-		return output;
+		return rv;
 	}
 
 	@Override
-	public OperationEntity toEntity(OperationBoundary ob) {
-		OperationEntity output = new OperationEntity();
-		
-		OperationId opId = ob.getOperationId();
-		output.setOperationSpace(opId.getSpace());
-		output.setOperationId(opId.getId());
-		
-		ItemId itId = ob.getItem().getItemId();
-		output.setItemSpace(itId.getSpace());
-		output.setItemId(itId.getId());
-		
-		UserId usId = ob.getInvokedBy().getUserId();
-		output.setUserSpace(usId.getSpace());
-		output.setUserEmail(usId.getEmail());
-		
-		output.setType(ob.getType());
-		
-		output.setCreatedTimestamp(ob.getCreatedTimestamp());
-		
-		output.setOperationAttributes(ob.getOperationAttributes());
-		
-		return output;
+	public OperationEntity toEntity(OperationBoundary input) {
+		OperationEntity rv = new OperationEntity();
+
+		if (input.getOperationId() != null) {
+			OperationId opId = input.getOperationId();
+			rv.setOperationSpace(opId.getSpace());
+			rv.setOperationId(opId.getId());
+		}
+
+		if (input.getItem() != null) {
+			Item tempItem = input.getItem();
+			if (tempItem.getItemId() != null) {
+				ItemId itId = tempItem.getItemId();
+				rv.setItemSpace(itId.getSpace());
+				rv.setItemId(itId.getId());
+			}
+		}
+
+		if (input.getInvokedBy() != null) {
+			User tempUser = input.getInvokedBy();
+			if (tempUser.getUserId() != null) {
+				UserId usId = tempUser.getUserId();
+				rv.setUserSpace(usId.getSpace());
+				rv.setUserEmail(usId.getEmail());
+			}
+		}
+
+		if (input.getType() != null)
+			rv.setType(input.getType());
+
+		if (input.getCreatedTimestamp() != null)
+			rv.setCreatedTimestamp(input.getCreatedTimestamp());
+
+		if (input.getOperationAttributes() != null)
+			rv.setOperationAttributes(input.getOperationAttributes());
+
+		return rv;
 	}
 
 	@Override
-	public ItemBoundary toBoundary(ItemEntity oe) {
+	public ItemBoundary toBoundary(ItemEntity input) {
 		ItemBoundary rv = new ItemBoundary();
-		
-		rv.setItemId(oe.getItemId());
-		rv.setType(oe.getType());
-		rv.setName(oe.getName());
-		rv.setActive(oe.isActive());
-		rv.setCreatedTimestamp(oe.getCreatedTimestamp());
-		rv.setCreatedBy(oe.getCreatedBy());
-		rv.setLocation(oe.getLocation());
-		rv.setItemAttributes(oe.getItemAttributes());
-		
+
+		rv.setItemId(input.getItemId());
+		rv.setType(input.getType());
+		rv.setName(input.getName());
+		rv.setActive(input.isActive());
+		rv.setCreatedTimestamp(input.getCreatedTimestamp());
+		rv.setCreatedBy(input.getCreatedBy());
+		rv.setLocation(input.getLocation());
+		rv.setItemAttributes(input.getItemAttributes());
+
 		return rv;
 	}
 
 	@Override
-	public ItemEntity toEntity(ItemBoundary ob) {
+	public ItemEntity toEntity(ItemBoundary input) {
 		ItemEntity rv = new ItemEntity();
-		
-		rv.setItemId(ob.getItemId());
-		rv.setType(ob.getType());
-		rv.setName(ob.getName());
-		rv.setActive(ob.isActive());
-		rv.setCreatedTimestamp(ob.getCreatedTimestamp());
-		rv.setCreatedBy(ob.getCreatedBy());
-		rv.setLocation(ob.getLocation());
-		rv.setItemAttributes(ob.getItemAttributes());
-		
+
+		if (input.getItemId() != null)
+			rv.setItemId(input.getItemId());
+
+		if (input.getType() != null)
+			rv.setType(input.getType());
+
+		if (input.getName() != null)
+			rv.setName(input.getName());
+
+		if (input.isActive() != null)
+			rv.setActive(input.isActive());
+
+		if (input.getCreatedTimestamp() != null)
+			rv.setCreatedTimestamp(input.getCreatedTimestamp());
+
+		if (input.getCreatedBy() != null)
+			rv.setCreatedBy(input.getCreatedBy());
+
+		if (input.getLocation() != null)
+			rv.setLocation(input.getLocation());
+
+		if (input.getItemAttributes() != null)
+			rv.setItemAttributes(input.getItemAttributes());
+
 		return rv;
 	}
 
 	@Override
-	public UserBoundary toBoundary(UserEntity oe) {
+	public UserBoundary toBoundary(UserEntity input) {
 		UserBoundary rv = new UserBoundary();
-		
-		rv.setUsername(oe.getUsername());
-		rv.setUserId(oe.getUserId());
-		rv.setAvatar(oe.getAvatar());
-		rv.setRole(oe.getRole().name());
-		
+
+		rv.setUsername(input.getUsername());
+		rv.setUserId(input.getUserId());
+		rv.setAvatar(input.getAvatar());
+		rv.setRole(input.getRole().name());
+
 		return rv;
 	}
 
 	@Override
-	public UserEntity toEntity(UserBoundary ob) {
+	public UserEntity toEntity(UserBoundary input) {
 		UserEntity rv = new UserEntity();
-		
-		rv.setUsername(ob.getUsername());
-		rv.setUserId(ob.getUserId());
-		rv.setAvatar(ob.getAvatar());
-		rv.setRole(UserRole.valueOf(ob.getRole()));
-		
+
+		if (input.getUsername() != null)
+			rv.setUsername(input.getUsername());
+
+		if (input.getUserId() != null)
+			rv.setUserId(input.getUserId());
+
+		if (input.getAvatar() != null)
+			rv.setAvatar(input.getAvatar());
+
+		if (input.getRole() != null)
+			rv.setRole(UserRole.valueOf(input.getRole()));
+
 		return rv;
 	}
 }

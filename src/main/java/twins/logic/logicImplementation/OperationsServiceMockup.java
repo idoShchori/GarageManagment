@@ -56,7 +56,7 @@ public class OperationsServiceMockup implements OperationsService {
 		
 		this.operations.put(currId, entity);
 		
-		return currId;
+		return entity;
 	}
 
 	@Override
