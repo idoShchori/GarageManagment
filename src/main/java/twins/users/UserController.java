@@ -1,7 +1,7 @@
 package twins.users;
 
 
-import java.util.List;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -10,15 +10,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import twins.logic.logicImplementation.UsersServiceMockup;
+
+import twins.logic.logicImplementation.UserServiceJpa;
+//import twins.logic.logicImplementation.UsersServiceMockup;
 
 @RestController
 public class UserController {
 
-	private UsersServiceMockup userService;
+	private UserServiceJpa userService;
 	
 	@Autowired
-	public void setUserServiceMockup(UsersServiceMockup userService) {
+	public void setUserServiceJpa(UserServiceJpa userService) {
 		this.userService = userService;
 	}
 	

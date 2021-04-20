@@ -10,14 +10,14 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+//import org.springframework.stereotype.Service;
 
 import twins.logic.UsersService;
 import twins.users.UserBoundary;
 import twins.data.UserEntity;
 import twins.data.UserRole;
 
-@Service
+//@Service
 public class UsersServiceMockup implements UsersService {
 	
 	private Map<String, UserEntity> users;
@@ -49,7 +49,7 @@ public class UsersServiceMockup implements UsersService {
 	public UserBoundary createUser(UserBoundary user) {
 		//MOCKUP
 		UserEntity entity = this.entityConverter.toEntity(user);
-		entity.getUserId().setSpace(springApplicatioName);
+		entity.setUserSpace(springApplicatioName);
 		
 		this.users.put(user.getUserId().getSpace()+"/"+user.getUserId().getEmail(), entity);
 		

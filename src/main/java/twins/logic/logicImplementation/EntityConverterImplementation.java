@@ -130,9 +130,10 @@ public class EntityConverterImplementation implements EntityConverter {
 	@Override
 	public UserBoundary toBoundary(UserEntity input) {
 		UserBoundary rv = new UserBoundary();
-
+		//TODO check that split is WORKING!!!
 		rv.setUsername(input.getUsername());
-		rv.setUserId(input.getUserId());
+		
+		rv.setUserId(new UserId(input.getUserSpace(),input.getUserEmail()));
 		rv.setAvatar(input.getAvatar());
 		rv.setRole(input.getRole().name());
 
@@ -146,8 +147,10 @@ public class EntityConverterImplementation implements EntityConverter {
 		if (input.getUsername() != null)
 			rv.setUsername(input.getUsername());
 
-		if (input.getUserId() != null)
-			rv.setUserId(input.getUserId());
+		if (input.getUserId() != null) {
+			rv.setUserSpace(input.getUserId().getSpace());
+			rv.setUserEmail(input.getUserId().getEmail());
+		}
 
 		if (input.getAvatar() != null)
 			rv.setAvatar(input.getAvatar());

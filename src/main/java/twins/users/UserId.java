@@ -7,9 +7,6 @@ public class UserId {
 
 	public UserId() {
 
-		//		stub implementation
-//		this.setSpace("2020b.twins");
-//		this.setEmail("myyy@email.com");
 	}
 
 	public UserId(String space, String email) {
