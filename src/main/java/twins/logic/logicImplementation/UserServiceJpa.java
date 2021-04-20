@@ -57,6 +57,7 @@ public class UserServiceJpa implements UsersService{
 	public UserBoundary createUser(UserBoundary user) {
 		UserEntity entity = this.entityConverter.toEntity(user);
 		entity.setUserSpace(springApplicatioName);
+		entity.setUserEmail(user.getUserId().getEmail());
 		this.usersDao.save(entity);
 		return this.entityConverter.toBoundary(entity);
 	}
