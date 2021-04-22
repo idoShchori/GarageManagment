@@ -1,7 +1,5 @@
 package twins.operations;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import twins.logic.OperationsService;
-import twins.users.UserBoundary;
-import twins.users.UserId;
 
 @RestController
 public class OperationController {

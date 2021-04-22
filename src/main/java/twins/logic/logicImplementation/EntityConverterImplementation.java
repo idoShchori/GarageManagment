@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import twins.data.ItemEntity;
 import twins.data.OperationEntity;
+import twins.data.OperationIdPK;
 import twins.data.UserEntity;
 import twins.data.UserIdPK;
 import twins.data.UserRole;
@@ -22,8 +23,10 @@ public class EntityConverterImplementation implements EntityConverter {
 	@Override
 	public OperationBoundary toBoundary(OperationEntity input) {
 		OperationBoundary rv = new OperationBoundary();
+		
+		OperationIdPK idPK = input.getOperationIdPK();
 
-		OperationId opId = new OperationId(input.getOperationSpace(), input.getOperationId());
+		OperationId opId = new OperationId(idPK.getOperationSpace(), idPK.getOperationId());
 		rv.setOperationId(opId);
 
 		ItemId itId = new ItemId(input.getItemSpace(), input.getItemId());
@@ -47,8 +50,8 @@ public class EntityConverterImplementation implements EntityConverter {
 
 		if (input.getOperationId() != null) {
 			OperationId opId = input.getOperationId();
-			rv.setOperationSpace(opId.getSpace());
-			rv.setOperationId(opId.getId());
+			OperationIdPK pk = new OperationIdPK(opId.getSpace(), opId.getId());
+			rv.setOperationIdPK(pk);
 		}
 
 		if (input.getItem() != null) {
