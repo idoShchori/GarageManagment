@@ -43,7 +43,7 @@ public class EntityConverterImplementation implements EntityConverter {
 
 		rv.setCreatedTimestamp(input.getCreatedTimestamp());
 
-		rv.setOperationAttributes(input.getOperationAttributes());
+		rv.setOperationAttributes(this.fromJsonToMap(input.getOperationAttributes()));
 
 		return rv;
 	}
@@ -83,7 +83,7 @@ public class EntityConverterImplementation implements EntityConverter {
 			rv.setCreatedTimestamp(input.getCreatedTimestamp());
 
 		if (input.getOperationAttributes() != null)
-			rv.setOperationAttributes(input.getOperationAttributes());
+			rv.setOperationAttributes(this.fromMapToJson(input.getOperationAttributes()));
 
 		return rv;
 	}

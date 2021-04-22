@@ -1,14 +1,13 @@
 package twins.data;
 
 import java.util.Date;
-import java.util.Map;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 
 //	OPERATIONS
@@ -21,9 +20,6 @@ import javax.persistence.Transient;
 @Entity
 @Table(name="OPERATIONS")
 public class OperationEntity {
-
-//	private String operationSpace;
-//	private String operationId;
 	
 	@EmbeddedId
 	private OperationIdPK operationIdPK;
@@ -32,46 +28,15 @@ public class OperationEntity {
 	private String userSpace;
 	private String userEmail;
 	private String type;
+	
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdTimestamp;
-	@Transient
-	private Map<String, Object> operationAttributes;
+	
+	@Lob
+	private String operationAttributes;
 
 	public OperationEntity() {
 	}
-
-	public OperationEntity(OperationIdPK operationIdPK, String itemSpace, String itemId, String userSpace,
-			String userEmail, String type, Date createdTimestamp, Map<String, Object> operationAttributes) {
-		super();
-//		this.operationSpace = operationSpace;
-//		this.operationId = operationId;
-
-		this.operationIdPK = operationIdPK;
-		this.itemSpace = itemSpace;
-		this.itemId = itemId;
-		this.userSpace = userSpace;
-		this.userEmail = userEmail;
-		this.type = type;
-		this.createdTimestamp = createdTimestamp;
-		this.operationAttributes = operationAttributes;
-	}
-
-//	@Id
-//	public String getOperationSpace() {
-//		return operationSpace;
-//	}
-//
-//	public void setOperationSpace(String operationSpace) {
-//		this.operationSpace = operationSpace;
-//	}
-
-//	@Id
-//	public String getOperationId() {
-//		return operationId;
-//	}
-//
-//	public void setOperationId(String operationId) {
-//		this.operationId = operationId;
-//	}
 	
 	
 	public OperationIdPK getOperationIdPK() {
@@ -123,7 +88,6 @@ public class OperationEntity {
 		this.type = type;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
@@ -132,11 +96,11 @@ public class OperationEntity {
 		this.createdTimestamp = createdTimestamp;
 	}
 
-	public Map<String, Object> getOperationAttributes() {
+	public String getOperationAttributes() {
 		return operationAttributes;
 	}
 
-	public void setOperationAttributes(Map<String, Object> operationAttributes) {
+	public void setOperationAttributes(String operationAttributes) {
 		this.operationAttributes = operationAttributes;
 	}
 
