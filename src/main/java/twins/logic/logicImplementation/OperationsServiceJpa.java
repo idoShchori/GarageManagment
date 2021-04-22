@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import twins.data.OperationEntity;
 import twins.data.OperationIdPK;
+import twins.data.OperationsDao;
 import twins.logic.OperationsService;
 import twins.operations.OperationBoundary;
 
