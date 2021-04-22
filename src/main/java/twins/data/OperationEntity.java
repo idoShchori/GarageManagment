@@ -12,8 +12,8 @@ import javax.persistence.TemporalType;
 
 //	OPERATIONS
 //	--------------------------------------------------------------------------------------------------------------------------------------------------------------
-//	OPERATION_SPACE |OPERATION_ID | ITEM_SPACE 	| ITEM_ID	   | USER_SPACE   | USER_EMAIL	| TYPE			|CREATED_TIME_STAMP	|	ATTRIBUTES
-//	VARCHAR(255)  	|VARCHAR(255) | VARCHAR(255)| VARCHAR(255) | VARCHAR(255) | VARCHAR(255)	| VARCHAR(255)	|DATE				|	
+//	OPERATION_SPACE |OPERATION_ID | ITEM_SPACE 	| ITEM_ID	   | USER_SPACE   | USER_EMAIL	| TYPE			|CREATED_TIME_STAMP	|ATTRIBUTES
+//	VARCHAR(255)  	|VARCHAR(255) | VARCHAR(255)| VARCHAR(255) | VARCHAR(255) | VARCHAR(255)| VARCHAR(255)	|TIMESTAMP			|CLOB	
 //	<PK>			|<PK>		  |
 
 
