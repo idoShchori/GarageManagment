@@ -1,5 +1,6 @@
 package twins.logic.logicImplementation;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,6 +43,7 @@ public class ItemsServiceJpa implements ItemsService {
 	@Transactional(readOnly = false) //The default value
 	public ItemBoundary createItem(String userSpace, String userEmail, ItemBoundary item) {
 		ItemEntity entity = this.entityConverter.toEntity(item);
+		entity.setCreatedTimestamp(new Date());
 		entity.setItemId(new ItemIdPK(springApplicatioName,  UUID.randomUUID().toString()));
 		this.itemsDao.save(entity);
 		return this.entityConverter.toBoundary(entity);
@@ -70,13 +72,6 @@ public class ItemsServiceJpa implements ItemsService {
 
 			if (update.isActive() != null) {
 				existing.setActive(update.isActive());
-				dirty = true;
-			}
-			
-		
-			if (update.getCreatedBy() != null) {
-				existing.setUserEmail(update.getCreatedBy().getUserId().getEmail());
-				existing.setUserSpace(update.getCreatedBy().getUserId().getSpace());
 				dirty = true;
 			}
 			

@@ -20,17 +20,6 @@ public class ItemBoundary {
 
 	public ItemBoundary() {
 		super();
-		
-		// STUB IMPLEMENTATION
-		this.setItemId(new ItemId());
-		this.setType("Example type");
-		this.setName("Example name");
-		this.setActive(false);
-		this.setCreatedTimestamp(new Date());
-		this.setCreatedBy(new User());
-		this.setLocation(new Location());
-		this.itemAttributes = new HashMap<>();
-		this.itemAttributes.put("ExampleAttribute", "The value");
 	}
 
 	public ItemBoundary(
