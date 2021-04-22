@@ -1,18 +1,24 @@
 package twins.data;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+
 //USERS
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-//ID          | SPACE      |TYPE         | NAME          | ACTIVE       | CREATED_TIMESTAMP |USER_ID      | USER_SPACE  | LOCATION_LAT |LOCATION_LNG |ITEMS_ATTRIBUTES|
-//VARCHAR(255)|VARCHAR(255)|VARCHAR(255) |VARCHAR(255)   | boolean      | TIMESTAMP         |VARCHAR(255) |VARCHAR(255) |  DOUBLE      |  DOUBLE     | CLOB           |
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//ID          | SPACE      |TYPE         | NAME          | ACTIVE       | CREATED_TIMESTAMP |USER_ID      | USER_SPACE  | LOCATION_LAT |LOCATION_LNG |ITEMS_ATTRIBUTES|PARENT_ID   | PARENT_SPACE|
+//VARCHAR(255)|VARCHAR(255)|VARCHAR(255) |VARCHAR(255)   | boolean      | TIMESTAMP         |VARCHAR(255) |VARCHAR(255) |  DOUBLE      |  DOUBLE     | CLOB           |VARCHAR(255)|VARCHAR(255)  
 //<PK>        |<PK>        |
 @Entity
 @Table(name="ITEMS")
@@ -36,14 +42,41 @@ public class ItemEntity {
 
 	@Lob
 	private String itemAttributes;
+	
+	@OneToMany(mappedBy = "parent" , fetch = FetchType.LAZY)
+	private Set<ItemEntity> children;
+	
+	@ManyToOne( fetch = FetchType.LAZY)
+	private ItemEntity parent;
 
-	public ItemEntity(){	
+	public ItemEntity(){
+		children=new HashSet<>();
 	}
 
 
 	public ItemIdPK getItemIdPK() {
 		return itemIdPK;
 	}
+
+	public Set<ItemEntity> getChildrens() {
+		return children;
+	}
+
+
+	public void setChildrens(Set<ItemEntity> children) {
+		this.children = children;
+	}
+
+
+	public ItemEntity getParent() {
+		return parent;
+	}
+
+
+	public void setParent(ItemEntity parent) {
+		this.parent = parent;
+	}
+
 
 	public void setItemId(ItemIdPK itemIdPK) {
 		this.itemIdPK = itemIdPK;
@@ -134,5 +167,36 @@ public class ItemEntity {
 		this.itemAttributes = itemAttributes;
 	}
 	
+	public void addItem(ItemEntity child) {
+		children.add(child);
+		child.setParent(this);
+	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((itemIdPK == null) ? 0 : itemIdPK.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ItemEntity other = (ItemEntity) obj;
+		if (itemIdPK == null) {
+			if (other.itemIdPK != null)
+				return false;
+		} else if (!itemIdPK.equals(other.itemIdPK))
+			return false;
+		return true;
+	}
 	
 }

@@ -1,4 +1,4 @@
-package twins.logic;
+package twins.logic.Exceptions;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;

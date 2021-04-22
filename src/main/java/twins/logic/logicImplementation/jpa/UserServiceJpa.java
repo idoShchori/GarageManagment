@@ -1,4 +1,4 @@
-package twins.logic.logicImplementation;
+package twins.logic.logicImplementation.jpa;
 
 
 
@@ -17,10 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import twins.data.UserEntity;
 import twins.data.UserIdPK;
 import twins.data.UserRole;
-import twins.data.UsersDao;
-import twins.logic.UserAccessDeniedException;
-import twins.logic.UserNotFoundException;
+import twins.data.dao.UsersDao;
 import twins.logic.UsersService;
+import twins.logic.Exceptions.UserAccessDeniedException;
+import twins.logic.Exceptions.UserNotFoundException;
+import twins.logic.logicImplementation.EntityConverter;
 import twins.users.UserBoundary;
 
 @Service

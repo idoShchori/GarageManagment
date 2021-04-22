@@ -1,4 +1,4 @@
-package twins.logic.logicImplementation;
+package twins.logic.logicImplementation.mockups;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.stereotype.Service;
 
 import twins.logic.UsersService;
+import twins.logic.logicImplementation.EntityConverter;
 import twins.users.UserBoundary;
 import twins.data.UserEntity;
 import twins.data.UserRole;
