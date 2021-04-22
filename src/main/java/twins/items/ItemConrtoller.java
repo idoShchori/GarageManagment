@@ -1,5 +1,6 @@
 package twins.items;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -7,14 +8,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import twins.logic.logicImplementation.ItemServiceMockup;
+import twins.logic.ItemsService;
+
 
 
 @RestController
 public class ItemConrtoller {
-	private ItemServiceMockup itemService;
+	private ItemsService itemService;
 	
-	public ItemConrtoller(ItemServiceMockup itemService) {
+	@Autowired
+	public ItemConrtoller(ItemsService itemService) {
 		this.itemService=itemService;
 	}
 	

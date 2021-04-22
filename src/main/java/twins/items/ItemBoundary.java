@@ -2,6 +2,7 @@ package twins.items;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import twins.users.User;
 
@@ -15,7 +16,7 @@ public class ItemBoundary {
 	private Date createdTimestamp;
 	private User createdBy;
 	private Location location;
-	private HashMap<String, Object> itemAttributes;
+	private Map<String, Object> itemAttributes;
 
 	public ItemBoundary() {
 		super();
@@ -108,12 +109,12 @@ public class ItemBoundary {
 		this.location = location;
 	}
 
-	public HashMap<String, Object> getItemAttributes() {
+	public Map<String, Object> getItemAttributes() {
 		return itemAttributes;
 	}
 
-	public void setItemAttributes(HashMap<String, Object> itemAttributes) {
-		this.itemAttributes = itemAttributes;
+	public void setItemAttributes(Map<String, Object> map) {
+		this.itemAttributes = map;
 	}
 
 }

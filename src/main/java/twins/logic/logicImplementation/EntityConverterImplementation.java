@@ -1,6 +1,10 @@
 package twins.logic.logicImplementation;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import twins.data.ItemEntity;
 import twins.data.OperationEntity;
@@ -19,7 +23,7 @@ import twins.users.UserId;
 
 @Component
 public class EntityConverterImplementation implements EntityConverter {
-
+	private ObjectMapper jackson;
 	@Override
 	public OperationBoundary toBoundary(OperationEntity input) {
 		OperationBoundary rv = new OperationBoundary();
@@ -95,7 +99,7 @@ public class EntityConverterImplementation implements EntityConverter {
 		rv.setCreatedTimestamp(input.getCreatedTimestamp());
 		rv.setCreatedBy(input.getCreatedBy());
 		rv.setLocation(input.getLocation());
-		rv.setItemAttributes(input.getItemAttributes());
+		rv.setItemAttributes(this.fromJsonToMap(input.getItemAttributes()));
 
 		return rv;
 	}
@@ -126,7 +130,7 @@ public class EntityConverterImplementation implements EntityConverter {
 			rv.setLocation(input.getLocation());
 
 		if (input.getItemAttributes() != null)
-			rv.setItemAttributes(input.getItemAttributes());
+			rv.setItemAttributes(this.fromMapToJson(input.getItemAttributes()));
 
 		return rv;
 	}
@@ -163,6 +167,30 @@ public class EntityConverterImplementation implements EntityConverter {
 
 		return rv;
 	}
+
+	@Override
+	public String fromMapToJson(Map<String, Object> value) {
+		
+		try {
+			return this.jackson
+				.writeValueAsString(value);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	
+	}
+
+	@Override
+	public Map<String, Object> fromJsonToMap(String json) {
+		try {
+			return this.jackson
+				.readValue(json, Map.class);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
 
 
 }

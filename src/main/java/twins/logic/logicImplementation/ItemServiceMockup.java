@@ -17,8 +17,9 @@ import twins.items.ItemId;
 import twins.logic.ItemsService;
 
 
-@Service
+//@Service
 public class ItemServiceMockup implements ItemsService{
+	
 	private Map<String,ItemEntity> items;
 	private EntityConverter entityConverter;
 	private String springApplicatioName;
@@ -89,7 +90,7 @@ public class ItemServiceMockup implements ItemsService{
 			}
 			
 			if (update.getItemAttributes() != null) {
-				existing.setItemAttributes(update.getItemAttributes());
+				existing.setItemAttributes(this.entityConverter.fromMapToJson(update.getItemAttributes()));
 				dirty = true;
 			}
 

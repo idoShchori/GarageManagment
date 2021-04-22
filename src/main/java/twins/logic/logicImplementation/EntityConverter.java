@@ -1,5 +1,7 @@
 package twins.logic.logicImplementation;
 
+import java.util.Map;
+
 import twins.data.ItemEntity;
 import twins.data.OperationEntity;
 import twins.data.UserEntity;
@@ -19,5 +21,7 @@ public interface EntityConverter {
 	public UserBoundary toBoundary(UserEntity oe);
 	public UserEntity toEntity(UserBoundary ob);
 	
+	public String fromMapToJson (Map<String, Object> value);
+	public Map<String, Object> fromJsonToMap (String json);
 
 }
