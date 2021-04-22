@@ -1,52 +1,54 @@
 package twins.data;
 
 import java.util.Date;
-import java.util.HashMap;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
-import twins.items.ItemId;
-import twins.items.Location;
-import twins.users.User;
 
 //USERS
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-//ITEM_ID       |TYPE         | NAME          | ACTIVE       | CREATED_TIMESTAMP |CREATED_BY |LOCATION |ITEMS_ATTRIBUTES|
-//              |VARCHAR(255) |VARCHAR(255)   | boolean      | TIMESTAMP         |           |         | CLOB           |
-
+//ID          | SPACE      |TYPE         | NAME          | ACTIVE       | CREATED_TIMESTAMP |USER_ID      | USER_SPACE  | LOCATION_LAT |LOCATION_LNG |ITEMS_ATTRIBUTES|
+//VARCHAR(255)|VARCHAR(255)|VARCHAR(255) |VARCHAR(255)   | boolean      | TIMESTAMP         |VARCHAR(255) |VARCHAR(255) |  DOUBLE      |  DOUBLE     | CLOB           |
+//<PK>        |<PK>        |
 @Entity
 @Table(name="ITEMS")
 public class ItemEntity {
 	
-	private ItemId itemId;
+	@EmbeddedId
+	private ItemIdPK itemIdPK;
+	
 	private String type;
 	private String name;
 	private Boolean active;
+	
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdTimestamp;
-	private User createdBy;
-	private Location location;
+	
+	private String userEmail;
+	private String userSpace;
+	
+	private double locationLat;
+	private double locationLng;
+
+	@Lob
 	private String itemAttributes;
 
 	public ItemEntity(){	
 	}
 
-	@Transient
-	public ItemId getItemId() {
-		return itemId;
+
+	public ItemIdPK getItemIdPK() {
+		return itemIdPK;
 	}
 
-	@Transient
-	public void setItemId(ItemId itemId) {
-		this.itemId = itemId;
+	public void setItemId(ItemIdPK itemIdPK) {
+		this.itemIdPK = itemIdPK;
 	}
 
-	@Id
 	public String getType() {
 		return type;
 	}
@@ -80,26 +82,48 @@ public class ItemEntity {
 		this.createdTimestamp = createdTimestamp;
 	}
 
-	@Transient
-	public User getCreatedBy() {
-		return createdBy;
+
+
+	public String getUserEmail() {
+		return userEmail;
 	}
 
-	@Transient
-	public void setCreatedBy(User createdBy) {
-		this.createdBy = createdBy;
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 
-	@Transient
-	public Location getLocation() {
-		return location;
-	}
-	@Transient
-	public void setLocation(Location location) {
-		this.location = location;
+
+	public String getUserSpace() {
+		return userSpace;
 	}
 
-	//TODO map to database as CLOB
+
+	public void setUserSpace(String userSpace) {
+		this.userSpace = userSpace;
+	}
+
+
+	public double getLocationLat() {
+		return locationLat;
+	}
+
+
+	public void setLocationLat(double locationLat) {
+		this.locationLat = locationLat;
+	}
+
+
+	public double getLocationLng() {
+		return locationLng;
+	}
+
+
+	public void setLocationLng(double locationLng) {
+		this.locationLng = locationLng;
+	}
+
+
 	@Lob
 	public String getItemAttributes() {
 		return itemAttributes;

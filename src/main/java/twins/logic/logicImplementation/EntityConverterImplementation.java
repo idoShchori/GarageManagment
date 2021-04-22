@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import twins.data.ItemEntity;
+import twins.data.ItemIdPK;
 import twins.data.OperationEntity;
 import twins.data.OperationIdPK;
 import twins.data.UserEntity;
@@ -15,6 +16,7 @@ import twins.data.UserRole;
 import twins.items.Item;
 import twins.items.ItemBoundary;
 import twins.items.ItemId;
+import twins.items.Location;
 import twins.operations.OperationBoundary;
 import twins.operations.OperationId;
 import twins.users.User;
@@ -91,14 +93,20 @@ public class EntityConverterImplementation implements EntityConverter {
 	@Override
 	public ItemBoundary toBoundary(ItemEntity input) {
 		ItemBoundary rv = new ItemBoundary();
-
-		rv.setItemId(input.getItemId());
+		ItemId itemId = new ItemId();
+		itemId.setId(input.getItemIdPK().getId());
+		itemId.setSpace(input.getItemIdPK().getSpace());
+		rv.setItemId(itemId);
 		rv.setType(input.getType());
 		rv.setName(input.getName());
 		rv.setActive(input.isActive());
 		rv.setCreatedTimestamp(input.getCreatedTimestamp());
-		rv.setCreatedBy(input.getCreatedBy());
-		rv.setLocation(input.getLocation());
+		
+		User createdBy = new User(new UserId(input.getUserSpace(),input.getUserEmail()));
+		rv.setCreatedBy(createdBy);
+		
+		Location location = new Location(input.getLocationLat(),input.getLocationLng());
+		rv.setLocation(location);
 		rv.setItemAttributes(this.fromJsonToMap(input.getItemAttributes()));
 
 		return rv;
@@ -108,8 +116,12 @@ public class EntityConverterImplementation implements EntityConverter {
 	public ItemEntity toEntity(ItemBoundary input) {
 		ItemEntity rv = new ItemEntity();
 
-		if (input.getItemId() != null)
-			rv.setItemId(input.getItemId());
+		if (input.getItemId() != null) {
+			ItemIdPK itemIdPK = new ItemIdPK();
+			itemIdPK.setId(input.getItemId().getId());
+			itemIdPK.setSpace(input.getItemId().getSpace());
+			rv.setItemId(itemIdPK);
+		}
 
 		if (input.getType() != null)
 			rv.setType(input.getType());
@@ -123,11 +135,14 @@ public class EntityConverterImplementation implements EntityConverter {
 		if (input.getCreatedTimestamp() != null)
 			rv.setCreatedTimestamp(input.getCreatedTimestamp());
 
-		if (input.getCreatedBy() != null)
-			rv.setCreatedBy(input.getCreatedBy());
-
-		if (input.getLocation() != null)
-			rv.setLocation(input.getLocation());
+		if (input.getCreatedBy() != null) {
+			rv.setUserEmail(input.getCreatedBy().getUserId().getEmail());
+			rv.setUserSpace(input.getCreatedBy().getUserId().getSpace());
+		}
+		if (input.getLocation() != null) {
+			rv.setLocationLat(input.getLocation().getLat());
+			rv.setLocationLng(input.getLocation().getLng());
+		}
 
 		if (input.getItemAttributes() != null)
 			rv.setItemAttributes(this.fromMapToJson(input.getItemAttributes()));

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import twins.data.ItemEntity;
+import twins.data.ItemIdPK;
 import twins.items.ItemBoundary;
 import twins.items.ItemId;
 import twins.logic.ItemsService;
@@ -45,9 +46,10 @@ public class ItemServiceMockup implements ItemsService{
 	public ItemBoundary createItem(String userSpace, String userEmail, ItemBoundary item) {
 		// MOCKUP
 		ItemEntity entity = this.entityConverter.toEntity(item);
-		entity.setItemId(new ItemId(springApplicatioName,  UUID.randomUUID().toString()));
+		
+		entity.setItemId(new ItemIdPK(springApplicatioName,  UUID.randomUUID().toString()));
 	
-		this.items.put(userSpace + "/" + userEmail + "/" + springApplicatioName + "/" +entity.getItemId().getId(),
+		this.items.put(userSpace + "/" + userEmail + "/" + springApplicatioName + "/" +entity.getItemIdPK().getId(),
 				entity);
 
 		return this.entityConverter.toBoundary(entity);
@@ -80,12 +82,14 @@ public class ItemServiceMockup implements ItemsService{
 			
 		
 			if (update.getCreatedBy() != null) {
-				existing.setCreatedBy(update.getCreatedBy());
+				existing.setUserEmail(update.getCreatedBy().getUserId().getEmail());
+				existing.setUserSpace(update.getCreatedBy().getUserId().getSpace());
 				dirty = true;
 			}
 			
 			if (update.getLocation() != null) {
-				existing.setLocation(update.getLocation());
+				existing.setLocationLat(update.getLocation().getLat());
+				existing.setLocationLng(update.getLocation().getLng());
 				dirty = true;
 			}
 			
