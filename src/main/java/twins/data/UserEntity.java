@@ -3,7 +3,6 @@ package twins.data;
 import javax.persistence.EmbeddedId;
 //import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 //import javax.persistence.Lob;
 import javax.persistence.Table;
 

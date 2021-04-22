@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import twins.data.UserEntity;
 import twins.data.UserIdPK;
 import twins.data.UserRole;
+import twins.data.UsersDao;
 import twins.logic.UserAccessDeniedException;
 import twins.logic.UserNotFoundException;
 import twins.logic.UsersService;
