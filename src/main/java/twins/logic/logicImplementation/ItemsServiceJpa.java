@@ -100,7 +100,6 @@ public class ItemsServiceJpa implements ItemsService {
 			// TODO have server return status 404 here
 			throw new RuntimeException("could not find item by userSpace/userEmail/itemSpace/itemId: " + userSpace + "/" + userEmail+"/"+itemSpace+"/"+itemId);// NullPointerException
 		}
-
 	}
 
 	@Override
