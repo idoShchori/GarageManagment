@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import twins.data.ItemEntity;
 import twins.data.OperationEntity;
 import twins.data.UserEntity;
+import twins.data.UserIdPK;
 import twins.data.UserRole;
 import twins.items.Item;
 import twins.items.ItemBoundary;
@@ -133,7 +134,7 @@ public class EntityConverterImplementation implements EntityConverter {
 		//TODO check that split is WORKING!!!
 		rv.setUsername(input.getUsername());
 		
-		rv.setUserId(new UserId(input.getUserSpace(),input.getUserEmail()));
+		rv.setUserId(new UserId(input.getUserId().getSpace(),input.getUserId().getEmail()));
 		rv.setAvatar(input.getAvatar());
 		rv.setRole(input.getRole().name());
 
@@ -148,8 +149,7 @@ public class EntityConverterImplementation implements EntityConverter {
 			rv.setUsername(input.getUsername());
 
 		if (input.getUserId() != null) {
-			rv.setUserSpace(input.getUserId().getSpace());
-			rv.setUserEmail(input.getUserId().getEmail());
+			rv.setUserId(new UserIdPK(input.getUserId().getSpace(),input.getUserId().getEmail()));
 		}
 
 		if (input.getAvatar() != null)
@@ -160,4 +160,6 @@ public class EntityConverterImplementation implements EntityConverter {
 
 		return rv;
 	}
+
+
 }

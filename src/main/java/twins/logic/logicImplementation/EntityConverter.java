@@ -7,6 +7,7 @@ import twins.items.ItemBoundary;
 import twins.operations.OperationBoundary;
 import twins.users.UserBoundary;
 
+
 public interface EntityConverter {
 	
 	public OperationBoundary toBoundary(OperationEntity oe);
@@ -18,4 +19,5 @@ public interface EntityConverter {
 	public UserBoundary toBoundary(UserEntity oe);
 	public UserEntity toEntity(UserBoundary ob);
 	
+
 }

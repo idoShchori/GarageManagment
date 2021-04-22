@@ -1,5 +1,6 @@
 package twins.data;
 
+import javax.persistence.EmbeddedId;
 //import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -18,35 +19,17 @@ import javax.persistence.Table;
 @Table(name="USERS")
 public class UserEntity {
 	
-	private String userSpace;
-	private String userEmail;
+
 	
+	@EmbeddedId
+	private UserIdPK userId;
+
 	private UserRole role;
 	private String username;
 	private String avatar;
 	
 	public UserEntity() {
 	}
-
-	
-	@Id
-	public String getUserEmail() {
-		return userEmail;
-	}
-
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
-	}
-	
-	public String getUserSpace() {
-		return userSpace;
-	}
-
-	public void setUserSpace(String userSpace) {
-		this.userSpace = userSpace;
-	}
-
-	
 
 //	@Column(name="USER_ROLE")
 	public UserRole getRole() {
@@ -75,6 +58,12 @@ public class UserEntity {
 		this.avatar = avatar;
 	}
 	
-	
+	public UserIdPK getUserId() {
+		return userId;
+	}
+
+	public void setUserId(UserIdPK userId) {
+		this.userId = userId;
+	}
 	
 }

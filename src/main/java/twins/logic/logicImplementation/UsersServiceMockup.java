@@ -49,7 +49,7 @@ public class UsersServiceMockup implements UsersService {
 	public UserBoundary createUser(UserBoundary user) {
 		//MOCKUP
 		UserEntity entity = this.entityConverter.toEntity(user);
-		entity.setUserSpace(springApplicatioName);
+		entity.getUserId().setSpace(springApplicatioName);
 		
 		this.users.put(user.getUserId().getSpace()+"/"+user.getUserId().getEmail(), entity);
 		

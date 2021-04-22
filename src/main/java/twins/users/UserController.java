@@ -11,16 +11,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import twins.logic.UsersService;
 import twins.logic.logicImplementation.UserServiceJpa;
 //import twins.logic.logicImplementation.UsersServiceMockup;
 
 @RestController
 public class UserController {
 
-	private UserServiceJpa userService;
+	private UsersService userService;
 	
 	@Autowired
-	public void setUserServiceJpa(UserServiceJpa userService) {
+	public void setUserService(UsersService userService) {
 		this.userService = userService;
 	}
 	

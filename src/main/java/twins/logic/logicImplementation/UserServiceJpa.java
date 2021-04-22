@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import twins.data.UserEntity;
+import twins.data.UserIdPK;
 import twins.data.UserRole;
 import twins.logic.UserAccessDeniedException;
 import twins.logic.UserNotFoundException;
@@ -56,8 +57,7 @@ public class UserServiceJpa implements UsersService{
 	@Transactional(readOnly = false) //The default value
 	public UserBoundary createUser(UserBoundary user) {
 		UserEntity entity = this.entityConverter.toEntity(user);
-		entity.setUserSpace(springApplicatioName);
-		entity.setUserEmail(user.getUserId().getEmail());
+		entity.getUserId().setSpace(springApplicatioName);
 		this.usersDao.save(entity);
 		return this.entityConverter.toBoundary(entity);
 	}
@@ -65,8 +65,9 @@ public class UserServiceJpa implements UsersService{
 	@Override
 	@Transactional(readOnly = true)
 	public UserBoundary login(String userSpace, String userEmail) {
-		String addressId = userSpace+"/"+userEmail;//Users unique addressID combined from this String --> userSpace+"/"+userEmail
-		Optional<UserEntity> optionalUser = this.usersDao.findById(addressId);
+		//Users unique addressID combined from this String --> userSpace and userEmail (TOGETHER)
+		
+		Optional<UserEntity> optionalUser = this.usersDao.findById(new UserIdPK(userSpace,userEmail));
 		if( optionalUser.isPresent()) {
 			UserEntity entity = optionalUser.get();
 			UserBoundary boundary = entityConverter.toBoundary (entity);
@@ -82,8 +83,8 @@ public class UserServiceJpa implements UsersService{
 	@Transactional(readOnly = false) //The default value
 	public UserBoundary updateUser(String userSpace, String userEmail, UserBoundary update) {
 		// get existing user from database
-		String addressId = userSpace+"/"+userEmail;//Users unique addressID combined from this String --> userSpace+"/"+userEmail
-		Optional<UserEntity> existingOptional = this.usersDao.findById(addressId);
+		//Users unique addressID combined from this String --> userSpace and userEmail (TOGETHER)
+		Optional<UserEntity> existingOptional = this.usersDao.findById(new UserIdPK(userSpace,userEmail));
 		if( existingOptional.isPresent()) {
 			UserEntity existing = existingOptional.get();
 			// update collection and return update
@@ -113,8 +114,8 @@ public class UserServiceJpa implements UsersService{
 	@Override
 	@Transactional(readOnly = true)
 	public List<UserBoundary> getAllUsers(String adminSpace, String adminEmail) {
-		String addressId = adminSpace+"/"+adminEmail;//Users unique addressID combined from this String --> userSpace+"/"+userEmail
-		Optional<UserEntity> optionalUser = this.usersDao.findById(addressId);
+		//Users unique addressID combined from this String --> userSpace and userEmail (TOGETHER)
+		Optional<UserEntity> optionalUser = this.usersDao.findById(new UserIdPK(adminSpace,adminEmail));
 		if( optionalUser.isPresent()) {
 			UserEntity entity = optionalUser.get();
 			if(entity.getRole() == UserRole.ADMIN) {
@@ -135,8 +136,8 @@ public class UserServiceJpa implements UsersService{
 	@Override
 	@Transactional(readOnly = false)//The default value
 	public void deleteAllUsers(String adminSpace, String adminEmail) {
-		String addressId = adminSpace+"/"+adminEmail;//Users unique addressID combined from this String --> userSpace+"/"+userEmail
-		Optional<UserEntity> optionalUser = this.usersDao.findById(addressId);
+		//Users unique addressID combined from this String --> userSpace and userEmail (TOGETHER)
+		Optional<UserEntity> optionalUser = this.usersDao.findById(new UserIdPK(adminSpace,adminEmail));
 		if( optionalUser.isPresent()) {
 			UserEntity entity = optionalUser.get();
 			if(entity.getRole() == UserRole.ADMIN) {
