@@ -17,6 +17,7 @@ import twins.data.ItemIdPK;
 import twins.data.dao.ItemsDao;
 import twins.items.ItemBoundary;
 import twins.logic.UpdatedItemsService;
+import twins.logic.Exceptions.EmptyFieldsException;
 import twins.logic.Exceptions.ItemNotFoundException;
 import twins.logic.logicImplementation.EntityConverter;
 
@@ -44,11 +45,21 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 	@Override
 	@Transactional(readOnly = false) // The default value
 	public ItemBoundary createItem(String userSpace, String userEmail, ItemBoundary item) {
-		ItemEntity entity = this.entityConverter.toEntity(item);
-		entity.setCreatedTimestamp(new Date());
-		entity.setItemId(new ItemIdPK(springApplicatioName, UUID.randomUUID().toString()));
-		this.itemsDao.save(entity);
-		return this.entityConverter.toBoundary(entity);
+		if (item.getCreatedBy() != null && item.getLocation() != null && item.getName() != null
+				&& !item.getName().isEmpty() && item.getType() != null && !item.getType().isEmpty()
+				&& userSpace!= null && !userSpace.isEmpty() && userEmail!=null && !userEmail.isEmpty()) {
+
+			ItemEntity entity = this.entityConverter.toEntity(item);
+			entity.setUserEmail(userEmail);
+			entity.setUserSpace(userSpace);
+			entity.setCreatedTimestamp(new Date());
+			entity.setItemId(new ItemIdPK(springApplicatioName, UUID.randomUUID().toString()));
+			this.itemsDao.save(entity);
+			return this.entityConverter.toBoundary(entity);
+
+		} else {
+			throw new EmptyFieldsException("could not create item -eror in one or more fileds");// NullPointerException
+		}
 	}
 
 	@Override
