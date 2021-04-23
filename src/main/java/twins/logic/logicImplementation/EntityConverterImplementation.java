@@ -26,6 +26,11 @@ import twins.users.UserId;
 @Component
 public class EntityConverterImplementation implements EntityConverter {
 	private ObjectMapper jackson;
+	
+	public EntityConverterImplementation() {
+		this.jackson = new ObjectMapper();
+	}
+	
 	@Override
 	public OperationBoundary toBoundary(OperationEntity input) {
 		OperationBoundary rv = new OperationBoundary();
@@ -184,19 +189,17 @@ public class EntityConverterImplementation implements EntityConverter {
 	}
 
 	@Override
-	public String fromMapToJson(Map<String, Object> value) {
-		
+	public String fromMapToJson (Map<String, Object> value) { // marshalling: Java->JSON
 		try {
 			return this.jackson
 				.writeValueAsString(value);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
-		}
-	
+		}	
 	}
 
 	@Override
-	public Map<String, Object> fromJsonToMap(String json) {
+	public Map<String, Object> fromJsonToMap (String json){ // unmarshalling: JSON->Java
 		try {
 			return this.jackson
 				.readValue(json, Map.class);
@@ -205,7 +208,4 @@ public class EntityConverterImplementation implements EntityConverter {
 		}
 
 	}
-
-
-
 }
