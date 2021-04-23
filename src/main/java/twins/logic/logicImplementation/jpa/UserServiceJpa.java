@@ -19,6 +19,7 @@ import twins.data.UserIdPK;
 import twins.data.UserRole;
 import twins.data.dao.UsersDao;
 import twins.logic.UsersService;
+import twins.logic.Exceptions.EmptyFieldsException;
 import twins.logic.Exceptions.UserAccessDeniedException;
 import twins.logic.Exceptions.UserNotFoundException;
 import twins.logic.logicImplementation.EntityConverter;
@@ -58,10 +59,38 @@ public class UserServiceJpa implements UsersService{
 	@Override
 	@Transactional(readOnly = false) //The default value
 	public UserBoundary createUser(UserBoundary user) {
+		
+		checkUserBoundary(user);
+		
 		UserEntity entity = this.entityConverter.toEntity(user);
 		entity.getUserId().setSpace(springApplicatioName);
 		this.usersDao.save(entity);
 		return this.entityConverter.toBoundary(entity);
+	}
+
+	private void checkUserBoundary(UserBoundary user) {
+		
+		if( user.getUserId().getEmail() == null || user.getUserId().getEmail().isEmpty()) {
+			throw new EmptyFieldsException("UserEmail must be specified!");
+		}
+		
+		if (user.getUsername() == null) {
+			throw new EmptyFieldsException("UserName must be specified!");
+		}
+		if( user.getAvatar() == null){
+			throw new EmptyFieldsException("UserAvatar must be specified!");
+		}
+		if(user.getRole() == null) {
+			throw new EmptyFieldsException("UserRole must be specified!");
+		}
+		
+		try {
+			UserRole.valueOf(user.getRole()); 	
+		}catch (Exception e) {
+			throw new EmptyFieldsException("UserRole must be PLAYER/MANGAER/ADMIN");
+		}
+	
+		
 	}
 
 	@Override

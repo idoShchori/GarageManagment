@@ -46,23 +46,23 @@ public class TestGarage {
 	}
 	
 	//TODO: add actual tests
-//	@Test //@Disabled
-//	public void testPostUserOnServer() throws Exception{
-//		
-//		
-//		String theUrl = "http://localhost:" + this.port + "/twins/users";
-//		Map<String,Object> emptyUser = new HashMap<>();
-//		
-//		UserBoundary user=this.restTemplate.postForObject(theUrl, emptyUser, UserBoundary.class);
-//		
-//		//assert that the id is not null AND returns message with initialized unique id
-//		assertThat(user.getUserId()).overridingErrorMessage("Expected user id").isNotNull();
-//		
-//		assertThat(user.getUsername()).overridingErrorMessage("Expected user name").isNotNull();
-//		
-//		assertThat(user.getRole()).overridingErrorMessage("Expected role").isNotNull();
-//		
-//		assertThat(user.getAvatar()).overridingErrorMessage("Expected avatar").isNotNull();
-//	}
+	@Test //@Disabled
+	public void testPostUserOnServer() throws Exception{
+		
+		
+		String theUrl = "http://localhost:" + this.port + "/twins/users";
+		Map<String,Object> emptyUser = new HashMap<>();
+		
+		UserBoundary user=this.restTemplate.postForObject(theUrl, emptyUser, UserBoundary.class);
+		
+		//assert that the id is not null AND returns message with initialized unique id
+		assertThat(user.getUserId()).overridingErrorMessage("Expected user id").isNotNull();
+		
+		assertThat(user.getUsername()).overridingErrorMessage("Expected user name").isNotNull();
+		
+		assertThat(user.getRole()).overridingErrorMessage("Expected role").isNotNull();
+		
+		assertThat(user.getAvatar()).overridingErrorMessage("Expected avatar").isNotNull();
+	}
 	
 }
