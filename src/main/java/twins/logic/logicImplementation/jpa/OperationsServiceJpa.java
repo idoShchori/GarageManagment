@@ -60,7 +60,8 @@ public class OperationsServiceJpa implements OperationsService {
 		entity.setCreatedTimestamp(new Date());
 	
 		this.operationsDao.save(entity);
-		return entity;
+		
+		return this.entityConverter.toBoundary(entity);
 	}
 	
 	@Override
