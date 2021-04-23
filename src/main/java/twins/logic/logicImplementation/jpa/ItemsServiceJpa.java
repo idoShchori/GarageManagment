@@ -78,12 +78,12 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 
 			ItemEntity existing = existingOptional.get();
 
-			if (update.getType() != null) {
+			if (update.getType() != null && !update.getType().isEmpty()) {
 				existing.setType(update.getType());
 				dirty = true;
 			}
 
-			if (update.getName() != null) {
+			if (update.getName() != null && !update.getName().isEmpty()) {
 				existing.setName(update.getName());
 				dirty = true;
 			}
