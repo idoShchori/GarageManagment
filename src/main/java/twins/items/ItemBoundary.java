@@ -9,7 +9,7 @@ import twins.users.User;
 
 public class ItemBoundary {
 
-	private ItemId itemId;
+	private ItemIdBoundary itemId;
 	private String type;
 	private String name;
 	private Boolean active;
@@ -23,7 +23,7 @@ public class ItemBoundary {
 	}
 
 	public ItemBoundary(
-			ItemId itemId,
+			ItemIdBoundary itemId,
 			String type,
 			String name,
 			boolean active,
@@ -42,11 +42,11 @@ public class ItemBoundary {
 		this.itemAttributes = new HashMap<>();
 	}
 
-	public ItemId getItemId() {
+	public ItemIdBoundary getItemId() {
 		return itemId;
 	}
 
-	public void setItemId(ItemId itemId) {
+	public void setItemId(ItemIdBoundary itemId) {
 		this.itemId = itemId;
 	}
 

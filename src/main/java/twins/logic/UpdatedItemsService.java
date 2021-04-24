@@ -5,11 +5,12 @@ import java.util.List;
 import java.util.Optional;
 
 import twins.items.ItemBoundary;
+import twins.items.ItemIdBoundary;
 
 public interface UpdatedItemsService extends ItemsService{
 
-	public void addChildToParent(String userSpace,String userEmail,String itemSpace, String itemId,ItemBoundary item);
+	public void addChildToParent(String userSpace,String userEmail,String itemSpace, String itemId,ItemIdBoundary item);
 	public List<ItemBoundary> getAllChildren(String userSpace,String userEmail,String itemSpace, String itemId);
-	public Optional<List<ItemBoundary>>getAllParents(String childSpace, String childId);
+	public List<ItemBoundary> getAllParents(String childSpace, String childId);
 	
 }

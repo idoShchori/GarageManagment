@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import twins.data.OperationEntity;
 import twins.data.OperationIdPK;
 import twins.data.dao.OperationsDao;
-import twins.items.ItemId;
+import twins.items.ItemIdBoundary;
 import twins.logic.OperationsService;
 import twins.logic.Exceptions.EmptyFieldsException;
 import twins.logic.logicImplementation.EntityConverter;
@@ -54,7 +54,7 @@ public class OperationsServiceJpa implements OperationsService {
 		if (userId.getSpace() == null)
 			throw new EmptyFieldsException("Invalid user's `Email` or `Space`");
 
-		ItemId itemId = operation.getItem().getItemId();
+		ItemIdBoundary itemId = operation.getItem().getItemId();
 		if (itemId == null)
 			throw new EmptyFieldsException("An operation must be performed on a valid item");
 

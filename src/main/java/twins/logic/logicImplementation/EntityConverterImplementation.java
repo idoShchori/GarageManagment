@@ -15,7 +15,7 @@ import twins.data.UserIdPK;
 import twins.data.UserRole;
 import twins.items.Item;
 import twins.items.ItemBoundary;
-import twins.items.ItemId;
+import twins.items.ItemIdBoundary;
 import twins.items.Location;
 import twins.operations.OperationBoundary;
 import twins.operations.OperationId;
@@ -40,7 +40,7 @@ public class EntityConverterImplementation implements EntityConverter {
 		OperationId opId = new OperationId(idPK.getOperationSpace(), idPK.getOperationId());
 		rv.setOperationId(opId);
 
-		ItemId itId = new ItemId(input.getItemSpace(), input.getItemId());
+		ItemIdBoundary itId = new ItemIdBoundary(input.getItemSpace(), input.getItemId());
 		rv.setItem(new Item(itId));
 
 		UserId usId = new UserId(input.getUserSpace(), input.getUserEmail());
@@ -68,7 +68,7 @@ public class EntityConverterImplementation implements EntityConverter {
 		if (input.getItem() != null) {
 			Item tempItem = input.getItem();
 			if (tempItem.getItemId() != null) {
-				ItemId itId = tempItem.getItemId();
+				ItemIdBoundary itId = tempItem.getItemId();
 				rv.setItemSpace(itId.getSpace());
 				rv.setItemId(itId.getId());
 			}
@@ -98,7 +98,7 @@ public class EntityConverterImplementation implements EntityConverter {
 	@Override
 	public ItemBoundary toBoundary(ItemEntity input) {
 		ItemBoundary rv = new ItemBoundary();
-		ItemId itemId = new ItemId();
+		ItemIdBoundary itemId = new ItemIdBoundary();
 		itemId.setId(input.getItemIdPK().getId());
 		itemId.setSpace(input.getItemIdPK().getSpace());
 		rv.setItemId(itemId);

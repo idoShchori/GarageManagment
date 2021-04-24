@@ -1,16 +1,16 @@
 package twins.items;
 
-public class ItemId {
+public class ItemIdBoundary {
 
 	private String space;
 	private String id;
 
-	public ItemId() {
+	public ItemIdBoundary() {
 		this.setSpace("2021b.twins");
 		this.setId("46");
 	}
 
-	public ItemId(String space, String id) {
+	public ItemIdBoundary(String space, String id) {
 		super();
 		this.space = space;
 		this.id = id;

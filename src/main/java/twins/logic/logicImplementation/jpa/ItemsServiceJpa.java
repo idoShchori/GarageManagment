@@ -1,5 +1,9 @@
 package twins.logic.logicImplementation.jpa;
 
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +20,7 @@ import twins.data.ItemEntity;
 import twins.data.ItemIdPK;
 import twins.data.dao.ItemsDao;
 import twins.items.ItemBoundary;
+import twins.items.ItemIdBoundary;
 import twins.logic.UpdatedItemsService;
 import twins.logic.Exceptions.EmptyFieldsException;
 import twins.logic.Exceptions.ItemNotFoundException;
@@ -162,7 +167,7 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 
 	@Override
 	@Transactional(readOnly = false) // The default value
-	public void addChildToParent(String userSpace, String userEmail, String itemSpace, String itemId, ItemBoundary item) {
+	public void addChildToParent(String userSpace, String userEmail, String itemSpace, String itemId, ItemIdBoundary item) {
 		// TODO: check if user exist
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
@@ -171,9 +176,8 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 				.findById(id)
 				.orElseThrow(
 				() -> new ItemNotFoundException("could not find parent item by space:" + itemSpace + " id:" + itemId));
-		
-		ItemEntity inputChild = this.entityConverter.toEntity(item);
-		ItemIdPK inputChildId = inputChild.getItemIdPK();
+
+		ItemIdPK inputChildId = new ItemIdPK(item.getSpace(), item.getId());
 		
 		ItemEntity child = this.itemsDao
 				.findById(inputChildId)
@@ -207,23 +211,29 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 
 	@Override
 	@Transactional(readOnly = true) // The default value
-	public Optional<List<ItemBoundary>> getAllParents(String childSpace, String childId) {
+	public List<ItemBoundary> getAllParents(String childSpace, String childId) {
 		
 		ItemIdPK id = new ItemIdPK(childSpace, childId);
 		
-		ItemEntity parent = this.itemsDao
+		ItemEntity child = this.itemsDao
 				.findById(id)
 				.orElseThrow(
 				() -> new ItemNotFoundException("could not find parent item by space:" + childSpace + " id:" + childId));
 		
-		if (parent.getChildrens() != null) {
-			return Optional.of(
-					parent.getChildrens()
-					.stream()
-					.map(this.entityConverter::toBoundary)
-					.collect(Collectors.toList()));
-		} else {
-			return Optional.empty();
-		}
+		List<ItemBoundary> parents = new ArrayList<ItemBoundary>();
+		parents.add(entityConverter.toBoundary(child.getParent()));
+
+		return parents;
+		
+//		TODO: implementation of manyToMany relationship
+//		if (child.getParent() != null) {
+//			return Optional.of(
+//					child.getParent()
+//					.stream()
+//					.map(this.entityConverter::toBoundary)
+//					.collect(Collectors.toList()));
+//		} else {
+//			return Optional.empty();
+//		}
 	}
 }

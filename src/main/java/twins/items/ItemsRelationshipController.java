@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 import twins.logic.UpdatedItemsService;
 
@@ -31,13 +30,13 @@ public class ItemsRelationshipController {
 				path = "/twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}/children",
 				consumes = MediaType.APPLICATION_JSON_VALUE)
 		public void addChildToParent (
-				@RequestBody ItemBoundary item,
+				@RequestBody ItemIdBoundary item,
 				@PathVariable("userSpace") String userSpace,
 				@PathVariable("userEmail") String userEmail,
 				@PathVariable("itemSpace") String itemSpace,
 				@PathVariable("itemId") String itemId) {
 			this.updateItemService
-				.addChildToParent(userSpace,userEmail,itemSpace,itemId,item);
+					.addChildToParent(userSpace, userEmail, itemSpace, itemId, item);
 		}
 		
 		// operation for getting all items of item of specific user
@@ -50,7 +49,7 @@ public class ItemsRelationshipController {
 				@PathVariable("itemSpace") String itemSpace,
 				@PathVariable("itemId") String itemId) {
 			return this.updateItemService
-				.getAllChildren(userSpace,userEmail,itemSpace,itemId)
+					.getAllChildren(userSpace, userEmail, itemSpace, itemId)
 				.toArray(new ItemBoundary[0]);
 		}
 		
@@ -63,13 +62,7 @@ public class ItemsRelationshipController {
 				@PathVariable("userEmail") String userEmail,
 				@PathVariable("itemSpace") String itemSpace,
 				@PathVariable("itemId") String itemId) {
-			Optional<List<ItemBoundary>> item = this.updateItemService.getAllParents(itemId,itemSpace);
-			if(item.isPresent()) {
-				return item.get().toArray(new ItemBoundary[0]);
-			}else
-				return new ItemBoundary[0];
+			List<ItemBoundary> item = this.updateItemService.getAllParents(itemSpace, itemId);
+			return item.toArray(new ItemBoundary[0]);
 		}
-		
-
-
-}
+	}

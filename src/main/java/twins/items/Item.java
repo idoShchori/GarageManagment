@@ -1,21 +1,21 @@
 package twins.items;
 
 public class Item {
-	private ItemId itemId;
+	private ItemIdBoundary itemId;
 	
 	public Item() {
-		this.itemId = new ItemId();
+		this.itemId = new ItemIdBoundary();
 	}
 	
-	public Item(ItemId id) {
+	public Item(ItemIdBoundary id) {
 		this.setItemId(id);
 	}
 
-	public ItemId getItemId() {
+	public ItemIdBoundary getItemId() {
 		return itemId;
 	}
 
-	public void setItemId(ItemId itemId) {
+	public void setItemId(ItemIdBoundary itemId) {
 		this.itemId = itemId;
 	}
 	
