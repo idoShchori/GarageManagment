@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
+
+
 @Embeddable
 public class UserIdPK implements Serializable{
 	
@@ -12,6 +14,8 @@ public class UserIdPK implements Serializable{
 	 */
 	private static final long serialVersionUID = 4871311189981504510L;
 	private String space;
+	
+
 	private String email;
 
 	public UserIdPK() {

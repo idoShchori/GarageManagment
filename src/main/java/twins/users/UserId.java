@@ -1,10 +1,11 @@
 package twins.users;
 
 
-
 public class UserId {
 
 	private String space;
+	
+
 	private String email;
 
 	public UserId() {

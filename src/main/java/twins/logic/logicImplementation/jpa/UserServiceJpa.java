@@ -4,6 +4,7 @@ package twins.logic.logicImplementation.jpa;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -76,12 +77,14 @@ public class UserServiceJpa implements UsersService{
 		
 		if( user.getUserId().getEmail() == null || user.getUserId().getEmail().isEmpty()) {
 			throw new EmptyFieldsException("UserEmail must be specified!");
+		}else if(validEmail(user.getUserId().getEmail())){
+			throw new EmptyFieldsException("UserEmail must be Valid!");
 		}
 		
 		if (user.getUsername() == null) {
 			throw new EmptyFieldsException("UserName must be specified!");
 		}
-		if( user.getAvatar() == null){
+		if( user.getAvatar() == null || user.getAvatar().isEmpty()){
 			throw new EmptyFieldsException("UserAvatar must be specified!");
 		}
 		if(user.getRole() == null) {
@@ -95,6 +98,13 @@ public class UserServiceJpa implements UsersService{
 		}
 	
 		
+	}
+
+	private boolean validEmail(String email) {
+		// TODO Auto-generated method stub
+		String regex = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+		Pattern pat = Pattern.compile(regex);
+		return pat.matcher(email).matches();
 	}
 
 	@Override
@@ -123,17 +133,12 @@ public class UserServiceJpa implements UsersService{
 		if( existingOptional.isPresent()) {
 			UserEntity existing = existingOptional.get();
 			// update collection and return update
-			if (update.getUsername() != null) {
-				existing.setUsername(update.getUsername());
-			}
 			
-			if (update.getAvatar() != null) {
-				existing.setAvatar(update.getAvatar());
-			}
+			checkUserBoundary(update);
+			existing.setUsername(update.getUsername());
+			existing.setAvatar(update.getAvatar());
+			existing.setRole(UserRole.valueOf(update.getRole()));
 			
-			if (update.getRole() != null) {
-				existing.setRole(UserRole.valueOf(update.getRole()));
-			}
 			//userSpace and userEmail are never changed!!!!! (id)
 			
 			// update database
