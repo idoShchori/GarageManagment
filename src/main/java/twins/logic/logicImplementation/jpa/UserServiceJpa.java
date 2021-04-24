@@ -68,6 +68,10 @@ public class UserServiceJpa implements UsersService{
 		return this.entityConverter.toBoundary(entity);
 	}
 
+	/**
+	 * Method which checks UserBoundry's fields. Throws an EmptyFieldException if one of fields isn't specified.
+	 * @param user
+	 */
 	private void checkUserBoundary(UserBoundary user) {
 		
 		if( user.getUserId().getEmail() == null || user.getUserId().getEmail().isEmpty()) {
