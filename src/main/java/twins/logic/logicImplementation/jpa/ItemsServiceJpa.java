@@ -27,6 +27,7 @@ import twins.logic.logicImplementation.EntityConverter;
 public class ItemsServiceJpa implements UpdatedItemsService {
 	private ItemsDao itemsDao;
 	private EntityConverter entityConverter;
+	private Validator validator;
 	private String springApplicatioName;
 
 	@Value("${spring.application.name:defaultName}")
@@ -44,16 +45,20 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 		this.entityConverter = entityConverter;
 	}
 
+	@Autowired
+	public void setValidator(Validator validator) {
+		this.validator = validator;
+	}
+
 	@Override
 	@Transactional(readOnly = false) // The default value
 	public ItemBoundary createItem(String userSpace, String userEmail, ItemBoundary item) {
-		
-		// TODO:	extract the user details from database, and create a new UserEntity, and set item's
-		//			createdBy attribute to be that UserEntity
-		
-		if (item.getLocation() != null && item.getName() != null
-				&& !item.getName().isEmpty() && item.getType() != null && !item.getType().isEmpty() && userSpace != null
-				&& !userSpace.isEmpty() && userEmail != null && !userEmail.isEmpty()) {
+
+		// TODO: extract the user details from database, and create a new UserEntity,
+		// and set item's
+		// createdBy attribute to be that UserEntity
+
+		if (validator.isValidItem(item) && validator.isValidEmail(userEmail) && userSpace != null && !userSpace.isEmpty()) {
 
 			ItemEntity entity = this.entityConverter.toEntity(item);
 			entity.setUserEmail(userEmail);

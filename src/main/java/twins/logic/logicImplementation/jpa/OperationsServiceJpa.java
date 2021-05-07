@@ -14,12 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import twins.data.OperationEntity;
 import twins.data.OperationIdPK;
 import twins.data.dao.OperationsDao;
-import twins.items.ItemIdBoundary;
 import twins.logic.OperationsService;
-import twins.logic.Exceptions.EmptyFieldsException;
 import twins.logic.logicImplementation.EntityConverter;
 import twins.operations.OperationBoundary;
-import twins.users.UserId;
 
 @Service
 public class OperationsServiceJpa implements OperationsService {

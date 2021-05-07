@@ -3,6 +3,7 @@ package twins.logic.logicImplementation.jpa;
 import java.util.regex.Pattern;
 
 import twins.data.UserRole;
+import twins.items.ItemBoundary;
 import twins.items.ItemIdBoundary;
 import twins.logic.Exceptions.EmptyFieldsException;
 import twins.operations.OperationBoundary;
@@ -76,15 +77,36 @@ public class Validator implements Validatorable {
 			throw new EmptyFieldsException("Invalid user's `Email` or `Space`");
 
 		ItemIdBoundary itemId = operation.getItem().getItemId();
-		if (itemId == null)
-			throw new EmptyFieldsException("An operation must be performed on a valid item");
-
-		if (itemId.getId() == null || itemId.getSpace() == null ||
-				itemId.getId().isEmpty() || itemId.getSpace().isEmpty())
-			throw new EmptyFieldsException("Invalid item's `Id` or `Space`");
+		isValidItemId(itemId);
 
 		if (operation.getType() == null || operation.getType().isEmpty())
 			throw new EmptyFieldsException("Type of operation must be specified");
+		
+		return true;
+	}
+	
+	@Override
+	public boolean isValidItem(ItemBoundary item) {
+		if (item.getLocation() == null)
+			throw new EmptyFieldsException("Item must have a location");
+		
+		if (item.getName() == null || item.getName().isEmpty())
+			throw new EmptyFieldsException("Item's name is empty");
+		
+		if (item.getType() == null || item.getType().isEmpty())
+			throw new EmptyFieldsException("Item's type is empty");
+		
+		return true;		
+	}
+
+	@Override
+	public boolean isValidItemId(ItemIdBoundary iid) {
+		if (iid == null)
+			throw new EmptyFieldsException("An operation must be performed on a valid item");
+
+		if (iid.getId() == null || iid.getSpace() == null ||
+				iid.getId().isEmpty() || iid.getSpace().isEmpty())
+			throw new EmptyFieldsException("Invalid item's `Id` or `Space`");
 		
 		return true;
 	}
