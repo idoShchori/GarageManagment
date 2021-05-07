@@ -1,7 +1,5 @@
 package twins.logic.logicImplementation.jpa;
 
-
-
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -27,42 +25,41 @@ import twins.logic.logicImplementation.EntityConverter;
 import twins.users.UserBoundary;
 
 @Service
-public class UserServiceJpa implements UsersService{
-	
+public class UserServiceJpa implements UsersService {
+
 	private UsersDao usersDao;
 	private EntityConverter entityConverter;
 	private String springApplicatioName;
-	
+
 	public UserServiceJpa() {
 	}
-	
+
 	@Value("${spring.application.name:defaultName}")
 	public void setSpringApplicatioName(String springApplicatioName) {
 		this.springApplicatioName = springApplicatioName;
 	}
-	
+
 	@Autowired
 	public void setUsersDao(UsersDao usersDao) {
 		this.usersDao = usersDao;
 	}
-	
+
 	@Autowired
 	public void setEntityConverter(EntityConverter entityConverter) {
 		this.entityConverter = entityConverter;
 	}
-	
+
 	@PostConstruct
 	public void init() {
 		System.err.println("spring application name = " + this.springApplicatioName);
 	}
-	
 
 	@Override
-	@Transactional(readOnly = false) //The default value
+	@Transactional(readOnly = false) // The default value
 	public UserBoundary createUser(UserBoundary user) {
-		
+
 		checkUserBoundary(user);
-		
+
 		UserEntity entity = this.entityConverter.toEntity(user);
 		entity.getUserId().setSpace(springApplicatioName);
 		this.usersDao.save(entity);
@@ -70,34 +67,35 @@ public class UserServiceJpa implements UsersService{
 	}
 
 	/**
-	 * Method which checks UserBoundry's fields. Throws an EmptyFieldException if one of fields isn't specified.
+	 * Method which checks UserBoundry's fields. Throws an EmptyFieldException if
+	 * one of fields isn't specified.
+	 * 
 	 * @param user
 	 */
 	private void checkUserBoundary(UserBoundary user) {
-		
-		if( user.getUserId().getEmail() == null || user.getUserId().getEmail().isEmpty()) {
+
+		if (user.getUserId().getEmail() == null || user.getUserId().getEmail().isEmpty()) {
 			throw new EmptyFieldsException("UserEmail must be specified!");
-		}else if(validEmail(user.getUserId().getEmail())){
+		} else if (!validEmail(user.getUserId().getEmail())) {
 			throw new EmptyFieldsException("UserEmail must be Valid!");
 		}
-		
+
 		if (user.getUsername() == null) {
 			throw new EmptyFieldsException("UserName must be specified!");
 		}
-		if( user.getAvatar() == null || user.getAvatar().isEmpty()){
+		if (user.getAvatar() == null || user.getAvatar().isEmpty()) {
 			throw new EmptyFieldsException("UserAvatar must be specified!");
 		}
-		if(user.getRole() == null) {
+		if (user.getRole() == null) {
 			throw new EmptyFieldsException("UserRole must be specified!");
 		}
-		
+
 		try {
-			UserRole.valueOf(user.getRole()); 	
-		}catch (Exception e) {
+			UserRole.valueOf(user.getRole());
+		} catch (Exception e) {
 			throw new EmptyFieldsException("UserRole must be PLAYER/MANGAER/ADMIN");
 		}
-	
-		
+
 	}
 
 	private boolean validEmail(String email) {
@@ -110,84 +108,89 @@ public class UserServiceJpa implements UsersService{
 	@Override
 	@Transactional(readOnly = true)
 	public UserBoundary login(String userSpace, String userEmail) {
-		//Users unique addressID combined from this String --> userSpace and userEmail (TOGETHER)
-		
-		Optional<UserEntity> optionalUser = this.usersDao.findById(new UserIdPK(userSpace,userEmail));
-		if( optionalUser.isPresent()) {
+		// Users unique addressID combined from this String --> userSpace and userEmail
+		// (TOGETHER)
+
+		Optional<UserEntity> optionalUser = this.usersDao.findById(new UserIdPK(userSpace, userEmail));
+		if (optionalUser.isPresent()) {
 			UserEntity entity = optionalUser.get();
-			UserBoundary boundary = entityConverter.toBoundary (entity);
+			UserBoundary boundary = entityConverter.toBoundary(entity);
 			return boundary;
-		}
-		else {
+		} else {
 			// TODO have server return status 404 here
-			throw new UserNotFoundException("Could not find user by userSpace/userEmail : " + userSpace+"/"+userEmail);// NullPointerException
+			throw new UserNotFoundException(
+					"Could not find user by userSpace/userEmail : " + userSpace + "/" + userEmail);// NullPointerException
 		}
 	}
 
 	@Override
-	@Transactional(readOnly = false) //The default value
+	@Transactional(readOnly = false) // The default value
 	public UserBoundary updateUser(String userSpace, String userEmail, UserBoundary update) {
 		// get existing user from database
-		//Users unique addressID combined from this String --> userSpace and userEmail (TOGETHER)
-		Optional<UserEntity> existingOptional = this.usersDao.findById(new UserIdPK(userSpace,userEmail));
-		if( existingOptional.isPresent()) {
+		// Users unique addressID combined from this String --> userSpace and userEmail
+		// (TOGETHER)
+		Optional<UserEntity> existingOptional = this.usersDao.findById(new UserIdPK(userSpace, userEmail));
+		if (existingOptional.isPresent()) {
 			UserEntity existing = existingOptional.get();
 			// update collection and return update
-			
+
 			checkUserBoundary(update);
 			existing.setUsername(update.getUsername());
 			existing.setAvatar(update.getAvatar());
 			existing.setRole(UserRole.valueOf(update.getRole()));
-			
-			//userSpace and userEmail are never changed!!!!! (id)
-			
+
+			// userSpace and userEmail are never changed!!!!! (id)
+
 			// update database
 			existing = this.usersDao.save(existing);
-			
+
 			UserBoundary rv = this.entityConverter.toBoundary(existing);
 			return rv;
-		}else {
-			throw new UserNotFoundException("could not find user by userSpace/userEmail: " + userSpace+"/"+userEmail);// NullPointerException
+		} else {
+			throw new UserNotFoundException(
+					"could not find user by userSpace/userEmail: " + userSpace + "/" + userEmail);// NullPointerException
 		}
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<UserBoundary> getAllUsers(String adminSpace, String adminEmail) {
-		//Users unique addressID combined from this String --> userSpace and userEmail (TOGETHER)
-		Optional<UserEntity> optionalUser = this.usersDao.findById(new UserIdPK(adminSpace,adminEmail));
-		if( optionalUser.isPresent()) {
+		// Users unique addressID combined from this String --> userSpace and userEmail
+		// (TOGETHER)
+		Optional<UserEntity> optionalUser = this.usersDao.findById(new UserIdPK(adminSpace, adminEmail));
+		if (optionalUser.isPresent()) {
 			UserEntity entity = optionalUser.get();
-			if(entity.getRole() == UserRole.ADMIN) {
-				Iterable<UserEntity>  allEntities = this.usersDao.findAll();
-				return StreamSupport
-						.stream(allEntities.spliterator(), false)
-						.map(this.entityConverter::toBoundary)
+			if (entity.getRole() == UserRole.ADMIN) {
+				Iterable<UserEntity> allEntities = this.usersDao.findAll();
+				return StreamSupport.stream(allEntities.spliterator(), false).map(this.entityConverter::toBoundary)
 						.collect(Collectors.toList());
-			}else {
-				throw new UserAccessDeniedException("User is not ADMIN,therefore access denied! ");//Not a Manager
+			} else {
+				throw new UserAccessDeniedException("User is not ADMIN,therefore access denied! ");// Not a Manager
 			}
-		}else {
+		} else {
 			// TODO have server return status 404 here
-			throw new UserNotFoundException("Could not find user by userSpace/userEmail : " + adminSpace+"/"+adminEmail);// NullPointerException
+			throw new UserNotFoundException(
+					"Could not find user by userSpace/userEmail : " + adminSpace + "/" + adminEmail);// NullPointerException
 		}
 	}
 
 	@Override
-	@Transactional(readOnly = false)//The default value
+	@Transactional(readOnly = false) // The default value
 	public void deleteAllUsers(String adminSpace, String adminEmail) {
-		//Users unique addressID combined from this String --> userSpace and userEmail (TOGETHER)
-		Optional<UserEntity> optionalUser = this.usersDao.findById(new UserIdPK(adminSpace,adminEmail));
-		if( optionalUser.isPresent()) {
+		// Users unique addressID combined from this String --> userSpace and userEmail
+		// (TOGETHER)
+		Optional<UserEntity> optionalUser = this.usersDao.findById(new UserIdPK(adminSpace, adminEmail));
+		if (optionalUser.isPresent()) {
 			UserEntity entity = optionalUser.get();
-			if(entity.getRole() == UserRole.ADMIN) {
+			if (entity.getRole() == UserRole.ADMIN) {
 				this.usersDao.deleteAll();
-			}else {
-				throw new UserAccessDeniedException("User is not ADMIN,therefore access denied! ");//Not a Manager
+			} else {
+				throw new UserAccessDeniedException("User is not ADMIN,therefore access denied! ");// Not a Manager
 			}
-		}else {
+		} else {
 			// TODO have server return status 404 here
-			throw new UserNotFoundException("Could not find user by userSpace/userEmail : " + adminSpace+"/"+adminEmail);// NullPointerException
+			throw new UserNotFoundException(
+					"Could not find user by userSpace/userEmail : " + adminSpace + "/" + adminEmail);// NullPointerException
 		}
 	}
 
