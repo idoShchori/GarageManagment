@@ -8,26 +8,31 @@ import javax.persistence.Table;
 
 //import twins.users.UserId;
 
-
 //USERS
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 //USER_EMAIL    |USER_SPACE   | USER_ROLE | USER_NAME    | AVATAR       |
 //VARCHAR(255)  |VARCHAR(255) |INT        | VARCHAR(255) | VARCHAR(255) | 
 //<PK>
 @Entity
-@Table(name="USERS")
+@Table(name = "USERS")
 public class UserEntity {
-	
 
-	
-	@EmbeddedId
 	private UserIdPK userId;
 
 	private UserRole role;
 	private String username;
 	private String avatar;
-	
+
 	public UserEntity() {
+	}
+
+	@EmbeddedId
+	public UserIdPK getUserId() {
+		return userId;
+	}
+
+	public void setUserId(UserIdPK userId) {
+		this.userId = userId;
 	}
 
 //	@Column(name="USER_ROLE")
@@ -39,7 +44,6 @@ public class UserEntity {
 		this.role = role;
 	}
 
-	
 	public String getUsername() {
 		return username;
 	}
@@ -56,13 +60,4 @@ public class UserEntity {
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-	
-	public UserIdPK getUserId() {
-		return userId;
-	}
-
-	public void setUserId(UserIdPK userId) {
-		this.userId = userId;
-	}
-	
 }

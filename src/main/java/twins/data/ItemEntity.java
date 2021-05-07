@@ -14,71 +14,38 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
 //USERS
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //ID          | SPACE      |TYPE         | NAME          | ACTIVE       | CREATED_TIMESTAMP |USER_ID      | USER_SPACE  | LOCATION_LAT |LOCATION_LNG |ITEMS_ATTRIBUTES|PARENT_ID   | PARENT_SPACE|
 //VARCHAR(255)|VARCHAR(255)|VARCHAR(255) |VARCHAR(255)   | boolean      | TIMESTAMP         |VARCHAR(255) |VARCHAR(255) |  DOUBLE      |  DOUBLE     | CLOB           |VARCHAR(255)|VARCHAR(255)  
 //<PK>        |<PK>        |
 @Entity
-@Table(name="ITEMS")
+@Table(name = "ITEMS")
 public class ItemEntity {
-	
-	@EmbeddedId
+
 	private ItemIdPK itemIdPK;
-	
 	private String type;
 	private String name;
 	private Boolean active;
-	
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdTimestamp;
-	
 	private String userEmail;
 	private String userSpace;
-	
 	private double locationLat;
 	private double locationLng;
-
-	@Lob
 	private String itemAttributes;
-	
-	@OneToMany(mappedBy = "parent" , fetch = FetchType.LAZY)
 	private Set<ItemEntity> children;
-	
-	@ManyToOne( fetch = FetchType.LAZY)
 	private ItemEntity parent;
 
-	public ItemEntity(){
-		children=new HashSet<>();
+	public ItemEntity() {
+		children = new HashSet<>();
 	}
 
-
+	@EmbeddedId
 	public ItemIdPK getItemIdPK() {
 		return itemIdPK;
 	}
 
-	public Set<ItemEntity> getChildrens() {
-		return children;
-	}
-
-
-	public void setChildrens(Set<ItemEntity> children) {
-		this.children = children;
-	}
-
-
-	public ItemEntity getParent() {
-		return parent;
-	}
-
-
-	public void setParent(ItemEntity parent) {
-		this.parent = parent;
-	}
-
-
-	public void setItemId(ItemIdPK itemIdPK) {
+	public void setItemIdPK(ItemIdPK itemIdPK) {
 		this.itemIdPK = itemIdPK;
 	}
 
@@ -98,7 +65,7 @@ public class ItemEntity {
 		this.name = name;
 	}
 
-	public Boolean isActive() {
+	public Boolean getActive() {
 		return active;
 	}
 
@@ -115,63 +82,64 @@ public class ItemEntity {
 		this.createdTimestamp = createdTimestamp;
 	}
 
-
-
 	public String getUserEmail() {
 		return userEmail;
 	}
-
 
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
 
-
 	public String getUserSpace() {
 		return userSpace;
 	}
-
 
 	public void setUserSpace(String userSpace) {
 		this.userSpace = userSpace;
 	}
 
-
 	public double getLocationLat() {
 		return locationLat;
 	}
-
 
 	public void setLocationLat(double locationLat) {
 		this.locationLat = locationLat;
 	}
 
-
 	public double getLocationLng() {
 		return locationLng;
 	}
 
-
 	public void setLocationLng(double locationLng) {
 		this.locationLng = locationLng;
 	}
-
 
 	@Lob
 	public String getItemAttributes() {
 		return itemAttributes;
 	}
 
-
 	public void setItemAttributes(String itemAttributes) {
 		this.itemAttributes = itemAttributes;
 	}
-	
-	public void addItem(ItemEntity child) {
-		children.add(child);
-		child.setParent(this);
+
+	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+	public Set<ItemEntity> getChildren() {
+		return children;
 	}
 
+	public void setChildren(Set<ItemEntity> children) {
+		this.children = children;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	public ItemEntity getParent() {
+		return parent;
+	}
+
+	public void setParent(ItemEntity parent) {
+		this.parent = parent;
+	}
 
 	@Override
 	public int hashCode() {
@@ -180,7 +148,6 @@ public class ItemEntity {
 		result = prime * result + ((itemIdPK == null) ? 0 : itemIdPK.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -198,5 +165,5 @@ public class ItemEntity {
 			return false;
 		return true;
 	}
-	
+
 }

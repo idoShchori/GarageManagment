@@ -9,36 +9,29 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
 //	OPERATIONS
 //	--------------------------------------------------------------------------------------------------------------------------------------------------------------
 //	OPERATION_SPACE |OPERATION_ID | ITEM_SPACE 	| ITEM_ID	   | USER_SPACE   | USER_EMAIL	| TYPE			|CREATED_TIME_STAMP	|ATTRIBUTES
 //	VARCHAR(255)  	|VARCHAR(255) | VARCHAR(255)| VARCHAR(255) | VARCHAR(255) | VARCHAR(255)| VARCHAR(255)	|TIMESTAMP			|CLOB	
 //	<PK>			|<PK>		  |
 
-
 @Entity
-@Table(name="OPERATIONS")
+@Table(name = "OPERATIONS")
 public class OperationEntity {
-	
-	@EmbeddedId
+
 	private OperationIdPK operationIdPK;
 	private String itemSpace;
 	private String itemId;
 	private String userSpace;
 	private String userEmail;
 	private String type;
-	
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdTimestamp;
-	
-	@Lob
 	private String operationAttributes;
 
 	public OperationEntity() {
 	}
-	
-	
+
+	@EmbeddedId
 	public OperationIdPK getOperationIdPK() {
 		return operationIdPK;
 	}
@@ -54,8 +47,7 @@ public class OperationEntity {
 	public void setItemSpace(String itemSpace) {
 		this.itemSpace = itemSpace;
 	}
-	
-	
+
 	public String getItemId() {
 		return itemId;
 	}
@@ -88,6 +80,7 @@ public class OperationEntity {
 		this.type = type;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
@@ -96,6 +89,7 @@ public class OperationEntity {
 		this.createdTimestamp = createdTimestamp;
 	}
 
+	@Lob
 	public String getOperationAttributes() {
 		return operationAttributes;
 	}
