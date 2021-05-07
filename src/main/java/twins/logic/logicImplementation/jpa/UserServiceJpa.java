@@ -67,8 +67,13 @@ public class UserServiceJpa implements UsersService {
 
 		UserEntity entity = this.entityConverter.toEntity(user);
 		entity.getUserId().setSpace(springApplicatioName);
+		
+		UserBoundary userB = this.entityConverter.toBoundary(entity);
+		if (!validator.isValidUser(userB))
+			return null;
+		
 		this.usersDao.save(entity);
-		return this.entityConverter.toBoundary(entity);
+		return userB;
 	}
 
 	/**
