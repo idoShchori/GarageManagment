@@ -2,7 +2,6 @@ package twins.logic.logicImplementation.jpa;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -29,6 +28,7 @@ public class UserServiceJpa implements UsersService {
 
 	private UsersDao usersDao;
 	private EntityConverter entityConverter;
+	private Validator validator;
 	private String springApplicatioName;
 
 	public UserServiceJpa() {
@@ -49,6 +49,11 @@ public class UserServiceJpa implements UsersService {
 		this.entityConverter = entityConverter;
 	}
 
+	@Autowired
+	public void setValidator(Validator validator) {
+		this.validator = validator;
+	}
+
 	@PostConstruct
 	public void init() {
 		System.err.println("spring application name = " + this.springApplicatioName);
@@ -58,7 +63,7 @@ public class UserServiceJpa implements UsersService {
 	@Transactional(readOnly = false) // The default value
 	public UserBoundary createUser(UserBoundary user) {
 
-		checkUserBoundary(user);
+		validator.isValidUser(user);
 
 		UserEntity entity = this.entityConverter.toEntity(user);
 		entity.getUserId().setSpace(springApplicatioName);
@@ -72,38 +77,38 @@ public class UserServiceJpa implements UsersService {
 	 * 
 	 * @param user
 	 */
-	private void checkUserBoundary(UserBoundary user) {
+//	private void checkUserBoundary(UserBoundary user) {
+//
+//		if (user.getUserId().getEmail() == null || user.getUserId().getEmail().isEmpty()) {
+//			throw new EmptyFieldsException("UserEmail must be specified!");
+//		} else if (!validEmail(user.getUserId().getEmail())) {
+//			throw new EmptyFieldsException("UserEmail must be Valid!");
+//		}
+//
+//		if (user.getUsername() == null) {
+//			throw new EmptyFieldsException("UserName must be specified!");
+//		}
+//		if (user.getAvatar() == null || user.getAvatar().isEmpty()) {
+//			throw new EmptyFieldsException("UserAvatar must be specified!");
+//		}
+//		if (user.getRole() == null) {
+//			throw new EmptyFieldsException("UserRole must be specified!");
+//		}
+//
+//		try {
+//			UserRole.valueOf(user.getRole());
+//		} catch (Exception e) {
+//			throw new EmptyFieldsException("UserRole must be PLAYER/MANGAER/ADMIN");
+//		}
+//
+//	}
 
-		if (user.getUserId().getEmail() == null || user.getUserId().getEmail().isEmpty()) {
-			throw new EmptyFieldsException("UserEmail must be specified!");
-		} else if (!validEmail(user.getUserId().getEmail())) {
-			throw new EmptyFieldsException("UserEmail must be Valid!");
-		}
-
-		if (user.getUsername() == null) {
-			throw new EmptyFieldsException("UserName must be specified!");
-		}
-		if (user.getAvatar() == null || user.getAvatar().isEmpty()) {
-			throw new EmptyFieldsException("UserAvatar must be specified!");
-		}
-		if (user.getRole() == null) {
-			throw new EmptyFieldsException("UserRole must be specified!");
-		}
-
-		try {
-			UserRole.valueOf(user.getRole());
-		} catch (Exception e) {
-			throw new EmptyFieldsException("UserRole must be PLAYER/MANGAER/ADMIN");
-		}
-
-	}
-
-	private boolean validEmail(String email) {
-		// TODO Auto-generated method stub
-		String regex = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-		Pattern pat = Pattern.compile(regex);
-		return pat.matcher(email).matches();
-	}
+//	private boolean validEmail(String email) {
+//		// TODO Auto-generated method stub
+//		String regex = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+//		Pattern pat = Pattern.compile(regex);
+//		return pat.matcher(email).matches();
+//	}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -134,7 +139,7 @@ public class UserServiceJpa implements UsersService {
 			UserEntity existing = existingOptional.get();
 			// update collection and return update
 
-			checkUserBoundary(update);
+			validator.isValidUser(update);
 			existing.setUsername(update.getUsername());
 			existing.setAvatar(update.getAvatar());
 			existing.setRole(UserRole.valueOf(update.getRole()));

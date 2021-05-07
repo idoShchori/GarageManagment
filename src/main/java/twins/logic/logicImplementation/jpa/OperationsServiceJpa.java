@@ -26,6 +26,7 @@ public class OperationsServiceJpa implements OperationsService {
 
 	private OperationsDao operationsDao;
 	private EntityConverter entityConverter;
+	private Validator validator;
 	private String springApplicatioName;
 
 	@Value("${spring.application.name:defaultName}")
@@ -43,35 +44,42 @@ public class OperationsServiceJpa implements OperationsService {
 		this.entityConverter = entityConverter;
 	}
 
-	public boolean validateOperationFields(OperationBoundary operation) {
-		UserId userId = operation.getInvokedBy().getUserId();
-		if (userId == null)
-			throw new EmptyFieldsException("An operation must be performed by a valid user");
-
-		if (userId.getEmail() == null)
-			throw new EmptyFieldsException("Invalid user's `Email`");
-		
-		if (userId.getSpace() == null)
-			throw new EmptyFieldsException("Invalid user's `Email` or `Space`");
-
-		ItemIdBoundary itemId = operation.getItem().getItemId();
-		if (itemId == null)
-			throw new EmptyFieldsException("An operation must be performed on a valid item");
-
-		if (itemId.getId() == null || itemId.getSpace() == null)
-			throw new EmptyFieldsException("Invalid item's `Id` or `Space`");
-
-		if (operation.getType() == null)
-			throw new EmptyFieldsException("Type of operation must be specified");
-		
-		return true;
+	@Autowired
+	public void setValidator(Validator validator) {
+		this.validator = validator;
 	}
+
+//	public boolean validateOperationFields(OperationBoundary operation) {
+//		UserId userId = operation.getInvokedBy().getUserId();
+//		if (userId == null)
+//			throw new EmptyFieldsException("An operation must be performed by a valid user");
+//
+//		if (userId.getEmail() == null || userId.getEmail().isEmpty())
+//			throw new EmptyFieldsException("Invalid user's `Email`");
+//		else if (validem)
+//		
+//		if (userId.getSpace() == null || userId.getSpace().isEmpty())
+//			throw new EmptyFieldsException("Invalid user's `Email` or `Space`");
+//
+//		ItemIdBoundary itemId = operation.getItem().getItemId();
+//		if (itemId == null)
+//			throw new EmptyFieldsException("An operation must be performed on a valid item");
+//
+//		if (itemId.getId() == null || itemId.getSpace() == null ||
+//				itemId.getId().isEmpty() || itemId.getSpace().isEmpty())
+//			throw new EmptyFieldsException("Invalid item's `Id` or `Space`");
+//
+//		if (operation.getType() == null || operation.getType().isEmpty())
+//			throw new EmptyFieldsException("Type of operation must be specified");
+//		
+//		return true;
+//	}
 
 	@Override
 	@Transactional(readOnly = false)
 	public Object invokeOperation(OperationBoundary operation) {
-		if (!validateOperationFields(operation))
-			return null;
+
+		validator.isValidOperation(operation);
 
 		OperationEntity entity = this.entityConverter.toEntity(operation);
 
@@ -87,8 +95,8 @@ public class OperationsServiceJpa implements OperationsService {
 	@Override
 	@Transactional(readOnly = false)
 	public OperationBoundary invokeAsynchronous(OperationBoundary operation) {
-		if (!validateOperationFields(operation))
-			return null;
+
+		validator.isValidOperation(operation);
 
 		OperationEntity entity = this.entityConverter.toEntity(operation);
 
