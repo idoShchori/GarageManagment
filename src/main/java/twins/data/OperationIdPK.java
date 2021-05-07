@@ -6,12 +6,11 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class OperationIdPK implements Serializable {
-	
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -628027276963954292L;
-	
+	private static final long serialVersionUID = 1L;
 	private String operationSpace;
 	private String operationId;
 	
