@@ -45,7 +45,7 @@ public class ItemEntity {
 		return itemIdPK;
 	}
 
-	public void setItemIdPK(ItemIdPK itemIdPK) {
+	public void setItemId(ItemIdPK itemIdPK) {
 		this.itemIdPK = itemIdPK;
 	}
 
@@ -65,7 +65,7 @@ public class ItemEntity {
 		this.name = name;
 	}
 
-	public Boolean getActive() {
+	public Boolean isActive() {
 		return active;
 	}
 
@@ -139,6 +139,11 @@ public class ItemEntity {
 
 	public void setParent(ItemEntity parent) {
 		this.parent = parent;
+	}
+
+	public void addItem(ItemEntity child) {
+		children.add(child);
+		child.setParent(this);
 	}
 
 	@Override

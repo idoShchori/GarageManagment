@@ -202,7 +202,7 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 				() -> new ItemNotFoundException("could not find parent item by space:" + itemSpace + " id:" + itemId));
 		
 		return parent
-				.getChildrens()
+				.getChildren()
 				.stream()
 				.map(this.entityConverter::toBoundary)
 				.collect(Collectors.toList());
