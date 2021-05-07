@@ -1,7 +1,5 @@
 package twins.logic.logicImplementation.jpa;
 
-
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,9 +47,13 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 	@Override
 	@Transactional(readOnly = false) // The default value
 	public ItemBoundary createItem(String userSpace, String userEmail, ItemBoundary item) {
-		if (item.getCreatedBy() != null && item.getLocation() != null && item.getName() != null
-				&& !item.getName().isEmpty() && item.getType() != null && !item.getType().isEmpty()
-				&& userSpace!= null && !userSpace.isEmpty() && userEmail!=null && !userEmail.isEmpty()) {
+		
+		// TODO:	extract the user details from database, and create a new UserEntity, and set item's
+		//			createdBy attribute to be that UserEntity
+		
+		if (item.getLocation() != null && item.getName() != null
+				&& !item.getName().isEmpty() && item.getType() != null && !item.getType().isEmpty() && userSpace != null
+				&& !userSpace.isEmpty() && userEmail != null && !userEmail.isEmpty()) {
 
 			ItemEntity entity = this.entityConverter.toEntity(item);
 			entity.setUserEmail(userEmail);
@@ -71,12 +73,11 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 	public ItemBoundary updateItem(String userSpace, String userEmail, String itemSpace, String itemId,
 			ItemBoundary update) {
 		// TODO: check if user exist
-		
+
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
-		
-		Optional<ItemEntity> existingOptional = this.itemsDao
-													.findById(id);
-		
+
+		Optional<ItemEntity> existingOptional = this.itemsDao.findById(id);
+
 		if (existingOptional.isPresent()) {
 			boolean dirty = false;
 
@@ -128,7 +129,7 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 	@Transactional(readOnly = true)
 	public List<ItemBoundary> getAllItems(String userSpace, String userEmail) {
 		// TODO: find specific user
-		
+
 		Iterable<ItemEntity> allEntities = this.itemsDao.findAll();
 		return StreamSupport.stream(allEntities.spliterator(), false)
 				.filter(e -> e.getUserSpace().equals(userSpace) && e.getUserEmail().equals(userEmail))
@@ -139,11 +140,10 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 	@Transactional(readOnly = true)
 	public ItemBoundary getSpecificItem(String userSpace, String userEmail, String itemSpace, String itemId) {
 		// TODO: check if user exist
-		
+
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
-		
-		Optional<ItemEntity> existingOptional = this.itemsDao
-													.findById(id);
+
+		Optional<ItemEntity> existingOptional = this.itemsDao.findById(id);
 		if (existingOptional.isPresent()) {
 			ItemEntity existing = existingOptional.get();
 			ItemBoundary rv = this.entityConverter.toBoundary(existing);
@@ -166,64 +166,53 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 
 	@Override
 	@Transactional(readOnly = false) // The default value
-	public void addChildToParent(String userSpace, String userEmail, String itemSpace, String itemId, ItemIdBoundary item) {
+	public void addChildToParent(String userSpace, String userEmail, String itemSpace, String itemId,
+			ItemIdBoundary item) {
 		// TODO: check if user exist
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
 
-		ItemEntity parent = this.itemsDao
-				.findById(id)
-				.orElseThrow(
+		ItemEntity parent = this.itemsDao.findById(id).orElseThrow(
 				() -> new ItemNotFoundException("could not find parent item by space:" + itemSpace + " id:" + itemId));
 
 		ItemIdPK inputChildId = new ItemIdPK(item.getSpace(), item.getId());
-		
-		ItemEntity child = this.itemsDao
-				.findById(inputChildId)
-				.orElseThrow(
-				() ->  new ItemNotFoundException("could not find child item by space:" + inputChildId.getSpace() + " id:" + inputChildId.getId()));
-		
+
+		ItemEntity child = this.itemsDao.findById(inputChildId).orElseThrow(() -> new ItemNotFoundException(
+				"could not find child item by space:" + inputChildId.getSpace() + " id:" + inputChildId.getId()));
+
 		parent.addItem(child);
-		
+
 		this.itemsDao.save(parent);
 		this.itemsDao.save(child);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true) // The default value
 	public List<ItemBoundary> getAllChildren(String userSpace, String userEmail, String itemSpace, String itemId) {
 		// TODO: check if user exist
-		
+
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
-		
-		ItemEntity parent = this.itemsDao
-				.findById(id)
-				.orElseThrow(
+
+		ItemEntity parent = this.itemsDao.findById(id).orElseThrow(
 				() -> new ItemNotFoundException("could not find parent item by space:" + itemSpace + " id:" + itemId));
-		
-		return parent
-				.getChildren()
-				.stream()
-				.map(this.entityConverter::toBoundary)
-				.collect(Collectors.toList());
+
+		return parent.getChildren().stream().map(this.entityConverter::toBoundary).collect(Collectors.toList());
 	}
 
 	@Override
 	@Transactional(readOnly = true) // The default value
 	public List<ItemBoundary> getAllParents(String childSpace, String childId) {
-		
+
 		ItemIdPK id = new ItemIdPK(childSpace, childId);
-		
-		ItemEntity child = this.itemsDao
-				.findById(id)
-				.orElseThrow(
-				() -> new ItemNotFoundException("could not find parent item by space:" + childSpace + " id:" + childId));
-		
+
+		ItemEntity child = this.itemsDao.findById(id).orElseThrow(() -> new ItemNotFoundException(
+				"could not find parent item by space:" + childSpace + " id:" + childId));
+
 		List<ItemBoundary> parents = new ArrayList<ItemBoundary>();
 		parents.add(entityConverter.toBoundary(child.getParent()));
 
 		return parents;
-		
+
 //		TODO: implementation of manyToMany relationship
 //		if (child.getParent() != null) {
 //			return Optional.of(
