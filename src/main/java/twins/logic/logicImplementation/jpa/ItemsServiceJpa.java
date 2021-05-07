@@ -137,7 +137,7 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 
 		Iterable<ItemEntity> allEntities = this.itemsDao.findAll();
 		return StreamSupport.stream(allEntities.spliterator(), false)
-				.filter(e -> e.getUserSpace().equals(userSpace) && e.getUserEmail().equals(userEmail))
+//				.filter(e -> e.getUserSpace().equals(userSpace) && e.getUserEmail().equals(userEmail))
 				.map(this.entityConverter::toBoundary).collect(Collectors.toList());
 	}
 
