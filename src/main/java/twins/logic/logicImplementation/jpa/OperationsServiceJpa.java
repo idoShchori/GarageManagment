@@ -2,6 +2,7 @@ package twins.logic.logicImplementation.jpa;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -14,7 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import twins.data.OperationEntity;
 import twins.data.OperationIdPK;
+import twins.data.UserEntity;
+import twins.data.UserIdPK;
+import twins.data.UserRole;
 import twins.data.dao.OperationsDao;
+import twins.data.dao.UsersDao;
 import twins.logic.OperationsService;
 import twins.logic.logicImplementation.EntityConverter;
 import twins.logic.logicImplementation.Validator;
@@ -24,6 +29,7 @@ import twins.operations.OperationBoundary;
 public class OperationsServiceJpa implements OperationsService {
 
 	private OperationsDao operationsDao;
+	private UsersDao userDao;
 	private EntityConverter entityConverter;
 	private Validator validator;
 	private String springApplicatioName;
@@ -37,6 +43,11 @@ public class OperationsServiceJpa implements OperationsService {
 	public void setOperationsDao(OperationsDao operationsDao) {
 		this.operationsDao = operationsDao;
 	}
+	
+	@Autowired
+	public void setUsersDao(UsersDao userDao) {
+		this.userDao = userDao;
+	}
 
 	@Autowired
 	public void setEntityConverter(EntityConverter entityConverter) {
@@ -47,6 +58,17 @@ public class OperationsServiceJpa implements OperationsService {
 	public void setValidator(Validator validator) {
 		this.validator = validator;
 	}
+	
+	private boolean isUserRole(UserIdPK id, UserRole role) {
+		Optional<UserEntity> optionalUser = this.userDao.findById(id);
+		
+		if (!optionalUser.isPresent())
+			throw new RuntimeException("User does not exist");
+		
+		UserEntity user = optionalUser.get();
+		
+		return user.getRole() == role;
+	}
 
 	@Override
 	@Transactional(readOnly = false)
@@ -55,6 +77,10 @@ public class OperationsServiceJpa implements OperationsService {
 		validator.isValidOperation(operation);
 
 		OperationEntity entity = this.entityConverter.toEntity(operation);
+		
+		UserIdPK id = new UserIdPK(entity.getUserSpace(), entity.getUserEmail());
+		if (this.isUserRole(id, UserRole.PLAYER))
+			throw new RuntimeException("User's role is not player");
 
 		OperationIdPK pk = new OperationIdPK(this.springApplicatioName, UUID.randomUUID().toString());
 		entity.setOperationIdPK(pk);
@@ -72,6 +98,10 @@ public class OperationsServiceJpa implements OperationsService {
 		validator.isValidOperation(operation);
 
 		OperationEntity entity = this.entityConverter.toEntity(operation);
+		
+		UserIdPK id = new UserIdPK(entity.getUserSpace(), entity.getUserEmail());
+		if (this.isUserRole(id, UserRole.PLAYER))
+			throw new RuntimeException("User's role is not player");
 
 		OperationIdPK pk = new OperationIdPK(this.springApplicatioName, UUID.randomUUID().toString());
 		entity.setOperationIdPK(pk);
@@ -100,7 +130,10 @@ public class OperationsServiceJpa implements OperationsService {
 	
 	@Override
 	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail, int size, int page) {
-		// TODO: validate that `UserRole` == ADMIN, if not -> throws an exception
+		
+		UserIdPK id = new UserIdPK(adminSpace, adminEmail);
+		if (this.isUserRole(id, UserRole.ADMIN))
+			throw new RuntimeException("User's role is not player");
 		
 		return this.operationsDao
 				.findAll(PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "operationIdPK"))
@@ -114,7 +147,9 @@ public class OperationsServiceJpa implements OperationsService {
 	@Transactional(readOnly = false)
 	public void deleteAllOperations(String adminSpace, String adminEmail) {
 
-		// TODO: validate that `UserRole` == ADMIN, if not -> throws an exception
+		UserIdPK id = new UserIdPK(adminSpace, adminEmail);
+		if (this.isUserRole(id, UserRole.ADMIN))
+			throw new RuntimeException("User's role is not player");
 
 		this.operationsDao.deleteAll();
 	}
