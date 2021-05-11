@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -211,40 +210,61 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 
 	@Override
 	@Transactional(readOnly = true) // The default value
+	@Deprecated
 	public List<ItemBoundary> getAllChildren(String userSpace, String userEmail, String itemSpace, String itemId) {
+		throw new RuntimeException("Deprecated method");
+//		// TODO: check if user exist
+//
+//		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
+//
+//		ItemEntity parent = this.itemsDao.findById(id).orElseThrow(
+//				() -> new ItemNotFoundException("could not find parent item by space:" + itemSpace + " id:" + itemId));
+//
+//		return parent.getChildren().stream().map(this.entityConverter::toBoundary).collect(Collectors.toList());
+	}
+	
+	@Override
+	public List<ItemBoundary> getAllChildren(String userSpace, String userEmail, String itemSpace, String itemId,
+			int size, int page) {
 		// TODO: check if user exist
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
-
-		ItemEntity parent = this.itemsDao.findById(id).orElseThrow(
-				() -> new ItemNotFoundException("could not find parent item by space:" + itemSpace + " id:" + itemId));
-
-		return parent.getChildren().stream().map(this.entityConverter::toBoundary).collect(Collectors.toList());
+		
+		return this.itemsDao
+				.findAllByParent_itemIdPK(id,
+						PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
+				.stream()
+				.map(this.entityConverter::toBoundary)
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	@Transactional(readOnly = true) // The default value
+	@Deprecated
 	public List<ItemBoundary> getAllParents(String childSpace, String childId) {
+		throw new RuntimeException("Deprecated method");
+
+//		ItemIdPK id = new ItemIdPK(childSpace, childId);
+//
+//		ItemEntity child = this.itemsDao.findById(id).orElseThrow(() -> new ItemNotFoundException(
+//				"could not find parent item by space:" + childSpace + " id:" + childId));
+//
+//		List<ItemBoundary> parents = new ArrayList<ItemBoundary>();
+//		parents.add(entityConverter.toBoundary(child.getParent()));
+//
+//		return parents;
+	}
+
+	@Override
+	public List<ItemBoundary> getAllParents(String childSpace, String childId, int size, int page) {
 
 		ItemIdPK id = new ItemIdPK(childSpace, childId);
-
-		ItemEntity child = this.itemsDao.findById(id).orElseThrow(() -> new ItemNotFoundException(
-				"could not find parent item by space:" + childSpace + " id:" + childId));
-
-		List<ItemBoundary> parents = new ArrayList<ItemBoundary>();
-		parents.add(entityConverter.toBoundary(child.getParent()));
-
-		return parents;
-
-//		TODO: implementation of manyToMany relationship
-//		if (child.getParent() != null) {
-//			return Optional.of(
-//					child.getParent()
-//					.stream()
-//					.map(this.entityConverter::toBoundary)
-//					.collect(Collectors.toList()));
-//		} else {
-//			return Optional.empty();
-//		}
+		
+		return this.itemsDao
+				.findAllByChildren_itemIdPK(id,
+						PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
+				.stream()
+				.map(this.entityConverter::toBoundary)
+				.collect(Collectors.toList());
 	}
 }

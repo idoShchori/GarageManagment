@@ -62,6 +62,8 @@ public class ItemConrtoller {
 
 	}
 
+	// invoke url, either with no optional parameters : /twins/items/{userSpace}/{userEmail}
+	//             		  or with optional parameters : /twins/items/{userSpace}/{userEmail}?size=20&page=2
 	@RequestMapping(
 			path = "/twins/items/{userSpace}/{userEmail}",
 			method = RequestMethod.GET,

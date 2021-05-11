@@ -10,7 +10,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.web.client.RestTemplate;

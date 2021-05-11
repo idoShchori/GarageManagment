@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -40,6 +41,9 @@ public class ItemsRelationshipController {
 		}
 		
 		// operation for getting all items of item of specific user
+
+		// invoke url, either with no optional parameters : /twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}/children
+		//             		  or with optional parameters : /twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}/children?size=20&page=2
 		@RequestMapping(path ="/twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}/children",
 				method = RequestMethod.GET,
 				produces = MediaType.APPLICATION_JSON_VALUE)
@@ -47,13 +51,17 @@ public class ItemsRelationshipController {
 				@PathVariable("userSpace") String userSpace,
 				@PathVariable("userEmail") String userEmail,
 				@PathVariable("itemSpace") String itemSpace,
-				@PathVariable("itemId") String itemId) {
+				@PathVariable("itemId") String itemId,
+				@RequestParam(name="size", required = false, defaultValue = "20") int size,
+				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
 			return this.updateItemService
-					.getAllChildren(userSpace, userEmail, itemSpace, itemId)
+					.getAllChildren(userSpace, userEmail, itemSpace, itemId, size, page)
 				.toArray(new ItemBoundary[0]);
 		}
 		
 		// operation for getting parent of item of specific user
+		// invoke url, either with no optional parameters : /twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}/parents
+		//             		  or with optional parameters : /twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}/parents?size=20&page=2
 		@RequestMapping(path ="/twins/items/{userSpace}/{userEmail}/{itemSpace}/{itemId}/parents",
 				method = RequestMethod.GET,
 				produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,8 +69,10 @@ public class ItemsRelationshipController {
 				@PathVariable("userSpace") String userSpace,
 				@PathVariable("userEmail") String userEmail,
 				@PathVariable("itemSpace") String itemSpace,
-				@PathVariable("itemId") String itemId) {
-			List<ItemBoundary> item = this.updateItemService.getAllParents(itemSpace, itemId);
+				@PathVariable("itemId") String itemId,
+				@RequestParam(name="size", required = false, defaultValue = "20") int size,
+				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
+			List<ItemBoundary> item = this.updateItemService.getAllParents(itemSpace, itemId, size, page);
 			return item.toArray(new ItemBoundary[0]);
 		}
 	}

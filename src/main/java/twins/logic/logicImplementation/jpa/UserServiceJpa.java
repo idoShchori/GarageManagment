@@ -17,7 +17,6 @@ import twins.data.UserIdPK;
 import twins.data.UserRole;
 import twins.data.dao.UsersDao;
 import twins.logic.UsersService;
-import twins.logic.Exceptions.EmptyFieldsException;
 import twins.logic.Exceptions.UserAccessDeniedException;
 import twins.logic.Exceptions.UserNotFoundException;
 import twins.logic.logicImplementation.EntityConverter;
