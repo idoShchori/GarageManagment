@@ -102,4 +102,10 @@ public class OperationsServiceMockup implements OperationsService {
 		this.operations.clear();
 	}
 
+	@Override
+	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail, int size, int page) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

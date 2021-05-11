@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import twins.logic.ItemsService;
@@ -14,8 +15,6 @@ import twins.logic.OperationsService;
 import twins.logic.UsersService;
 import twins.operations.OperationBoundary;
 import twins.users.UserBoundary;
-
-
 
 
 @RestController
@@ -27,8 +26,7 @@ public class AdminController {
 	
 	
 	@Autowired
-	public AdminController(UsersService userService,OperationsService operationService,
-			ItemsService itemService ) {
+	public AdminController(UsersService userService, OperationsService operationService, ItemsService itemService) {
 		this.userService = userService;
 		this.operationService = operationService;
 		this.itemService = itemService;
@@ -36,7 +34,8 @@ public class AdminController {
 	@RequestMapping(
 			path = "/twins/admin/users/{userSpace}/{userEmail}",
 			method = RequestMethod.DELETE)
-	public void deleteAllUsersInSpace(@PathVariable("userSpace") String space,
+	public void deleteAllUsersInSpace(
+			@PathVariable("userSpace") String space,
 			@PathVariable("userEmail") String email) {
 		// STUB IMPLEMENTATION
 		System.out.println("all users deleted");
@@ -46,7 +45,8 @@ public class AdminController {
 	@RequestMapping(
 			path = "/twins/admin/items/{userSpace}/{userEmail}",
 			method = RequestMethod.DELETE)
-	public void deleteAllItemsInSpace(@PathVariable("userSpace") String space,
+	public void deleteAllItemsInSpace(
+			@PathVariable("userSpace") String space,
 			@PathVariable("userEmail") String email) {
 		// STUB IMPLEMENTATION.
 		System.out.println("all items deleted");
@@ -56,7 +56,8 @@ public class AdminController {
 	@RequestMapping(
 			path = "/twins/admin/operations/{userSpace}/{userEmail}",
 			method = RequestMethod.DELETE)
-	public void deleteAllOperationsInSpace(@PathVariable("userSpace") String space,
+	public void deleteAllOperationsInSpace(
+			@PathVariable("userSpace") String space,
 			@PathVariable("userEmail") String email) {
 		// STUB IMPLEMENTATION.
 		System.out.println("all operations deleted");
@@ -67,28 +68,30 @@ public class AdminController {
 			path = "/twins/admin/users/{userSpace}/{userEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserBoundary[] exportAllUsers(@PathVariable("userSpace") String space,
+	public UserBoundary[] exportAllUsers(
+			@PathVariable("userSpace") String space,
 			@PathVariable("userEmail") String email) {
 		return this.userService.getAllUsers(space, email).toArray(new UserBoundary[0]);
 	}
 	
 
+	// invoke url, either with no optional parameters : /twins/admin/operations/{userSpace}/{userEmail}
+	//             		  or with optional parameters : /twins/admin/operations/{userSpace}/{userEmail}?size=20&page=2
 	@RequestMapping(
 			path = "/twins/admin/operations/{userSpace}/{userEmail}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public OperationBoundary[] exportAllOperations(@PathVariable("userSpace") String space,
-			@PathVariable("userEmail") String email) {
+	public OperationBoundary[] exportAllOperations(
+			@PathVariable("userSpace") String space,
+			@PathVariable("userEmail") String email,
+			@RequestParam(name="size", required = false, defaultValue = "20") int size,
+			@RequestParam(name="page", required = false, defaultValue = "0") int page) {
 		
 		List<OperationBoundary> allOperations = 
 				this.operationService
-				.getAllOperations(space,email);
+				.getAllOperations(space, email, size, page);
 		
 		return allOperations
 				.toArray(new OperationBoundary[0]);
 	}
-	
-	//TODO: get Items of all USERS
-
-
 }

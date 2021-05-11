@@ -4,10 +4,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,32 +48,6 @@ public class OperationsServiceJpa implements OperationsService {
 		this.validator = validator;
 	}
 
-//	public boolean validateOperationFields(OperationBoundary operation) {
-//		UserId userId = operation.getInvokedBy().getUserId();
-//		if (userId == null)
-//			throw new EmptyFieldsException("An operation must be performed by a valid user");
-//
-//		if (userId.getEmail() == null || userId.getEmail().isEmpty())
-//			throw new EmptyFieldsException("Invalid user's `Email`");
-//		else if (validem)
-//		
-//		if (userId.getSpace() == null || userId.getSpace().isEmpty())
-//			throw new EmptyFieldsException("Invalid user's `Email` or `Space`");
-//
-//		ItemIdBoundary itemId = operation.getItem().getItemId();
-//		if (itemId == null)
-//			throw new EmptyFieldsException("An operation must be performed on a valid item");
-//
-//		if (itemId.getId() == null || itemId.getSpace() == null ||
-//				itemId.getId().isEmpty() || itemId.getSpace().isEmpty())
-//			throw new EmptyFieldsException("Invalid item's `Id` or `Space`");
-//
-//		if (operation.getType() == null || operation.getType().isEmpty())
-//			throw new EmptyFieldsException("Type of operation must be specified");
-//		
-//		return true;
-//	}
-
 	@Override
 	@Transactional(readOnly = false)
 	public Object invokeOperation(OperationBoundary operation) {
@@ -109,16 +84,30 @@ public class OperationsServiceJpa implements OperationsService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated
 	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail) {
-
+		throw new RuntimeException("Deprecated method");
+		
+//		// TODO: validate that `UserRole` == ADMIN, if not -> throws an exception
+//
+//		Iterable<OperationEntity> allEntities = this.operationsDao.findAll();
+//
+//		return StreamSupport.stream(allEntities.spliterator(), false).map(this.entityConverter::toBoundary) // convert
+//																											// to
+//																											// Stream<OperationBoundary>
+//				.collect(Collectors.toList()); // convert to List<OperationBoundary>
+	}
+	
+	@Override
+	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail, int size, int page) {
 		// TODO: validate that `UserRole` == ADMIN, if not -> throws an exception
-
-		Iterable<OperationEntity> allEntities = this.operationsDao.findAll();
-
-		return StreamSupport.stream(allEntities.spliterator(), false).map(this.entityConverter::toBoundary) // convert
-																											// to
-																											// Stream<OperationBoundary>
-				.collect(Collectors.toList()); // convert to List<OperationBoundary>
+		
+		return this.operationsDao
+				.findAll(PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "operationIdPK"))
+				.getContent()
+				.stream()
+				.map(this.entityConverter::toBoundary)
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -129,5 +118,4 @@ public class OperationsServiceJpa implements OperationsService {
 
 		this.operationsDao.deleteAll();
 	}
-
 }
