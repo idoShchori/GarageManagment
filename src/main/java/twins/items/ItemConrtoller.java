@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import twins.logic.ItemsService;
@@ -67,9 +68,12 @@ public class ItemConrtoller {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ItemBoundary[] getAllItems(
 			@PathVariable("userSpace") String userSpace,
-			@PathVariable("userEmail") String email) {
+			@PathVariable("userEmail") String email,
+			@RequestParam(name="size", required = false, defaultValue = "20") int size,
+			@RequestParam(name="page", required = false, defaultValue = "0") int page) {
 
-		return itemService.getAllItems(userSpace, email).toArray(new ItemBoundary[0]);
+		return itemService.getAllItems(userSpace, email, size, page)
+							.toArray(new ItemBoundary[0]);
 
 	}
 	

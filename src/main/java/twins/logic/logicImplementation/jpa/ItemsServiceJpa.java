@@ -10,6 +10,8 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,14 +20,14 @@ import twins.data.ItemIdPK;
 import twins.data.dao.ItemsDao;
 import twins.items.ItemBoundary;
 import twins.items.ItemIdBoundary;
-import twins.logic.UpdatedItemsService;
+import twins.logic.ItemsRelationshipService;
 import twins.logic.Exceptions.EmptyFieldsException;
 import twins.logic.Exceptions.ItemNotFoundException;
 import twins.logic.logicImplementation.EntityConverter;
 import twins.logic.logicImplementation.Validator;
 
 @Service
-public class ItemsServiceJpa implements UpdatedItemsService {
+public class ItemsServiceJpa implements ItemsRelationshipService {
 	private ItemsDao itemsDao;
 	private EntityConverter entityConverter;
 	private Validator validator;
@@ -58,20 +60,24 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 		// TODO: extract the user details from database, and create a new UserEntity,
 		// and set item's
 		// createdBy attribute to be that UserEntity
+		
+		if (!validator.isValidEmail(userEmail))
+			throw new EmptyFieldsException("User email is illegal");
+		
+		if (userSpace == null || userSpace.isEmpty())
+			throw new EmptyFieldsException("User space must be specified");
+		
+		if (!validator.isValidItem(item))
+			throw new EmptyFieldsException("Item has illegal attributes");
 
-		if (validator.isValidItem(item) && validator.isValidEmail(userEmail) && userSpace != null && !userSpace.isEmpty()) {
-
-			ItemEntity entity = this.entityConverter.toEntity(item);
-			entity.setUserEmail(userEmail);
-			entity.setUserSpace(userSpace);
-			entity.setCreatedTimestamp(new Date());
-			entity.setItemId(new ItemIdPK(springApplicatioName, UUID.randomUUID().toString()));
-			this.itemsDao.save(entity);
-			return this.entityConverter.toBoundary(entity);
-
-		} else {
-			throw new EmptyFieldsException("could not create item -eror in one or more fileds");// NullPointerException
-		}
+		ItemEntity entity = this.entityConverter.toEntity(item);
+		entity.setUserEmail(userEmail);
+		entity.setUserSpace(userSpace);
+		entity.setCreatedTimestamp(new Date());
+		entity.setItemId(new ItemIdPK(springApplicatioName, UUID.randomUUID().toString()));
+		this.itemsDao.save(entity);
+		
+		return this.entityConverter.toBoundary(entity);
 	}
 
 	@Override
@@ -133,13 +139,24 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated
 	public List<ItemBoundary> getAllItems(String userSpace, String userEmail) {
-		// TODO: find specific user
-
-		Iterable<ItemEntity> allEntities = this.itemsDao.findAll();
-		return StreamSupport.stream(allEntities.spliterator(), false)
-//				.filter(e -> e.getUserSpace().equals(userSpace) && e.getUserEmail().equals(userEmail))
-				.map(this.entityConverter::toBoundary).collect(Collectors.toList());
+		throw new RuntimeException("Deprecated method");
+//		Iterable<ItemEntity> allEntities = this.itemsDao.findAll();
+//		return StreamSupport.stream(allEntities.spliterator(), false)
+////				.filter(e -> e.getUserSpace().equals(userSpace) && e.getUserEmail().equals(userEmail))
+//				.map(this.entityConverter::toBoundary).collect(Collectors.toList());
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<ItemBoundary> getAllItems(String userSpace, String userEmail, int size, int page) {
+		return this.itemsDao
+				.findAll(PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
+				.getContent()
+				.stream()
+				.map(this.entityConverter::toBoundary)
+				.collect(Collectors.toList());
 	}
 
 	@Override

@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import twins.logic.UpdatedItemsService;
+import twins.logic.ItemsRelationshipService;
 
 
 
 @RestController
 public class ItemsRelationshipController {
-	private UpdatedItemsService updateItemService;
+	private ItemsRelationshipService updateItemService;
 
 	@Autowired
-	public ItemsRelationshipController(UpdatedItemsService updateItemService) {
+	public ItemsRelationshipController(ItemsRelationshipService updateItemService) {
 		super();
 		this.updateItemService = updateItemService;
 	}

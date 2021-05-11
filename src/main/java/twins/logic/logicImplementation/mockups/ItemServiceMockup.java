@@ -140,4 +140,10 @@ public class ItemServiceMockup implements ItemsService{
 		this.items.clear();
 	}
 
+	@Override
+	public List<ItemBoundary> getAllItems(String userSpace, String userEmail, int size, int page) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
