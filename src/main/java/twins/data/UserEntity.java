@@ -17,6 +17,7 @@ import javax.persistence.Table;
 @Table(name = "USERS")
 public class UserEntity {
 
+	@EmbeddedId
 	private UserIdPK userId;
 
 	private UserRole role;
@@ -26,7 +27,7 @@ public class UserEntity {
 	public UserEntity() {
 	}
 
-	@EmbeddedId
+	
 	public UserIdPK getUserId() {
 		return userId;
 	}

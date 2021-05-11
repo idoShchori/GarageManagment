@@ -1,6 +1,8 @@
-package twins.logic.logicImplementation.jpa;
+package twins.logic.logicImplementation;
 
 import java.util.regex.Pattern;
+
+import org.springframework.stereotype.Component;
 
 import twins.data.UserRole;
 import twins.items.ItemBoundary;
@@ -10,7 +12,11 @@ import twins.operations.OperationBoundary;
 import twins.users.UserBoundary;
 import twins.users.UserId;
 
+@Component
 public class Validator implements Validatorable {
+	
+	public Validator() {
+	}
 
 	@Override
 	public boolean isValidEmail(String email) {
@@ -42,7 +48,7 @@ public class Validator implements Validatorable {
 		} catch (Exception e) {
 			throw new EmptyFieldsException("UserRole must be PLAYER/MANGAER/ADMIN");
 		}
-		
+
 		return true;
 	}
 
@@ -60,7 +66,7 @@ public class Validator implements Validatorable {
 	public boolean isValidUserId(UserId uid) {
 		if (uid.getEmail() == null || uid.getEmail().isEmpty()) {
 			throw new EmptyFieldsException("UserEmail must be specified!");
-			
+
 		} else if (!isValidEmail(uid.getEmail())) {
 			throw new EmptyFieldsException("UserEmail must be Valid!");
 		}
@@ -70,9 +76,9 @@ public class Validator implements Validatorable {
 	@Override
 	public boolean isValidOperation(OperationBoundary operation) {
 		UserId userId = operation.getInvokedBy().getUserId();
-			
+
 		isValidUserId(userId);
-		
+
 		if (userId.getSpace() == null || userId.getSpace().isEmpty())
 			throw new EmptyFieldsException("Invalid user's `Email` or `Space`");
 
@@ -81,22 +87,22 @@ public class Validator implements Validatorable {
 
 		if (operation.getType() == null || operation.getType().isEmpty())
 			throw new EmptyFieldsException("Type of operation must be specified");
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public boolean isValidItem(ItemBoundary item) {
 		if (item.getLocation() == null)
 			throw new EmptyFieldsException("Item must have a location");
-		
+
 		if (item.getName() == null || item.getName().isEmpty())
 			throw new EmptyFieldsException("Item's name is empty");
-		
+
 		if (item.getType() == null || item.getType().isEmpty())
 			throw new EmptyFieldsException("Item's type is empty");
-		
-		return true;		
+
+		return true;
 	}
 
 	@Override
@@ -104,10 +110,9 @@ public class Validator implements Validatorable {
 		if (iid == null)
 			throw new EmptyFieldsException("An operation must be performed on a valid item");
 
-		if (iid.getId() == null || iid.getSpace() == null ||
-				iid.getId().isEmpty() || iid.getSpace().isEmpty())
+		if (iid.getId() == null || iid.getSpace() == null || iid.getId().isEmpty() || iid.getSpace().isEmpty())
 			throw new EmptyFieldsException("Invalid item's `Id` or `Space`");
-		
+
 		return true;
 	}
 

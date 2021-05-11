@@ -21,6 +21,7 @@ import twins.logic.Exceptions.EmptyFieldsException;
 import twins.logic.Exceptions.UserAccessDeniedException;
 import twins.logic.Exceptions.UserNotFoundException;
 import twins.logic.logicImplementation.EntityConverter;
+import twins.logic.logicImplementation.Validator;
 import twins.users.UserBoundary;
 
 @Service

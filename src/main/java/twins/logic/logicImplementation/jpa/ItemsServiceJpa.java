@@ -22,6 +22,7 @@ import twins.logic.UpdatedItemsService;
 import twins.logic.Exceptions.EmptyFieldsException;
 import twins.logic.Exceptions.ItemNotFoundException;
 import twins.logic.logicImplementation.EntityConverter;
+import twins.logic.logicImplementation.Validator;
 
 @Service
 public class ItemsServiceJpa implements UpdatedItemsService {

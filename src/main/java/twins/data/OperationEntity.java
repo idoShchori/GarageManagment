@@ -19,19 +19,24 @@ import javax.persistence.TemporalType;
 @Table(name = "OPERATIONS")
 public class OperationEntity {
 
+	@EmbeddedId
 	private OperationIdPK operationIdPK;
 	private String itemSpace;
 	private String itemId;
 	private String userSpace;
 	private String userEmail;
 	private String type;
+	
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdTimestamp;
+	
+	@Lob
 	private String operationAttributes;
 
 	public OperationEntity() {
 	}
 
-	@EmbeddedId
+	
 	public OperationIdPK getOperationIdPK() {
 		return operationIdPK;
 	}
@@ -80,7 +85,6 @@ public class OperationEntity {
 		this.type = type;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
@@ -89,7 +93,6 @@ public class OperationEntity {
 		this.createdTimestamp = createdTimestamp;
 	}
 
-	@Lob
 	public String getOperationAttributes() {
 		return operationAttributes;
 	}

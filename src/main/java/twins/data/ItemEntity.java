@@ -23,24 +23,32 @@ import javax.persistence.TemporalType;
 @Table(name = "ITEMS")
 public class ItemEntity {
 
+	@EmbeddedId
 	private ItemIdPK itemIdPK;
 	private String type;
 	private String name;
 	private Boolean active;
+	
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdTimestamp;
 	private String userEmail;
 	private String userSpace;
 	private double locationLat;
 	private double locationLng;
+	
+	@Lob
 	private String itemAttributes;
+	
+	@OneToMany(mappedBy = "parent" , fetch = FetchType.LAZY)
 	private Set<ItemEntity> children;
+	
+	@ManyToOne( fetch = FetchType.LAZY)
 	private ItemEntity parent;
 
 	public ItemEntity() {
 		children = new HashSet<>();
 	}
 
-	@EmbeddedId
 	public ItemIdPK getItemIdPK() {
 		return itemIdPK;
 	}
@@ -73,7 +81,6 @@ public class ItemEntity {
 		this.active = active;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}
@@ -114,7 +121,6 @@ public class ItemEntity {
 		this.locationLng = locationLng;
 	}
 
-	@Lob
 	public String getItemAttributes() {
 		return itemAttributes;
 	}

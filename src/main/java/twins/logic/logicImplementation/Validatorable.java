@@ -1,4 +1,4 @@
-package twins.logic.logicImplementation.jpa;
+package twins.logic.logicImplementation;
 
 import twins.items.ItemBoundary;
 import twins.items.ItemIdBoundary;
