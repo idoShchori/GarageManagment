@@ -45,7 +45,7 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	public void setItemsDao(ItemsDao itemsDao) {
 		this.itemsDao = itemsDao;
 	}
-	
+
 	@Autowired
 	public void setUsersDao(UsersDao userDao) {
 		this.userDao = userDao;
@@ -64,22 +64,22 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	@Override
 	@Transactional(readOnly = false) // The default value
 	public ItemBoundary createItem(String userSpace, String userEmail, ItemBoundary item) {
-		
+
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-		
+
 		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
-		
+
 		if (!optionalUser.isPresent())
 			throw new RuntimeException("User does not exist");
-		
+
 		userId = optionalUser.get().getUserId();
-		
+
 		if (!validator.isValidEmail(userEmail))
 			throw new EmptyFieldsException("User email is illegal");
-		
+
 		if (userSpace == null || userSpace.isEmpty())
 			throw new EmptyFieldsException("User space must be specified");
-		
+
 		if (!validator.isValidItem(item))
 			throw new EmptyFieldsException("Item has illegal attributes");
 
@@ -89,7 +89,7 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 		entity.setCreatedTimestamp(new Date());
 		entity.setItemId(new ItemIdPK(springApplicatioName, UUID.randomUUID().toString()));
 		this.itemsDao.save(entity);
-		
+
 		return this.entityConverter.toBoundary(entity);
 	}
 
@@ -97,12 +97,11 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	@Transactional(readOnly = false)
 	public ItemBoundary updateItem(String userSpace, String userEmail, String itemSpace, String itemId,
 			ItemBoundary update) {
-		
+
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
 		if (!this.userDao.existsById(userId))
 			throw new RuntimeException("User does not exist");
 
-		
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
 
 		Optional<ItemEntity> existingOptional = this.itemsDao.findById(id);
@@ -164,28 +163,24 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 ////				.filter(e -> e.getUserSpace().equals(userSpace) && e.getUserEmail().equals(userEmail))
 //				.map(this.entityConverter::toBoundary).collect(Collectors.toList());
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<ItemBoundary> getAllItems(String userSpace, String userEmail, int size, int page) {
-		return this.itemsDao
-				.findAll(PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
-				.getContent()
-				.stream()
-				.map(this.entityConverter::toBoundary)
-				.collect(Collectors.toList());
+		return this.itemsDao.findAll(PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
+				.getContent().stream().map(this.entityConverter::toBoundary).collect(Collectors.toList());
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public ItemBoundary getSpecificItem(String userSpace, String userEmail, String itemSpace, String itemId) {
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-		
+
 		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
-		
+
 		if (!optionalUser.isPresent())
 			throw new RuntimeException("User does not exist");
-		
+
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
 
 		Optional<ItemEntity> existingOptional = this.itemsDao.findById(id);
@@ -201,25 +196,25 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 		}
 
 	}
-	
+
 	private boolean isUserRole(UserIdPK id, UserRole role) {
 		Optional<UserEntity> optionalUser = this.userDao.findById(id);
-		
+
 		if (!optionalUser.isPresent())
 			throw new RuntimeException("User does not exist");
-		
+
 		UserEntity user = optionalUser.get();
-		
+
 		return user.getRole() == role;
 	}
 
 	@Override
 	@Transactional(readOnly = false) // The default value
 	public void deleteAllItems(String adminSpace, String adminEmail) {
-		
+
 		UserIdPK id = new UserIdPK(adminSpace, adminEmail);
 		if (this.isUserRole(id, UserRole.ADMIN))
-			throw new RuntimeException("User's role is not player");
+			throw new RuntimeException("User's role is not admin");
 
 		this.itemsDao.deleteAll();
 	}
@@ -228,14 +223,13 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	@Transactional(readOnly = false) // The default value
 	public void addChildToParent(String userSpace, String userEmail, String itemSpace, String itemId,
 			ItemIdBoundary item) {
-		
+
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-		
+
 		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
-		
+
 		if (!optionalUser.isPresent())
 			throw new RuntimeException("User does not exist");
-		
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
 
@@ -267,26 +261,24 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 //
 //		return parent.getChildren().stream().map(this.entityConverter::toBoundary).collect(Collectors.toList());
 	}
-	
+
 	@Override
 	public List<ItemBoundary> getAllChildren(String userSpace, String userEmail, String itemSpace, String itemId,
 			int size, int page) {
-		
+
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-		
+
 		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
-		
+
 		if (!optionalUser.isPresent())
 			throw new RuntimeException("User does not exist");
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
-		
+
 		return this.itemsDao
 				.findAllByParent_itemIdPK(id,
 						PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
-				.stream()
-				.map(this.entityConverter::toBoundary)
-				.collect(Collectors.toList());
+				.stream().map(this.entityConverter::toBoundary).collect(Collectors.toList());
 	}
 
 	@Override
@@ -307,15 +299,21 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	}
 
 	@Override
-	public List<ItemBoundary> getAllParents(String childSpace, String childId, int size, int page) {
+	public List<ItemBoundary> getAllParents(String userSpace, String userEmail, String childSpace, String childId,
+			int size, int page) {
+
+		UserIdPK userId = new UserIdPK(userSpace, userEmail);
+
+		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
+
+		if (!optionalUser.isPresent())
+			throw new RuntimeException("User does not exist");
 
 		ItemIdPK id = new ItemIdPK(childSpace, childId);
-		
+
 		return this.itemsDao
 				.findAllByChildren_itemIdPK(id,
 						PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
-				.stream()
-				.map(this.entityConverter::toBoundary)
-				.collect(Collectors.toList());
+				.stream().map(this.entityConverter::toBoundary).collect(Collectors.toList());
 	}
 }

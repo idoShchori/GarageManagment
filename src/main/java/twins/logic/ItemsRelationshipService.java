@@ -14,6 +14,6 @@ public interface ItemsRelationshipService extends ItemsService {
 	public List<ItemBoundary> getAllChildren(String userSpace,String userEmail,String itemSpace, String itemId, int size, int page);
 	@Deprecated
 	public List<ItemBoundary> getAllParents(String childSpace, String childId);
-	public List<ItemBoundary> getAllParents(String childSpace, String childId, int size, int page);
+	public List<ItemBoundary> getAllParents(String userSpace, String userEmail, String childSpace, String childId, int size, int page);
 	
 }

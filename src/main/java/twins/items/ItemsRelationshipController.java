@@ -72,7 +72,7 @@ public class ItemsRelationshipController {
 				@PathVariable("itemId") String itemId,
 				@RequestParam(name="size", required = false, defaultValue = "20") int size,
 				@RequestParam(name="page", required = false, defaultValue = "0") int page) {
-			List<ItemBoundary> item = this.updateItemService.getAllParents(itemSpace, itemId, size, page);
+			List<ItemBoundary> item = this.updateItemService.getAllParents(userSpace, userEmail, itemSpace, itemId, size, page);
 			return item.toArray(new ItemBoundary[0]);
 		}
 	}
