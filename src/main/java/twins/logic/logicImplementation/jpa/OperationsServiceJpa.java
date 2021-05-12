@@ -2,7 +2,6 @@ package twins.logic.logicImplementation.jpa;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -58,17 +57,6 @@ public class OperationsServiceJpa implements OperationsService {
 	public void setValidator(Validator validator) {
 		this.validator = validator;
 	}
-	
-	private boolean isUserRole(UserIdPK id, UserRole role) {
-		Optional<UserEntity> optionalUser = this.userDao.findById(id);
-		
-		if (!optionalUser.isPresent())
-			throw new RuntimeException("User does not exist");
-		
-		UserEntity user = optionalUser.get();
-		
-		return user.getRole() == role;
-	}
 
 	@Override
 	@Transactional(readOnly = false)
@@ -78,8 +66,12 @@ public class OperationsServiceJpa implements OperationsService {
 
 		OperationEntity entity = this.entityConverter.toEntity(operation);
 		
-		UserIdPK id = new UserIdPK(entity.getUserSpace(), entity.getUserEmail());
-		if (this.isUserRole(id, UserRole.PLAYER))
+		UserIdPK userId = new UserIdPK(entity.getUserSpace(), entity.getUserEmail());
+		if (!this.userDao.existsById(userId))
+			throw new RuntimeException("User does not exist");
+		
+		UserEntity user = this.userDao.findById(userId).get();
+		if (!validator.isUserRole(user, UserRole.PLAYER))
 			throw new RuntimeException("User's role is not player");
 
 		OperationIdPK pk = new OperationIdPK(this.springApplicatioName, UUID.randomUUID().toString());
@@ -99,8 +91,12 @@ public class OperationsServiceJpa implements OperationsService {
 
 		OperationEntity entity = this.entityConverter.toEntity(operation);
 		
-		UserIdPK id = new UserIdPK(entity.getUserSpace(), entity.getUserEmail());
-		if (this.isUserRole(id, UserRole.PLAYER))
+		UserIdPK userId = new UserIdPK(entity.getUserSpace(), entity.getUserEmail());
+		if (!this.userDao.existsById(userId))
+			throw new RuntimeException("User does not exist");
+		
+		UserEntity user = this.userDao.findById(userId).get();
+		if (!validator.isUserRole(user, UserRole.PLAYER))
 			throw new RuntimeException("User's role is not player");
 
 		OperationIdPK pk = new OperationIdPK(this.springApplicatioName, UUID.randomUUID().toString());
@@ -131,9 +127,13 @@ public class OperationsServiceJpa implements OperationsService {
 	@Override
 	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail, int size, int page) {
 		
-		UserIdPK id = new UserIdPK(adminSpace, adminEmail);
-		if (this.isUserRole(id, UserRole.ADMIN))
-			throw new RuntimeException("User's role is not player");
+		UserIdPK userId = new UserIdPK(adminSpace, adminEmail);
+		if (!this.userDao.existsById(userId))
+			throw new RuntimeException("User does not exist");
+		
+		UserEntity user = this.userDao.findById(userId).get();
+		if (!validator.isUserRole(user, UserRole.ADMIN))
+			throw new RuntimeException("User's role is not admin");
 		
 		return this.operationsDao
 				.findAll(PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "operationIdPK"))
@@ -147,9 +147,13 @@ public class OperationsServiceJpa implements OperationsService {
 	@Transactional(readOnly = false)
 	public void deleteAllOperations(String adminSpace, String adminEmail) {
 
-		UserIdPK id = new UserIdPK(adminSpace, adminEmail);
-		if (this.isUserRole(id, UserRole.ADMIN))
-			throw new RuntimeException("User's role is not player");
+		UserIdPK userId = new UserIdPK(adminSpace, adminEmail);
+		if (!this.userDao.existsById(userId))
+			throw new RuntimeException("User does not exist");
+		
+		UserEntity user = this.userDao.findById(userId).get();
+		if (!validator.isUserRole(user, UserRole.ADMIN))
+			throw new RuntimeException("User's role is not admin");
 
 		this.operationsDao.deleteAll();
 	}
