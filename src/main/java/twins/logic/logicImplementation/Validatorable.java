@@ -1,9 +1,6 @@
 package twins.logic.logicImplementation;
 
-import java.util.Optional;
-
 import twins.data.UserEntity;
-import twins.data.UserIdPK;
 import twins.data.UserRole;
 import twins.items.ItemBoundary;
 import twins.items.ItemIdBoundary;

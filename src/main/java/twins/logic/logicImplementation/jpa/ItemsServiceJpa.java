@@ -67,23 +67,19 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	public ItemBoundary createItem(String userSpace, String userEmail, ItemBoundary item) {
 
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-
-		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
-		if (!optionalUser.isPresent())
+		if (!this.userDao.existsById(userId))
 			throw new RuntimeException("User does not exist");
 		
-		UserEntity user = optionalUser.get();
+		UserEntity user = this.userDao.findById(userId).get();
 		if (validator.isUserRole(user, UserRole.PLAYER))
 			throw new RuntimeException("User defined as `Player` can not perform this action");
 
-		userId = optionalUser.get().getUserId();
+		userId = user.getUserId();
 
 		if (!validator.isValidEmail(userEmail))
 			throw new EmptyFieldsException("User email is illegal");
-
 		if (userSpace == null || userSpace.isEmpty())
 			throw new EmptyFieldsException("User space must be specified");
-
 		if (!validator.isValidItem(item))
 			throw new EmptyFieldsException("Item has illegal attributes");
 
@@ -103,20 +99,16 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 			ItemBoundary update) {
 
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-
-		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
-		if (!optionalUser.isPresent())
+		if (!this.userDao.existsById(userId))
 			throw new RuntimeException("User does not exist");
 		
-		UserEntity user = optionalUser.get();
+		UserEntity user = this.userDao.findById(userId).get();
 		if (validator.isUserRole(user, UserRole.PLAYER))
 			throw new RuntimeException("User defined as `Player` can not perform this action");
 		
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
-
 		Optional<ItemEntity> existingOptional = this.itemsDao.findById(id);
-
 		if (existingOptional.isPresent()) {
 			boolean dirty = false;
 
@@ -178,15 +170,12 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ItemBoundary> getAllItems(String userSpace, String userEmail, int size, int page) {
+		
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-
-		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
-
-		if (!optionalUser.isPresent())
+		if (!this.userDao.existsById(userId))
 			throw new RuntimeException("User does not exist");
 		
-		UserEntity user = optionalUser.get();
-		
+		UserEntity user = this.userDao.findById(userId).get();
 		//	if user defined as player, filter out all the non-active items
 		if (validator.isUserRole(user, UserRole.PLAYER)) {
 			return this.itemsDao.findAll(PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
@@ -207,21 +196,16 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	@Override
 	@Transactional(readOnly = true)
 	public ItemBoundary getSpecificItem(String userSpace, String userEmail, String itemSpace, String itemId) {
+		
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-
-		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
-
-		if (!optionalUser.isPresent())
+		if (!this.userDao.existsById(userId))
 			throw new RuntimeException("User does not exist");
 		
-		UserEntity user = optionalUser.get();
-
+		UserEntity user = this.userDao.findById(userId).get();
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
-
 		Optional<ItemEntity> existingOptional = this.itemsDao.findById(id);
 		if (existingOptional.isPresent()) {
 			ItemEntity existing = existingOptional.get();
-			
 			//	non-active items do not exist for player users
 			if (validator.isUserRole(user, UserRole.PLAYER) && !existing.isActive())
 				throw new RuntimeException("could not find item by userSpace/userEmail/itemSpace/itemId: " + userSpace + "/"
@@ -243,13 +227,11 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	public void deleteAllItems(String adminSpace, String adminEmail) {
 		
 		UserIdPK userId = new UserIdPK(adminSpace, adminEmail);
-
-		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
-
-		if (!optionalUser.isPresent())
+		if (!this.userDao.existsById(userId))
 			throw new RuntimeException("User does not exist");
 		
-		if (validator.isUserRole(optionalUser.get(), UserRole.ADMIN))
+		UserEntity user = this.userDao.findById(userId).get();
+		if (validator.isUserRole(user, UserRole.ADMIN))
 			throw new RuntimeException("User's role is not admin");
 
 		this.itemsDao.deleteAll();
@@ -261,19 +243,13 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 			ItemIdBoundary item) {
 
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-
-		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
-
-		if (!optionalUser.isPresent())
+		if (!this.userDao.existsById(userId))
 			throw new RuntimeException("User does not exist");
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
-
 		ItemEntity parent = this.itemsDao.findById(id).orElseThrow(
 				() -> new ItemNotFoundException("could not find parent item by space:" + itemSpace + " id:" + itemId));
-
 		ItemIdPK inputChildId = new ItemIdPK(item.getSpace(), item.getId());
-
 		ItemEntity child = this.itemsDao.findById(inputChildId).orElseThrow(() -> new ItemNotFoundException(
 				"could not find child item by space:" + inputChildId.getSpace() + " id:" + inputChildId.getId()));
 
@@ -303,14 +279,10 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 			int size, int page) {
 
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-
-		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
-
-		if (!optionalUser.isPresent())
+		if (!this.userDao.existsById(userId))
 			throw new RuntimeException("User does not exist");
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
-
 		return this.itemsDao
 				.findAllByParent_itemIdPK(id,
 						PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
@@ -339,17 +311,16 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 			int size, int page) {
 
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-
 		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
-
 		if (!optionalUser.isPresent())
 			throw new RuntimeException("User does not exist");
 
 		ItemIdPK id = new ItemIdPK(childSpace, childId);
-
 		return this.itemsDao
 				.findAllByChildren_itemIdPK(id,
 						PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
-				.stream().map(this.entityConverter::toBoundary).collect(Collectors.toList());
+				.stream()
+				.map(this.entityConverter::toBoundary)
+				.collect(Collectors.toList());
 	}
 }

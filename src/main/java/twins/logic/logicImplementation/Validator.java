@@ -1,12 +1,10 @@
 package twins.logic.logicImplementation;
 
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
 
 import twins.data.UserEntity;
-import twins.data.UserIdPK;
 import twins.data.UserRole;
 import twins.items.ItemBoundary;
 import twins.items.ItemIdBoundary;
