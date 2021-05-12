@@ -25,6 +25,8 @@ import twins.items.ItemIdBoundary;
 import twins.logic.ItemsRelationshipService;
 import twins.logic.Exceptions.EmptyFieldsException;
 import twins.logic.Exceptions.ItemNotFoundException;
+import twins.logic.Exceptions.UserAccessDeniedException;
+import twins.logic.Exceptions.UserNotFoundException;
 import twins.logic.logicImplementation.EntityConverter;
 import twins.logic.logicImplementation.Validator;
 
@@ -68,11 +70,11 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
 		if (!this.userDao.existsById(userId))
-			throw new RuntimeException("User does not exist");
+			throw new UserNotFoundException("User does not exist");
 		
 		UserEntity user = this.userDao.findById(userId).get();
 		if (validator.isUserRole(user, UserRole.PLAYER))
-			throw new RuntimeException("User defined as `Player` can not perform this action");
+			throw new UserAccessDeniedException("User defined as `Player` can not perform this action");
 
 		userId = user.getUserId();
 
@@ -100,11 +102,11 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
 		if (!this.userDao.existsById(userId))
-			throw new RuntimeException("User does not exist");
+			throw new UserNotFoundException("User does not exist");
 		
 		UserEntity user = this.userDao.findById(userId).get();
 		if (validator.isUserRole(user, UserRole.PLAYER))
-			throw new RuntimeException("User defined as `Player` can not perform this action");
+			throw new UserAccessDeniedException("User defined as `Player` can not perform this action");
 		
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
@@ -151,7 +153,7 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 
 		} else {
 			// TODO have server return status 404 here
-			throw new RuntimeException("could not find item by userSpace/userEmail/itemSpace/itemId: " + userSpace + "/"
+			throw new ItemNotFoundException("could not find item by userSpace/userEmail/itemSpace/itemId: " + userSpace + "/"
 					+ userEmail + "/" + itemSpace + "/" + itemId);// NullPointerException
 		}
 	}
@@ -173,7 +175,7 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 		
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
 		if (!this.userDao.existsById(userId))
-			throw new RuntimeException("User does not exist");
+			throw new UserNotFoundException("User does not exist");
 		
 		UserEntity user = this.userDao.findById(userId).get();
 		//	if user defined as player, filter out all the non-active items
@@ -199,7 +201,7 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 		
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
 		if (!this.userDao.existsById(userId))
-			throw new RuntimeException("User does not exist");
+			throw new UserNotFoundException("User does not exist");
 		
 		UserEntity user = this.userDao.findById(userId).get();
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
@@ -208,7 +210,7 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 			ItemEntity existing = existingOptional.get();
 			//	non-active items do not exist for player users
 			if (validator.isUserRole(user, UserRole.PLAYER) && !existing.isActive())
-				throw new RuntimeException("could not find item by userSpace/userEmail/itemSpace/itemId: " + userSpace + "/"
+				throw new ItemNotFoundException("could not find item by userSpace/userEmail/itemSpace/itemId: " + userSpace + "/"
 						+ userEmail + "/" + itemSpace + "/" + itemId);
 			
 			ItemBoundary rv = this.entityConverter.toBoundary(existing);
@@ -216,7 +218,7 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 
 		} else {
 			// TODO have server return status 404 here
-			throw new RuntimeException("could not find item by userSpace/userEmail/itemSpace/itemId: " + userSpace + "/"
+			throw new ItemNotFoundException("could not find item by userSpace/userEmail/itemSpace/itemId: " + userSpace + "/"
 					+ userEmail + "/" + itemSpace + "/" + itemId);
 		}
 
@@ -228,11 +230,11 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 		
 		UserIdPK userId = new UserIdPK(adminSpace, adminEmail);
 		if (!this.userDao.existsById(userId))
-			throw new RuntimeException("User does not exist");
+			throw new UserNotFoundException("User does not exist");
 		
 		UserEntity user = this.userDao.findById(userId).get();
 		if (validator.isUserRole(user, UserRole.ADMIN))
-			throw new RuntimeException("User's role is not admin");
+			throw new UserAccessDeniedException("User's role is not admin");
 
 		this.itemsDao.deleteAll();
 	}
@@ -244,11 +246,12 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
 		if (!this.userDao.existsById(userId))
-			throw new RuntimeException("User does not exist");
+			throw new UserNotFoundException("User does not exist");
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
 		ItemEntity parent = this.itemsDao.findById(id).orElseThrow(
-				() -> new ItemNotFoundException("could not find parent item by space:" + itemSpace + " id:" + itemId));
+				() -> new UserAccessDeniedException("could not find parent item by space:" + itemSpace + " id:" + itemId));
+		
 		ItemIdPK inputChildId = new ItemIdPK(item.getSpace(), item.getId());
 		ItemEntity child = this.itemsDao.findById(inputChildId).orElseThrow(() -> new ItemNotFoundException(
 				"could not find child item by space:" + inputChildId.getSpace() + " id:" + inputChildId.getId()));
@@ -280,7 +283,7 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
 		if (!this.userDao.existsById(userId))
-			throw new RuntimeException("User does not exist");
+			throw new UserNotFoundException("User does not exist");
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
 		return this.itemsDao
@@ -313,7 +316,7 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
 		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
 		if (!optionalUser.isPresent())
-			throw new RuntimeException("User does not exist");
+			throw new UserNotFoundException("User does not exist");
 
 		ItemIdPK id = new ItemIdPK(childSpace, childId);
 		return this.itemsDao
