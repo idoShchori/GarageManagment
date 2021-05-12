@@ -1,9 +1,12 @@
 package twins.logic.logicImplementation;
 
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
 
+import twins.data.UserEntity;
+import twins.data.UserIdPK;
 import twins.data.UserRole;
 import twins.items.ItemBoundary;
 import twins.items.ItemIdBoundary;
@@ -114,6 +117,11 @@ public class Validator implements Validatorable {
 			throw new EmptyFieldsException("Invalid item's `Id` or `Space`");
 
 		return true;
+	}
+
+	@Override
+	public boolean isUserRole(UserEntity user, UserRole role) {
+		return user.getRole() == role;
 	}
 
 }

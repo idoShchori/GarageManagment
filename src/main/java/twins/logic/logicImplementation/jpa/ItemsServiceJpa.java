@@ -60,7 +60,8 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	public void setValidator(Validator validator) {
 		this.validator = validator;
 	}
-
+	
+	
 	@Override
 	@Transactional(readOnly = false) // The default value
 	public ItemBoundary createItem(String userSpace, String userEmail, ItemBoundary item) {
@@ -68,9 +69,12 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
 
 		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
-
 		if (!optionalUser.isPresent())
 			throw new RuntimeException("User does not exist");
+		
+		UserEntity user = optionalUser.get();
+		if (validator.isUserRole(user, UserRole.PLAYER))
+			throw new RuntimeException("User defined as `Player` can not perform this action");
 
 		userId = optionalUser.get().getUserId();
 
@@ -99,8 +103,15 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 			ItemBoundary update) {
 
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-		if (!this.userDao.existsById(userId))
+
+		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
+		if (!optionalUser.isPresent())
 			throw new RuntimeException("User does not exist");
+		
+		UserEntity user = optionalUser.get();
+		if (validator.isUserRole(user, UserRole.PLAYER))
+			throw new RuntimeException("User defined as `Player` can not perform this action");
+		
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
 
@@ -167,8 +178,30 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ItemBoundary> getAllItems(String userSpace, String userEmail, int size, int page) {
+		UserIdPK userId = new UserIdPK(userSpace, userEmail);
+
+		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
+
+		if (!optionalUser.isPresent())
+			throw new RuntimeException("User does not exist");
+		
+		UserEntity user = optionalUser.get();
+		
+		//	if user defined as player, filter out all the non-active items
+		if (validator.isUserRole(user, UserRole.PLAYER)) {
+			return this.itemsDao.findAll(PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
+					.getContent()
+					.stream()
+					.filter(item -> item.isActive().booleanValue())		//	filter out all items with active=false
+					.map(this.entityConverter::toBoundary)
+					.collect(Collectors.toList());
+		}
+		
 		return this.itemsDao.findAll(PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
-				.getContent().stream().map(this.entityConverter::toBoundary).collect(Collectors.toList());
+						.getContent()
+						.stream()
+						.map(this.entityConverter::toBoundary)
+						.collect(Collectors.toList());
 	}
 
 	@Override
@@ -180,40 +213,43 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 
 		if (!optionalUser.isPresent())
 			throw new RuntimeException("User does not exist");
+		
+		UserEntity user = optionalUser.get();
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
 
 		Optional<ItemEntity> existingOptional = this.itemsDao.findById(id);
 		if (existingOptional.isPresent()) {
 			ItemEntity existing = existingOptional.get();
+			
+			//	non-active items do not exist for player users
+			if (validator.isUserRole(user, UserRole.PLAYER) && !existing.isActive())
+				throw new RuntimeException("could not find item by userSpace/userEmail/itemSpace/itemId: " + userSpace + "/"
+						+ userEmail + "/" + itemSpace + "/" + itemId);
+			
 			ItemBoundary rv = this.entityConverter.toBoundary(existing);
 			return rv;
 
 		} else {
 			// TODO have server return status 404 here
 			throw new RuntimeException("could not find item by userSpace/userEmail/itemSpace/itemId: " + userSpace + "/"
-					+ userEmail + "/" + itemSpace + "/" + itemId);// NullPointerException
+					+ userEmail + "/" + itemSpace + "/" + itemId);
 		}
 
-	}
-
-	private boolean isUserRole(UserIdPK id, UserRole role) {
-		Optional<UserEntity> optionalUser = this.userDao.findById(id);
-
-		if (!optionalUser.isPresent())
-			throw new RuntimeException("User does not exist");
-
-		UserEntity user = optionalUser.get();
-
-		return user.getRole() == role;
 	}
 
 	@Override
 	@Transactional(readOnly = false) // The default value
 	public void deleteAllItems(String adminSpace, String adminEmail) {
+		
+		UserIdPK userId = new UserIdPK(adminSpace, adminEmail);
 
-		UserIdPK id = new UserIdPK(adminSpace, adminEmail);
-		if (this.isUserRole(id, UserRole.ADMIN))
+		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
+
+		if (!optionalUser.isPresent())
+			throw new RuntimeException("User does not exist");
+		
+		if (validator.isUserRole(optionalUser.get(), UserRole.ADMIN))
 			throw new RuntimeException("User's role is not admin");
 
 		this.itemsDao.deleteAll();

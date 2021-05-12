@@ -1,5 +1,10 @@
 package twins.logic.logicImplementation;
 
+import java.util.Optional;
+
+import twins.data.UserEntity;
+import twins.data.UserIdPK;
+import twins.data.UserRole;
 import twins.items.ItemBoundary;
 import twins.items.ItemIdBoundary;
 import twins.operations.OperationBoundary;
@@ -20,4 +25,6 @@ public interface Validatorable {
 	public boolean isValidItem(ItemBoundary item);
 	
 	public boolean isValidItemId(ItemIdBoundary iid);
+	
+	public boolean isUserRole(UserEntity user, UserRole role);
 }
