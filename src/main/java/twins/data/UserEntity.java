@@ -17,9 +17,7 @@ import javax.persistence.Table;
 @Table(name = "USERS")
 public class UserEntity {
 
-	@EmbeddedId
 	private UserIdPK userId;
-
 	private UserRole role;
 	private String username;
 	private String avatar;
@@ -27,7 +25,7 @@ public class UserEntity {
 	public UserEntity() {
 	}
 
-	
+	@EmbeddedId
 	public UserIdPK getUserId() {
 		return userId;
 	}
@@ -36,7 +34,6 @@ public class UserEntity {
 		this.userId = userId;
 	}
 
-//	@Column(name="USER_ROLE")
 	public UserRole getRole() {
 		return role;
 	}
@@ -53,7 +50,6 @@ public class UserEntity {
 		this.username = username;
 	}
 
-//	@Column(name="AVATAR")
 	public String getAvatar() {
 		return avatar;
 	}

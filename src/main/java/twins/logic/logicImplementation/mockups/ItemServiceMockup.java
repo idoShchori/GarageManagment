@@ -48,7 +48,7 @@ public class ItemServiceMockup implements ItemsService{
 		
 		entity.setItemId(new ItemIdPK(springApplicatioName,  UUID.randomUUID().toString()));
 	
-		this.items.put(userSpace + "/" + userEmail + "/" + springApplicatioName + "/" +entity.getItemIdPK().getId(),
+		this.items.put(userSpace + "/" + userEmail + "/" + springApplicatioName + "/" +entity.getItemId().getId(),
 				entity);
 
 		return this.entityConverter.toBoundary(entity);

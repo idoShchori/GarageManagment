@@ -54,11 +54,6 @@ public class UserServiceJpa implements UsersService {
 		this.validator = validator;
 	}
 
-	@PostConstruct
-	public void init() {
-		System.err.println("spring application name = " + this.springApplicatioName);
-	}
-
 	@Override
 	@Transactional(readOnly = false) // The default value
 	public UserBoundary createUser(UserBoundary user) {
