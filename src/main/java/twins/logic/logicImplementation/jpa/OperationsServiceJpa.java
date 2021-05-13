@@ -10,8 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.jms.JmsException;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import twins.data.ItemEntity;
 import twins.data.ItemIdPK;
@@ -40,6 +45,7 @@ public class OperationsServiceJpa implements OperationsService {
 	private EntityConverter entityConverter;
 	private Validator validator;
 	private String springApplicatioName;
+	private JmsTemplate jmsTemplate;
 
 	@Value("${spring.application.name:defaultName}")
 	public void setSpringApplicatioName(String springApplicatioName) {
@@ -69,6 +75,11 @@ public class OperationsServiceJpa implements OperationsService {
 	@Autowired
 	public void setValidator(Validator validator) {
 		this.validator = validator;
+	}
+	
+	@Autowired
+	public void setJmsTemplate(JmsTemplate jmsTemplate) {
+		this.jmsTemplate = jmsTemplate;
 	}
 
 	@Override
@@ -124,11 +135,23 @@ public class OperationsServiceJpa implements OperationsService {
 
 		OperationIdPK pk = new OperationIdPK(this.springApplicatioName, UUID.randomUUID().toString());
 		entity.setOperationIdPK(pk);
-		entity.setCreatedTimestamp(new Date());
+		
+		ObjectMapper jackson = new ObjectMapper();
+		try {
+			String json = jackson.writeValueAsString(operation);
+			this.jmsTemplate
+				.send("asyncInbox",
+						session -> session.createTextMessage(json));
+			
+			
+//			entity.setCreatedTimestamp(new Date());
 
-		this.operationsDao.save(entity);
+//			this.operationsDao.save(entity);
 
-		return this.entityConverter.toBoundary(entity);
+			return this.entityConverter.toBoundary(entity);
+		} catch (Exception e) {
+			throw new RuntimeException();
+		}
 	}
 
 	@Override
