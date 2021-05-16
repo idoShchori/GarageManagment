@@ -1,6 +1,5 @@
 package twins.logic.logicImplementation.useCases;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -8,13 +7,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.stereotype.Service;
 
 import twins.data.ItemEntity;
 import twins.data.UserEntity;
 import twins.data.UserIdPK;
 import twins.data.dao.ItemsDao;
 import twins.data.dao.UsersDao;
-import twins.logic.ItemsRelationshipService;
 import twins.logic.UsersService;
 import twins.logic.Exceptions.UserNotFoundException;
 import twins.logic.logicImplementation.EntityConverter;
@@ -22,18 +21,13 @@ import twins.operations.OperationBoundary;
 import twins.users.UserBoundary;
 import twins.users.UserId;
 
+@Service
 public class GetMaintenancesByDate {
-	private ItemsRelationshipService itemService;
 	private UsersService usersService;
 	private UsersDao usersDao;
 	private EntityConverter entityConverter;
 	private ItemsDao itemsDao;
-
-	@Autowired
-	public void setItemService(ItemsRelationshipService itemService) {
-		this.itemService = itemService;
-	}
-
+	
 	@Autowired
 	public void setUsersService(UsersService usersService) {
 		this.usersService = usersService;

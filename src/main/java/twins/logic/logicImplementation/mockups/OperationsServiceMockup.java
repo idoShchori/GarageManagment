@@ -39,7 +39,7 @@ public class OperationsServiceMockup implements OperationsService {
 	}
 
 	@Override
-	public Object invokeOperation(OperationBoundary operation) {
+	public Object invokeOperation(OperationBoundary operation, int page, int size) {
 		
 		if (operation.getInvokedBy().getUserId() == null)
 			throw new RuntimeException("An operation must be performed by a valid user");

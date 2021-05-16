@@ -1,33 +1,23 @@
 package twins.logic.logicImplementation.useCases;
 
-import java.rmi.activation.ActivateFailedException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
-import twins.data.OperationEntity;
 import twins.data.UserEntity;
 import twins.data.UserIdPK;
-import twins.data.UserRole;
-import twins.data.dao.ItemsDao;
 import twins.data.dao.UsersDao;
 import twins.items.ItemBoundary;
 import twins.items.Location;
 import twins.logic.ItemsRelationshipService;
-import twins.logic.ItemsService;
 import twins.logic.UsersService;
 import twins.logic.Exceptions.EmptyFieldsException;
 import twins.logic.Exceptions.UserNotFoundException;
 import twins.logic.logicImplementation.EntityConverter;
 import twins.operations.OperationBoundary;
-import twins.users.User;
 import twins.users.UserBoundary;
 import twins.users.UserId;
 
