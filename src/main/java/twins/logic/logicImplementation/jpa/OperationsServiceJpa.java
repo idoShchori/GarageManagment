@@ -34,6 +34,7 @@ import twins.logic.Exceptions.UserAccessDeniedException;
 import twins.logic.Exceptions.UserNotFoundException;
 import twins.logic.logicImplementation.EntityConverter;
 import twins.logic.logicImplementation.Validator;
+import twins.logic.logicImplementation.useCases.FixVehicle;
 import twins.operations.OperationBoundary;
 
 @Service
@@ -46,6 +47,7 @@ public class OperationsServiceJpa implements OperationsService {
 	private Validator validator;
 	private String springApplicatioName;
 	private JmsTemplate jmsTemplate;
+	private FixVehicle fixVehicle;
 
 	@Value("${spring.application.name:defaultName}")
 	public void setSpringApplicatioName(String springApplicatioName) {
@@ -55,6 +57,11 @@ public class OperationsServiceJpa implements OperationsService {
 	@Autowired
 	public void setOperationsDao(OperationsDao operationsDao) {
 		this.operationsDao = operationsDao;
+	}
+	
+	@Autowired
+	public void setFixVehicle(FixVehicle fixVehicle) {
+		this.fixVehicle = fixVehicle;
 	}
 	
 	@Autowired
@@ -106,6 +113,18 @@ public class OperationsServiceJpa implements OperationsService {
 		OperationIdPK pk = new OperationIdPK(this.springApplicatioName, UUID.randomUUID().toString());
 		entity.setOperationIdPK(pk);
 		entity.setCreatedTimestamp(new Date());
+		
+		if(operation.getOperationAttributes().containsKey("operationName")) {
+			String opName= (String) operation.getOperationAttributes().get("operationName");
+			switch (opName) {
+			case "fix vehicle":
+				this.fixVehicle.invoke(operation);
+				break;
+
+			default:
+				break;
+			}
+		}
 
 		this.operationsDao.save(entity);
 
