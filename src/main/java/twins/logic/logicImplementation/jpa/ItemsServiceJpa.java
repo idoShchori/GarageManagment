@@ -286,6 +286,7 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 			throw new UserNotFoundException("User does not exist");
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
+		System.out.println(itemSpace + " " + itemId);
 		return this.itemsDao
 				.findAllByParent_itemIdPK(id,
 						PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))

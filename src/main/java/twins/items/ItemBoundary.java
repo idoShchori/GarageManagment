@@ -20,6 +20,7 @@ public class ItemBoundary {
 
 	public ItemBoundary() {
 		super();
+		this.itemAttributes = new HashMap<String, Object>();
 	}
 
 	public ItemBoundary(
