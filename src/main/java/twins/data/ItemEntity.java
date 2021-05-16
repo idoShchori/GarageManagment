@@ -73,7 +73,7 @@ public class ItemEntity {
 		this.active = active;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	public Date getCreatedTimestamp() {
 		return createdTimestamp;
 	}

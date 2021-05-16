@@ -1,5 +1,6 @@
 package twins.data.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -16,5 +17,11 @@ public interface ItemsDao extends PagingAndSortingRepository<ItemEntity, ItemIdP
 	
 	public List<ItemEntity> findAllByChildren_itemIdPK(
 			@Param("childId") ItemIdPK childId,
+			Pageable pageable);
+	
+	
+	public List<ItemEntity> findAllByTypeAndCreatedTimestamp(
+			@Param("type") String type,
+			@Param("createdTimestamp") Date createdTimestamp,
 			Pageable pageable);
 }

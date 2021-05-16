@@ -33,6 +33,7 @@ import twins.logic.Exceptions.UserNotFoundException;
 import twins.logic.logicImplementation.EntityConverter;
 import twins.logic.logicImplementation.Validator;
 import twins.logic.logicImplementation.useCases.FixVehicle;
+import twins.logic.logicImplementation.useCases.GetMaintenancesByDate;
 import twins.operations.OperationBoundary;
 
 @Service
@@ -46,7 +47,9 @@ public class OperationsServiceJpa implements OperationsService {
 	private String springApplicatioName;
 	private JmsTemplate jmsTemplate;
 	private FixVehicle fixVehicle;
-
+	private GetMaintenancesByDate getMaintenancesByDate;
+	
+	
 	@Value("${spring.application.name:defaultName}")
 	public void setSpringApplicatioName(String springApplicatioName) {
 		this.springApplicatioName = springApplicatioName;
@@ -86,10 +89,15 @@ public class OperationsServiceJpa implements OperationsService {
 	public void setJmsTemplate(JmsTemplate jmsTemplate) {
 		this.jmsTemplate = jmsTemplate;
 	}
+	
+	@Autowired
+	public void setGetMaintenancesByDate(GetMaintenancesByDate getMaintenancesByDate) {
+		this.getMaintenancesByDate = getMaintenancesByDate;
+	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public Object invokeOperation(OperationBoundary operation) {
+	public Object invokeOperation(OperationBoundary operation,int page , int size) {
 
 		validator.isValidOperation(operation);
 
@@ -113,18 +121,18 @@ public class OperationsServiceJpa implements OperationsService {
 		entity.setCreatedTimestamp(new Date());
 		
 		if(operation.getOperationAttributes().containsKey("operationName")) {
+			this.operationsDao.save(entity);
 			String opName= (String) operation.getOperationAttributes().get("operationName");
 			switch (opName) {
 			case "fix vehicle":
 				this.fixVehicle.invoke(operation);
 				break;
-
+			case "get all maintenances by date":
+				return this.getMaintenancesByDate.invoke(operation,page,size);
 			default:
 				break;
 			}
 		}
-
-		this.operationsDao.save(entity);
 
 		return this.entityConverter.toBoundary(entity);
 	}
