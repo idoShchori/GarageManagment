@@ -7,6 +7,8 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -157,20 +159,48 @@ public class UserServiceJpa implements UsersService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated
 	public List<UserBoundary> getAllUsers(String adminSpace, String adminEmail) {
+		throw new RuntimeException("Deprecated method");
+//		// Users unique addressID combined from this String --> userSpace and userEmail
+//		// (TOGETHER)
+//		Optional<UserEntity> optionalUser = this.usersDao.findById(new UserIdPK(adminSpace, adminEmail));
+//		if (optionalUser.isPresent()) {
+//			UserEntity entity = optionalUser.get();
+//			if (entity.getRole() == UserRole.ADMIN) {
+//				Iterable<UserEntity> allEntities = this.usersDao.findAll();
+//				return StreamSupport.stream(allEntities.spliterator(), false).map(this.entityConverter::toBoundary)
+//						.collect(Collectors.toList());
+//			} else {
+//				throw new UserAccessDeniedException("User is not ADMIN,therefore access denied! ");// Not a Manager
+//			}
+//		} else {
+//			throw new UserNotFoundException(
+//					"Could not find user by userSpace/userEmail : " + adminSpace + "/" + adminEmail);// NullPointerException
+//		}
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<UserBoundary> getAllUsers(String adminSpace, String adminEmail, int size, int page) {
 		// Users unique addressID combined from this String --> userSpace and userEmail
 		// (TOGETHER)
 		Optional<UserEntity> optionalUser = this.usersDao.findById(new UserIdPK(adminSpace, adminEmail));
 		if (optionalUser.isPresent()) {
 			UserEntity entity = optionalUser.get();
 			if (entity.getRole() == UserRole.ADMIN) {
-				Iterable<UserEntity> allEntities = this.usersDao.findAll();
-				return StreamSupport.stream(allEntities.spliterator(), false).map(this.entityConverter::toBoundary)
-						.collect(Collectors.toList());
-			} else {
+				
+					return this.usersDao
+							.findAll(PageRequest.of(page, size, Direction.DESC, "username", "userIdPK"))
+							.getContent()
+							.stream()
+							.map(this.entityConverter::toBoundary)
+							.collect(Collectors.toList());
+				
+			}else {
 				throw new UserAccessDeniedException("User is not ADMIN,therefore access denied! ");// Not a Manager
 			}
-		} else {
+		}else {
 			// TODO have server return status 404 here
 			throw new UserNotFoundException(
 					"Could not find user by userSpace/userEmail : " + adminSpace + "/" + adminEmail);// NullPointerException
@@ -196,5 +226,7 @@ public class UserServiceJpa implements UsersService {
 					"Could not find user by userSpace/userEmail : " + adminSpace + "/" + adminEmail);// NullPointerException
 		}
 	}
+
+
 
 }

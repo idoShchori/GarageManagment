@@ -70,8 +70,11 @@ public class AdminController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserBoundary[] exportAllUsers(
 			@PathVariable("userSpace") String space,
-			@PathVariable("userEmail") String email) {
-		return this.userService.getAllUsers(space, email).toArray(new UserBoundary[0]);
+			@PathVariable("userEmail") String email,
+			@RequestParam(name="size", required = false, defaultValue = "20") int size,
+			@RequestParam(name="page", required = false, defaultValue = "0") int page){
+//		return this.userService.getAllUsers(space, email).toArray(new UserBoundary[0]);
+		return this.userService.getAllUsers(space, email,size,page).toArray(new UserBoundary[0]);
 	}
 	
 

@@ -110,6 +110,7 @@ public class UsersServiceMockup implements UsersService {
 	}
 
 	@Override
+	@Deprecated
 	public List<UserBoundary> getAllUsers(String adminSpace, String adminEmail) {
 		// MOCKUP
 		UserEntity entity = this.users.get(adminSpace+"/"+adminEmail);
@@ -147,6 +148,27 @@ public class UsersServiceMockup implements UsersService {
 			throw new RuntimeException("Could not find user by userSpace/userEmail : " + adminSpace+"/"+adminEmail);// NullPointerException
 		}
 		
+	}
+
+	@Override
+	public List<UserBoundary> getAllUsers(String adminSpace, String adminEmail, int size, int page) {
+		// TODO Ask eyal how to do pagination with MOCKUP
+		UserEntity entity = this.users.get(adminSpace+"/"+adminEmail);
+		if (entity != null) {
+			if(entity.getRole() == UserRole.ADMIN) {
+				return this.users
+						.values()
+						.stream()
+						.map(this.entityConverter::toBoundary)
+						.collect(Collectors.toList());
+			}
+			else {
+				throw new RuntimeException("User is not ADMIN,therefore access denied! ");//Not a Manager
+			}
+		}else {
+			// TODO have server return status 404 here
+			throw new RuntimeException("Could not find user by userSpace/userEmail : " + adminSpace+"/"+adminEmail);// NullPointerException
+		}
 	}
 
 }
