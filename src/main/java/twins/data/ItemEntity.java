@@ -41,11 +41,11 @@ public class ItemEntity {
 	}
 
 	@EmbeddedId
-	public ItemIdPK getItemId() {
+	public ItemIdPK getItemIdPK() {
 		return itemIdPK;
 	}
 
-	public void setItemId(ItemIdPK itemIdPK) {
+	public void setItemIdPK(ItemIdPK itemIdPK) {
 		this.itemIdPK = itemIdPK;
 	}
 

@@ -99,8 +99,8 @@ public class EntityConverterImplementation implements EntityConverter {
 	public ItemBoundary toBoundary(ItemEntity input) {
 		ItemBoundary rv = new ItemBoundary();
 		ItemIdBoundary itemId = new ItemIdBoundary();
-		itemId.setId(input.getItemId().getId());
-		itemId.setSpace(input.getItemId().getSpace());
+		itemId.setId(input.getItemIdPK().getId());
+		itemId.setSpace(input.getItemIdPK().getSpace());
 		rv.setItemId(itemId);
 		rv.setType(input.getType());
 		rv.setName(input.getName());
@@ -125,7 +125,7 @@ public class EntityConverterImplementation implements EntityConverter {
 			ItemIdPK itemIdPK = new ItemIdPK();
 			itemIdPK.setId(input.getItemId().getId());
 			itemIdPK.setSpace(input.getItemId().getSpace());
-			rv.setItemId(itemIdPK);
+			rv.setItemIdPK(itemIdPK);
 		}
 
 		if (input.getType() != null)

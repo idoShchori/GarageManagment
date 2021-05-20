@@ -89,7 +89,7 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 		entity.setUserEmail(userId.getEmail());
 		entity.setUserSpace(userId.getSpace());
 		entity.setCreatedTimestamp(new Date());
-		entity.setItemId(new ItemIdPK(springApplicatioName, UUID.randomUUID().toString()));
+		entity.setItemIdPK(new ItemIdPK(springApplicatioName, UUID.randomUUID().toString()));
 		this.itemsDao.save(entity);
 
 		return this.entityConverter.toBoundary(entity);

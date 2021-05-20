@@ -1,22 +1,16 @@
 package twins.logic.logicImplementation.useCases;
 
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import twins.data.UserEntity;
-import twins.data.UserIdPK;
-import twins.data.dao.UsersDao;
 import twins.items.ItemBoundary;
 import twins.items.Location;
 import twins.logic.ItemsRelationshipService;
 import twins.logic.UsersService;
 import twins.logic.Exceptions.EmptyFieldsException;
-import twins.logic.Exceptions.UserNotFoundException;
-import twins.logic.logicImplementation.EntityConverter;
 import twins.operations.OperationBoundary;
 import twins.users.UserBoundary;
 import twins.users.UserId;
@@ -25,8 +19,6 @@ import twins.users.UserId;
 public class FixVehicle {
 	private ItemsRelationshipService itemService;
 	private UsersService usersService;
-	private UsersDao usersDao;
-	private EntityConverter entityConverter;
 
 	@Autowired
 	public void setItemService(ItemsRelationshipService itemService) {
@@ -37,27 +29,14 @@ public class FixVehicle {
 	public void setUsersService(UsersService usersService) {
 		this.usersService = usersService;
 	}
-	
-	@Autowired
-	public void setUsersDao(UsersDao usersDao) {
-		this.usersDao = usersDao;
-	}
-	
-	@Autowired
-	public void setEntityConverter(EntityConverter entityConverter) {
-		this.entityConverter = entityConverter;
-	}
 
 	public void invoke(OperationBoundary operation) {
-		UserId temp = operation.getInvokedBy().getUserId();
-		UserIdPK id = new UserIdPK(temp.getSpace(), temp.getEmail());
-		Optional<UserEntity> optionalUser = this.usersDao.findById(id);
-		if (!optionalUser.isPresent())
-			throw new UserNotFoundException("User not found");
+		UserId userId = operation.getInvokedBy().getUserId();
 		
-		UserBoundary user = this.entityConverter.toBoundary(optionalUser.get());
+		UserBoundary user = usersService.login(userId.getSpace(), userId.getEmail());
+		
 		user.setRole("ADMIN");
-		usersService.updateUser(id.getSpace(), id.getEmail(), user);
+		usersService.updateUser(userId.getSpace(), userId.getEmail(), user);
 		
 		ArrayList<String> allItems = (ArrayList<String>) operation.getOperationAttributes().get("items");
 		if (allItems == null)
@@ -70,16 +49,37 @@ public class FixVehicle {
 			item.setActive(true);
 			item.setCreatedBy(operation.getInvokedBy());
 			item.setLocation(new Location(0, 0));
+			item.setActive(false);
 			item = itemService.createItem(operation.getInvokedBy().getUserId().getSpace(),
 					operation.getInvokedBy().getUserId().getEmail(), item);
-			System.out.println(item);
-			itemService.addChildToParent(operation.getInvokedBy().getUserId().getSpace(),
-					operation.getInvokedBy().getUserId().getEmail(), operation.getItem().getItemId().getSpace(),
-					operation.getItem().getItemId().getId(), item.getItemId());
+			itemService.addChildToParent(
+					operation.getInvokedBy().getUserId().getSpace(),
+					operation.getInvokedBy().getUserId().getEmail(),
+					operation.getItem().getItemId().getSpace(),
+					operation.getItem().getItemId().getId(),
+					item.getItemId());
 		}
 		
+		ItemBoundary parent = itemService.getSpecificItem(
+				operation.getInvokedBy().getUserId().getSpace(),
+				operation.getInvokedBy().getUserId().getEmail(),
+				operation.getItem().getItemId().getSpace(),
+				operation.getItem().getItemId().getId());
+		
+		Map<String, Object> attributes = parent.getItemAttributes();
+		attributes.put("isFixed", true);
+		parent.setItemAttributes(attributes);
+		parent.setActive(false);
+		
+		itemService.updateItem(
+				operation.getInvokedBy().getUserId().getSpace(),
+				operation.getInvokedBy().getUserId().getEmail(),
+				operation.getItem().getItemId().getSpace(),
+				operation.getItem().getItemId().getId(),
+				parent);
+		
 		user.setRole("PLAYER");
-		usersService.updateUser(id.getSpace(), id.getEmail(), user);
+		usersService.updateUser(userId.getSpace(), userId.getEmail(), user);
 	}
 
 }
