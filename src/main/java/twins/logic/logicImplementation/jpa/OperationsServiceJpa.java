@@ -2,7 +2,6 @@ package twins.logic.logicImplementation.jpa;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -16,20 +15,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import twins.data.ItemEntity;
 import twins.data.ItemIdPK;
 import twins.data.OperationEntity;
 import twins.data.OperationIdPK;
 import twins.data.UserEntity;
 import twins.data.UserIdPK;
 import twins.data.UserRole;
-import twins.data.dao.ItemsDao;
 import twins.data.dao.OperationsDao;
-import twins.data.dao.UsersDao;
+import twins.items.ItemBoundary;
+import twins.logic.ItemsRelationshipService;
 import twins.logic.OperationsService;
+import twins.logic.UsersService;
 import twins.logic.Exceptions.ItemNotFoundException;
 import twins.logic.Exceptions.UserAccessDeniedException;
-import twins.logic.Exceptions.UserNotFoundException;
 import twins.logic.logicImplementation.EntityConverter;
 import twins.logic.logicImplementation.Validator;
 import twins.logic.logicImplementation.useCases.FixVehicle;
@@ -40,8 +38,8 @@ import twins.operations.OperationBoundary;
 public class OperationsServiceJpa implements OperationsService {
 
 	private OperationsDao operationsDao;
-	private UsersDao usersDao;
-	private ItemsDao itemsDao;
+	private UsersService usersService;
+	private ItemsRelationshipService itemService;
 	private EntityConverter entityConverter;
 	private Validator validator;
 	private String springApplicatioName;
@@ -61,18 +59,13 @@ public class OperationsServiceJpa implements OperationsService {
 	}
 	
 	@Autowired
-	public void setFixVehicle(FixVehicle fixVehicle) {
-		this.fixVehicle = fixVehicle;
+	public void setUsersService(UsersService usersService) {
+		this.usersService = usersService;
 	}
 	
 	@Autowired
-	public void setUsersDao(UsersDao usersDao) {
-		this.usersDao = usersDao;
-	}
-	
-	@Autowired
-	public void setItemsDao(ItemsDao itemsDao) {
-		this.itemsDao = itemsDao;
+	public void setItemsService(ItemsRelationshipService itemsService) {
+		this.itemService = itemsService;
 	}
 
 	@Autowired
@@ -91,6 +84,11 @@ public class OperationsServiceJpa implements OperationsService {
 	}
 	
 	@Autowired
+	public void setFixVehicle(FixVehicle fixVehicle) {
+		this.fixVehicle = fixVehicle;
+	}
+	
+	@Autowired
 	public void setGetMaintenancesByDate(GetMaintenancesByDate getMaintenancesByDate) {
 		this.getMaintenancesByDate = getMaintenancesByDate;
 	}
@@ -104,16 +102,16 @@ public class OperationsServiceJpa implements OperationsService {
 		OperationEntity entity = this.entityConverter.toEntity(operation);
 		
 		UserIdPK userId = new UserIdPK(entity.getUserSpace(), entity.getUserEmail());
-		if (!this.usersDao.existsById(userId))
-			throw new UserNotFoundException("User does not exist");
 		
-		UserEntity user = this.usersDao.findById(userId).get();
+		//		if user does not exits, exception will be thrown inside this method
+		UserEntity user = this.entityConverter.toEntity(this.usersService.login(userId.getSpace(), userId.getEmail()));
 		if (!validator.isUserRole(user, UserRole.PLAYER))
 			throw new UserAccessDeniedException("User's role is not player");
 		
 		ItemIdPK itemId = new ItemIdPK(entity.getItemSpace(), entity.getItemId());
-		Optional<ItemEntity> item = this.itemsDao.findById(itemId);
-		if (!item.isPresent() || !item.get().isActive())
+		ItemBoundary item = this.itemService.getSpecificItem(userId.getSpace(), userId.getEmail(), itemId.getSpace(), itemId.getId());
+		
+		if (!item.isActive())
 			throw new ItemNotFoundException("Item does not exist");	
 
 		OperationIdPK pk = new OperationIdPK(this.springApplicatioName, UUID.randomUUID().toString());
@@ -146,16 +144,16 @@ public class OperationsServiceJpa implements OperationsService {
 		OperationEntity entity = this.entityConverter.toEntity(operation);
 		
 		UserIdPK userId = new UserIdPK(entity.getUserSpace(), entity.getUserEmail());
-		if (!this.usersDao.existsById(userId))
-			throw new UserNotFoundException("User does not exist");
 		
-		UserEntity user = this.usersDao.findById(userId).get();
+		//		if user does not exits, exception will be thrown inside this method
+		UserEntity user = this.entityConverter.toEntity(this.usersService.login(userId.getSpace(), userId.getEmail()));
 		if (!validator.isUserRole(user, UserRole.PLAYER))
 			throw new UserAccessDeniedException("User's role is not player");
 		
 		ItemIdPK itemId = new ItemIdPK(entity.getItemSpace(), entity.getItemId());
-		Optional<ItemEntity> item = this.itemsDao.findById(itemId);
-		if (!item.isPresent() || !item.get().isActive())
+		ItemBoundary item = this.itemService.getSpecificItem(userId.getSpace(), userId.getEmail(), itemId.getSpace(), itemId.getId());
+		
+		if (!item.isActive())
 			throw new ItemNotFoundException("Item does not exist");	
 
 		OperationIdPK pk = new OperationIdPK(this.springApplicatioName, UUID.randomUUID().toString());
@@ -199,10 +197,9 @@ public class OperationsServiceJpa implements OperationsService {
 	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail, int size, int page) {
 		
 		UserIdPK userId = new UserIdPK(adminSpace, adminEmail);
-		if (!this.usersDao.existsById(userId))
-			throw new UserNotFoundException("User does not exist");
 		
-		UserEntity user = this.usersDao.findById(userId).get();
+		//		if user does not exits, exception will be thrown inside this method
+		UserEntity user = this.entityConverter.toEntity(this.usersService.login(userId.getSpace(), userId.getEmail()));
 		if (!validator.isUserRole(user, UserRole.ADMIN))
 			throw new UserAccessDeniedException("User's role is not admin");
 		
@@ -219,10 +216,9 @@ public class OperationsServiceJpa implements OperationsService {
 	public void deleteAllOperations(String adminSpace, String adminEmail) {
 
 		UserIdPK userId = new UserIdPK(adminSpace, adminEmail);
-		if (!this.usersDao.existsById(userId))
-			throw new UserNotFoundException("User does not exist");
 		
-		UserEntity user = this.usersDao.findById(userId).get();
+		//		if user does not exits, exception will be thrown inside this method
+		UserEntity user = this.entityConverter.toEntity(this.usersService.login(userId.getSpace(), userId.getEmail()));
 		if (!validator.isUserRole(user, UserRole.ADMIN))
 			throw new UserAccessDeniedException("User's role is not admin");
 

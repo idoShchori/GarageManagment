@@ -17,9 +17,10 @@ import twins.users.UserId;
 
 @Service
 public class FixVehicle {
+	
 	private ItemsRelationshipService itemService;
 	private UsersService usersService;
-
+	
 	@Autowired
 	public void setItemService(ItemsRelationshipService itemService) {
 		this.itemService = itemService;
