@@ -1,22 +1,18 @@
 package twins.logic.logicImplementation.useCases;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import twins.data.ItemEntity;
-import twins.data.UserEntity;
-import twins.data.UserIdPK;
-import twins.data.dao.ItemsDao;
-import twins.data.dao.UsersDao;
+import twins.items.ItemBoundary;
+import twins.items.ItemIdBoundary;
+import twins.logic.UpdatedItemsService;
 import twins.logic.UsersService;
-import twins.logic.Exceptions.UserNotFoundException;
-import twins.logic.logicImplementation.EntityConverter;
+import twins.logic.Exceptions.IllegalDateException;
+import twins.logic.Exceptions.IllegalItemTypeException;
 import twins.operations.OperationBoundary;
 import twins.users.UserBoundary;
 import twins.users.UserId;
@@ -24,45 +20,47 @@ import twins.users.UserId;
 @Service
 public class GetMaintenancesByDate {
 	private UsersService usersService;
-	private UsersDao usersDao;
-	private EntityConverter entityConverter;
-	private ItemsDao itemsDao;
-	
+	private UpdatedItemsService itemsService;
+
+	@Autowired
+	public void setItemService(UpdatedItemsService itemService) {
+		this.itemsService = itemService;
+	}
+
 	@Autowired
 	public void setUsersService(UsersService usersService) {
 		this.usersService = usersService;
 	}
-	
-	@Autowired
-	public void setUsersDao(UsersDao usersDao) {
-		this.usersDao = usersDao;
-	}
-	
-	@Autowired
-	public void setEntityConverter(EntityConverter entityConverter) {
-		this.entityConverter = entityConverter;
-	}
-	
-	@Autowired
-	public void setItemsDao(ItemsDao itemsDao) {
-		this.itemsDao = itemsDao;
-	}
 
+	public List<ItemBoundary> invoke(OperationBoundary operation, int page, int size) {
+		UserId userId = operation.getInvokedBy().getUserId();
+		UserBoundary user = usersService.login(userId.getSpace(), userId.getEmail());
 
-	public List<ItemEntity> invoke(OperationBoundary operation,int page,int size) {
-		UserId temp = operation.getInvokedBy().getUserId();
-		UserIdPK id = new UserIdPK(temp.getSpace(), temp.getEmail());
-		Optional<UserEntity> optionalUser = this.usersDao.findById(id);
-		if (!optionalUser.isPresent())
-			throw new UserNotFoundException("User not found");
-		
-		UserBoundary user = this.entityConverter.toBoundary(optionalUser.get());
 		user.setRole("ADMIN");
-		usersService.updateUser(id.getSpace(), id.getEmail(), user);
-		
-		Date date = (Date) operation.getOperationAttributes().get("Date");
-		return itemsDao.findAllByTypeAndCreatedTimestamp("Car item",date,
-				PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"));
-		
+		usersService.updateUser(userId.getSpace(), userId.getEmail(), user);
+
+		String stringDate = operation.getOperationAttributes().get("date").toString();
+		Date date;
+		try {
+			date = new SimpleDateFormat("yyyy-MM-dd").parse(stringDate);
+		} catch (Exception e) {
+			throw new IllegalDateException("Illegal date. Date format is yyyy-MM-dd");
+		}
+
+		ItemIdBoundary itemId = operation.getItem().getItemId();
+		if (!this.itemsService.getSpecificItem(userId.getSpace(), userId.getEmail(), itemId.getSpace(), itemId.getId())
+				.getType().equals("report")) {
+			throw new IllegalItemTypeException("Item's type is not a report");
+		}
+
+		String vehicleType = "vehicle";
+
+		List<ItemBoundary> cars = this.itemsService.getAllItemsByTypeAndDate(userId.getSpace(), userId.getEmail(),
+				vehicleType, date, size, page);
+
+		user.setRole("PLAYER");
+		usersService.updateUser(userId.getSpace(), userId.getEmail(), user);
+
+		return cars;
 	}
 }

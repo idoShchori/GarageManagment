@@ -20,21 +20,20 @@ import twins.data.UserEntity;
 import twins.data.UserIdPK;
 import twins.data.UserRole;
 import twins.data.dao.ItemsDao;
-import twins.data.dao.UsersDao;
 import twins.items.ItemBoundary;
 import twins.items.ItemIdBoundary;
-import twins.logic.ItemsRelationshipService;
+import twins.logic.UpdatedItemsService;
+import twins.logic.UsersService;
 import twins.logic.Exceptions.EmptyFieldsException;
 import twins.logic.Exceptions.ItemNotFoundException;
 import twins.logic.Exceptions.UserAccessDeniedException;
-import twins.logic.Exceptions.UserNotFoundException;
 import twins.logic.logicImplementation.EntityConverter;
 import twins.logic.logicImplementation.Validator;
 
 @Service
-public class ItemsServiceJpa implements ItemsRelationshipService {
+public class ItemsServiceJpa implements UpdatedItemsService {
 	private ItemsDao itemsDao;
-	private UsersDao userDao;
+	private UsersService usersService;
 	private EntityConverter entityConverter;
 	private Validator validator;
 	private String springApplicatioName;
@@ -50,8 +49,8 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	}
 
 	@Autowired
-	public void setUsersDao(UsersDao userDao) {
-		this.userDao = userDao;
+	public void setUsersService(UsersService usersService) {
+		this.usersService = usersService;
 	}
 
 	@Autowired
@@ -70,10 +69,8 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	public ItemBoundary createItem(String userSpace, String userEmail, ItemBoundary item) {
 
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-		if (!this.userDao.existsById(userId))
-			throw new UserNotFoundException("User does not exist");
-		
-		UserEntity user = this.userDao.findById(userId).get();
+		//		if user does not exits, exception will be thrown inside this method
+		UserEntity user = this.entityConverter.toEntity(this.usersService.login(userId.getSpace(), userId.getEmail()));
 		if (validator.isUserRole(user, UserRole.PLAYER))
 			throw new UserAccessDeniedException("User defined as `Player` can not perform this action");
 
@@ -102,13 +99,10 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 			ItemBoundary update) {
 
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-		if (!this.userDao.existsById(userId))
-			throw new UserNotFoundException("User does not exist");
-		
-		UserEntity user = this.userDao.findById(userId).get();
+		//		if user does not exits, exception will be thrown inside this method
+		UserEntity user = this.entityConverter.toEntity(this.usersService.login(userId.getSpace(), userId.getEmail()));
 		if (validator.isUserRole(user, UserRole.PLAYER))
 			throw new UserAccessDeniedException("User defined as `Player` can not perform this action");
-		
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
 		Optional<ItemEntity> existingOptional = this.itemsDao.findById(id);
@@ -175,10 +169,9 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	public List<ItemBoundary> getAllItems(String userSpace, String userEmail, int size, int page) {
 		
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-		if (!this.userDao.existsById(userId))
-			throw new UserNotFoundException("User does not exist");
+		//		if user does not exits, exception will be thrown inside this method
+		UserEntity user = this.entityConverter.toEntity(this.usersService.login(userId.getSpace(), userId.getEmail()));
 		
-		UserEntity user = this.userDao.findById(userId).get();
 		//	if user defined as player, filter out all the non-active items
 		if (validator.isUserRole(user, UserRole.PLAYER)) {
 			return this.itemsDao.findAll(PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
@@ -201,10 +194,9 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	public ItemBoundary getSpecificItem(String userSpace, String userEmail, String itemSpace, String itemId) {
 		
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-		if (!this.userDao.existsById(userId))
-			throw new UserNotFoundException("User does not exist");
+		//		if user does not exits, exception will be thrown inside this method
+		UserEntity user = this.entityConverter.toEntity(this.usersService.login(userId.getSpace(), userId.getEmail()));
 		
-		UserEntity user = this.userDao.findById(userId).get();
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
 		Optional<ItemEntity> existingOptional = this.itemsDao.findById(id);
 		if (existingOptional.isPresent()) {
@@ -230,10 +222,9 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 	public void deleteAllItems(String adminSpace, String adminEmail) {
 		
 		UserIdPK userId = new UserIdPK(adminSpace, adminEmail);
-		if (!this.userDao.existsById(userId))
-			throw new UserNotFoundException("User does not exist");
+		//		if user does not exits, exception will be thrown inside this method
+		UserEntity user = this.entityConverter.toEntity(this.usersService.login(userId.getSpace(), userId.getEmail()));
 		
-		UserEntity user = this.userDao.findById(userId).get();
 		if (validator.isUserRole(user, UserRole.ADMIN))
 			throw new UserAccessDeniedException("User's role is not admin");
 
@@ -246,8 +237,8 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 			ItemIdBoundary item) {
 
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-		if (!this.userDao.existsById(userId))
-			throw new UserNotFoundException("User does not exist");
+		//		if user does not exits, exception will be thrown inside this method
+		this.usersService.login(userId.getSpace(), userId.getEmail());
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
 		ItemEntity parent = this.itemsDao.findById(id).orElseThrow(
@@ -283,15 +274,17 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 			int size, int page) {
 
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-		if (!this.userDao.existsById(userId))
-			throw new UserNotFoundException("User does not exist");
+		//		if user does not exits, exception will be thrown inside this method
+		this.usersService.login(userId.getSpace(), userId.getEmail());
 
 		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
 		System.out.println(itemSpace + " " + itemId);
 		return this.itemsDao
 				.findAllByParent_itemIdPK(id,
 						PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
-				.stream().map(this.entityConverter::toBoundary).collect(Collectors.toList());
+				.stream()
+				.map(this.entityConverter::toBoundary)
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -316,9 +309,8 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 			int size, int page) {
 
 		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-		Optional<UserEntity> optionalUser = this.userDao.findById(userId);
-		if (!optionalUser.isPresent())
-			throw new UserNotFoundException("User does not exist");
+		//		if user does not exits, exception will be thrown inside this method
+		this.usersService.login(userId.getSpace(), userId.getEmail());
 
 		ItemIdPK id = new ItemIdPK(childSpace, childId);
 		
@@ -329,13 +321,25 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 		List<ItemEntity> parents =  new ArrayList<ItemEntity>();
 		parents.add(optionalChild.get().getParent());
 		
-		System.err.println(parents);
-		System.err.println(optionalChild.get().getParent());
-		
 		return parents
 				.stream()
 				.map(this.entityConverter::toBoundary)
 				.collect(Collectors.toList());
 
+	}
+
+	@Override
+	public List<ItemBoundary> getAllItemsByTypeAndDate(String userSpace, String userEmail, String type, Date date,
+			int size, int page) {
+		UserIdPK userId = new UserIdPK(userSpace, userEmail);
+		
+		//		if user does not exits, exception will be thrown inside this method
+		this.usersService.login(userId.getSpace(), userId.getEmail());
+
+		return this.itemsDao.findAllByTypeAndCreatedTimestamp(type, date,
+										PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
+							.stream()
+							.map(this.entityConverter::toBoundary)
+							.collect(Collectors.toList());
 	}
 }

@@ -23,7 +23,7 @@ import twins.data.UserIdPK;
 import twins.data.UserRole;
 import twins.data.dao.OperationsDao;
 import twins.items.ItemBoundary;
-import twins.logic.ItemsRelationshipService;
+import twins.logic.UpdatedItemsService;
 import twins.logic.OperationsService;
 import twins.logic.UsersService;
 import twins.logic.Exceptions.ItemNotFoundException;
@@ -39,7 +39,7 @@ public class OperationsServiceJpa implements OperationsService {
 
 	private OperationsDao operationsDao;
 	private UsersService usersService;
-	private ItemsRelationshipService itemService;
+	private UpdatedItemsService itemService;
 	private EntityConverter entityConverter;
 	private Validator validator;
 	private String springApplicatioName;
@@ -64,7 +64,7 @@ public class OperationsServiceJpa implements OperationsService {
 	}
 	
 	@Autowired
-	public void setItemsService(ItemsRelationshipService itemsService) {
+	public void setItemsService(UpdatedItemsService itemsService) {
 		this.itemService = itemsService;
 	}
 

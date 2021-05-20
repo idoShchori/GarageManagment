@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import twins.items.ItemBoundary;
 import twins.items.Location;
-import twins.logic.ItemsRelationshipService;
+import twins.logic.UpdatedItemsService;
 import twins.logic.UsersService;
 import twins.logic.Exceptions.EmptyFieldsException;
 import twins.operations.OperationBoundary;
@@ -18,11 +18,11 @@ import twins.users.UserId;
 @Service
 public class FixVehicle {
 	
-	private ItemsRelationshipService itemService;
+	private UpdatedItemsService itemService;
 	private UsersService usersService;
 	
 	@Autowired
-	public void setItemService(ItemsRelationshipService itemService) {
+	public void setItemService(UpdatedItemsService itemService) {
 		this.itemService = itemService;
 	}
 
@@ -33,7 +33,6 @@ public class FixVehicle {
 
 	public void invoke(OperationBoundary operation) {
 		UserId userId = operation.getInvokedBy().getUserId();
-		
 		UserBoundary user = usersService.login(userId.getSpace(), userId.getEmail());
 		
 		user.setRole("ADMIN");

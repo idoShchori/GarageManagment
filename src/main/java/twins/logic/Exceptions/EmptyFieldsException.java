@@ -3,8 +3,8 @@ package twins.logic.Exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE)
-public class EmptyFieldsException extends RuntimeException{
+@ResponseStatus(code = HttpStatus.NOT_FOUND)
+public class EmptyFieldsException extends RuntimeException {
 
 	/**
 	 * 
@@ -26,7 +26,5 @@ public class EmptyFieldsException extends RuntimeException{
 	public EmptyFieldsException(Throwable cause) {
 		super(cause);
 	}
-	
-	
 
 }
