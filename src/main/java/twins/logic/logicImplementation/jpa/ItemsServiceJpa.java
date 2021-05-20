@@ -1,5 +1,6 @@
 package twins.logic.logicImplementation.jpa;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -320,11 +321,21 @@ public class ItemsServiceJpa implements ItemsRelationshipService {
 			throw new UserNotFoundException("User does not exist");
 
 		ItemIdPK id = new ItemIdPK(childSpace, childId);
-		return this.itemsDao
-				.findAllByChildren_itemIdPK(id,
-						PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
+		
+		Optional<ItemEntity> optionalChild = this.itemsDao.findById(id);
+		if (!optionalChild.isPresent())
+			throw new ItemNotFoundException("This item does not exist");
+		
+		List<ItemEntity> parents =  new ArrayList<ItemEntity>();
+		parents.add(optionalChild.get().getParent());
+		
+		System.err.println(parents);
+		System.err.println(optionalChild.get().getParent());
+		
+		return parents
 				.stream()
 				.map(this.entityConverter::toBoundary)
 				.collect(Collectors.toList());
+
 	}
 }

@@ -19,7 +19,6 @@ public interface ItemsDao extends PagingAndSortingRepository<ItemEntity, ItemIdP
 			@Param("childId") ItemIdPK childId,
 			Pageable pageable);
 	
-	
 	public List<ItemEntity> findAllByTypeAndCreatedTimestamp(
 			@Param("type") String type,
 			@Param("createdTimestamp") Date createdTimestamp,
