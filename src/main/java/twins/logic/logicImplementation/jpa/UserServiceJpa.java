@@ -15,7 +15,7 @@ import twins.data.UserEntity;
 import twins.data.UserIdPK;
 import twins.data.UserRole;
 import twins.data.dao.UsersDao;
-import twins.logic.UsersService;
+import twins.logic.UpdatedUsersService;
 import twins.logic.Exceptions.UserAccessDeniedException;
 import twins.logic.Exceptions.UserNotFoundException;
 import twins.logic.logicImplementation.EntityConverter;
@@ -23,7 +23,7 @@ import twins.logic.logicImplementation.Validator;
 import twins.users.UserBoundary;
 
 @Service
-public class UserServiceJpa implements UsersService {
+public class UserServiceJpa implements UpdatedUsersService {
 
 	private UsersDao usersDao;
 	private EntityConverter entityConverter;
@@ -224,6 +224,16 @@ public class UserServiceJpa implements UsersService {
 			throw new UserNotFoundException(
 					"Could not find user by userSpace/userEmail : " + adminSpace + "/" + adminEmail);// NullPointerException
 		}
+	}
+
+	@Override
+	public List<UserBoundary> getAllUsersByRole(UserRole role, int size, int page) {
+		return this.usersDao.findAllByRole(
+							role,
+							PageRequest.of(page, size, Direction.DESC, "username", "userId"))
+					.stream()
+					.map(this.entityConverter::toBoundary)
+					.collect(Collectors.toList());
 	}
 
 

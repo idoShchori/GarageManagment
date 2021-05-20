@@ -36,6 +36,7 @@ public class GetMaintenancesByDate {
 		UserId userId = operation.getInvokedBy().getUserId();
 		UserBoundary user = usersService.login(userId.getSpace(), userId.getEmail());
 
+		// change user's role to admin to get all the non-active items
 		user.setRole("ADMIN");
 		usersService.updateUser(userId.getSpace(), userId.getEmail(), user);
 

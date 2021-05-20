@@ -199,7 +199,7 @@ public class EntityConverterImplementation implements EntityConverter {
 	}
 
 	@Override
-	public Map<String, Object> fromJsonToMap (String json){ // unmarshalling: JSON->Java
+	public Map<String, Object> fromJsonToMap (String json) { // unmarshalling: JSON->Java
 		try {
 			return this.jackson
 				.readValue(json, Map.class);

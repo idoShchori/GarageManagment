@@ -9,6 +9,7 @@ import twins.data.UserRole;
 import twins.items.ItemBoundary;
 import twins.items.ItemIdBoundary;
 import twins.logic.Exceptions.EmptyFieldsException;
+import twins.logic.logicImplementation.useCases.UseCase;
 import twins.operations.OperationBoundary;
 import twins.users.UserBoundary;
 import twins.users.UserId;
@@ -120,6 +121,31 @@ public class Validator implements Validatorable {
 	@Override
 	public boolean isUserRole(UserEntity user, UserRole role) {
 		return user.getRole() == role;
+	}
+	
+	@Override
+	public boolean isValidUseCase(String usecase) {
+		try {
+			UseCase.valueOf(usecase);
+			return true;
+		} catch (Exception e) {
+			throw new EmptyFieldsException("Invalid usecase type");
+		}
+	}
+
+	@Override
+	public boolean isValidUserForUseCase(UserEntity user, UseCase usecase) {
+
+		switch (usecase) {
+		case FIX_VEHICLE:
+			return this.isUserRole(user, UserRole.PLAYER);
+		case MAINTENANCE_BY_MONTH:
+			return this.isUserRole(user, UserRole.MANAGER) || this.isUserRole(user, UserRole.ADMIN);
+		case GET_ALL_WORKERS:
+			return this.isUserRole(user, UserRole.MANAGER) || this.isUserRole(user, UserRole.ADMIN);
+		default:
+			return false;
+		}
 	}
 
 }

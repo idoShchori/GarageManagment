@@ -61,7 +61,7 @@ public class OperationsServiceMockup implements OperationsService {
 	}
 
 	@Override
-	public OperationBoundary invokeAsynchronous(OperationBoundary operation) {
+	public OperationBoundary invokeAsynchronous(OperationBoundary operation, int page, int size) {
 
 		if (operation.getInvokedBy().getUserId() == null)
 			throw new RuntimeException("An operation must be performed by a valid user");
@@ -83,7 +83,7 @@ public class OperationsServiceMockup implements OperationsService {
 	}
 
 	@Override
-	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail) {
+	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail, int size, int page) {
 		
 		// TODO: validate that `UserRole` == ADMIN, if not -> throws an exception
 		
@@ -103,7 +103,7 @@ public class OperationsServiceMockup implements OperationsService {
 	}
 
 	@Override
-	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail, int size, int page) {
+	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail) {
 		// TODO Auto-generated method stub
 		return null;
 	}
