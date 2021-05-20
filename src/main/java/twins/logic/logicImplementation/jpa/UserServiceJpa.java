@@ -190,7 +190,7 @@ public class UserServiceJpa implements UsersService {
 			if (entity.getRole() == UserRole.ADMIN) {
 				
 					return this.usersDao
-							.findAll(PageRequest.of(page, size, Direction.DESC, "username", "userIdPK"))
+							.findAll(PageRequest.of(page, size, Direction.DESC, "username", "userId"))
 							.getContent()
 							.stream()
 							.map(this.entityConverter::toBoundary)
