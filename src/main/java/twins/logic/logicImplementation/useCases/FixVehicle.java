@@ -38,9 +38,21 @@ public class FixVehicle {
 		user.setRole("MANAGER");
 		usersService.updateUser(userId.getSpace(), userId.getEmail(), user);
 		
-		ArrayList<String> allItems = (ArrayList<String>) operation.getOperationAttributes().get("items");
-		if (allItems == null)
+		ArrayList<String> allItems = null;
+		try {
+			allItems = (ArrayList<String>) operation.getOperationAttributes().get("items");
+			if (allItems == null)
+				throw new EmptyFieldsException("Array of items is required");
+		} catch (Exception e) {
 			throw new EmptyFieldsException("Array of items is required");
+		}
+		
+		Double price = null;
+		try {
+			price = (Double) operation.getOperationAttributes().get("price");
+		} catch (Exception e) {
+			throw new EmptyFieldsException("Price of maintenance is required");
+		}
 			
 		for (String string : allItems) {
 			ItemBoundary item = new ItemBoundary();
@@ -68,6 +80,7 @@ public class FixVehicle {
 		
 		Map<String, Object> attributes = parent.getItemAttributes();
 		attributes.put("isFixed", true);
+		attributes.put("price", price);
 		parent.setItemAttributes(attributes);
 		parent.setActive(false);
 		
