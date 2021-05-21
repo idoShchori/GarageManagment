@@ -49,7 +49,9 @@ public class FixVehicle {
 		
 		Double price = null;
 		try {
-			price = (Double) operation.getOperationAttributes().get("price");
+			
+			// TODO: verify it works when the input is '500' for example (which is not a double value)
+			price = Double.parseDouble(operation.getOperationAttributes().get("price").toString());
 		} catch (Exception e) {
 			throw new EmptyFieldsException("Price of maintenance is required");
 		}
@@ -57,7 +59,7 @@ public class FixVehicle {
 		for (String string : allItems) {
 			ItemBoundary item = new ItemBoundary();
 			item.setName(string);
-			item.setType("Car item");
+			item.setType("car item");
 			item.setActive(true);
 			item.setCreatedBy(operation.getInvokedBy());
 			item.setLocation(new Location(0, 0));

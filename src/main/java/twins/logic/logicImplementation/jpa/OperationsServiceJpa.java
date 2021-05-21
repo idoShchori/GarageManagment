@@ -34,6 +34,7 @@ import twins.logic.logicImplementation.Validator;
 import twins.logic.logicImplementation.useCases.FixVehicle;
 import twins.logic.logicImplementation.useCases.GetAllWorkers;
 import twins.logic.logicImplementation.useCases.GetMaintenancesByDate;
+import twins.logic.logicImplementation.useCases.GetRevenueReport;
 import twins.logic.logicImplementation.useCases.UseCase;
 import twins.operations.OperationBoundary;
 
@@ -50,7 +51,9 @@ public class OperationsServiceJpa implements OperationsService {
 	private FixVehicle fixVehicle;
 	private GetMaintenancesByDate getMaintenancesByDate;
 	private GetAllWorkers getAllWorkers;
+	private GetRevenueReport getRevenueReport;
 
+	
 	private UserRole validOperationRole = UserRole.PLAYER;
 
 	@Value("${spring.application.name:defaultName}")
@@ -102,6 +105,11 @@ public class OperationsServiceJpa implements OperationsService {
 	public void setGetAllWorkers(GetAllWorkers getAllWorkers) {
 		this.getAllWorkers = getAllWorkers;
 	}
+	
+	@Autowired
+	public void setGetRevenueReport(GetRevenueReport getRevenueReport) {
+		this.getRevenueReport = getRevenueReport;
+	}
 
 	@Override
 	@Transactional(readOnly = false)
@@ -145,17 +153,20 @@ public class OperationsServiceJpa implements OperationsService {
 			this.operationsDao.save(entity);
 		}
 			
-		List<?> returnedList = null;
+		Object returnedValue = null;
 		
 		switch (operationCase) {
 		case FIX_VEHICLE:
 			this.fixVehicle.invoke(operation);
 			break;
 		case MAINTENANCE_BY_MONTH:
-			returnedList = this.getMaintenancesByDate.invoke(operation, page, size);
+			returnedValue = this.getMaintenancesByDate.invoke(operation, page, size);
 			break;
 		case GET_ALL_WORKERS:
-			returnedList = this.getAllWorkers.invoke(operation, actualRole, page, size);
+			returnedValue = this.getAllWorkers.invoke(operation, actualRole, page, size);
+			break;
+		case GET_REVENUE_REPORT:
+			returnedValue = this.getRevenueReport.invoke(operation);
 			break;
 		default:
 			throw new IllegalOperationType("Illegal operation type");
@@ -167,8 +178,8 @@ public class OperationsServiceJpa implements OperationsService {
 				userId.getEmail(),
 				entityConverter.toBoundary(user));
 
-		if (returnedList != null)
-			return returnedList;
+		if (returnedValue != null)
+			return returnedValue;
 		
 		return this.entityConverter.toBoundary(entity);
 	}

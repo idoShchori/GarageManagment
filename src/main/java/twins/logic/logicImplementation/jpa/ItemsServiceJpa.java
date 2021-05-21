@@ -342,4 +342,18 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 							.map(this.entityConverter::toBoundary)
 							.collect(Collectors.toList());
 	}
+
+	@Override
+	public List<ItemBoundary> getAllItemsByTypeAndDateBetween(String userSpace, String userEmail,
+			String type, Date startDate, Date stringEndDate) {
+		UserIdPK userId = new UserIdPK(userSpace, userEmail);
+		
+		//		if user does not exits, exception will be thrown inside this method
+		this.usersService.login(userId.getSpace(), userId.getEmail());
+
+		return this.itemsDao.findAllByTypeAndCreatedTimestampBetween(type, startDate, stringEndDate)
+							.stream()
+							.map(this.entityConverter::toBoundary)
+							.collect(Collectors.toList());
+	}
 }
