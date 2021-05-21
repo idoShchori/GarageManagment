@@ -140,9 +140,9 @@ public class Validator implements Validatorable {
 		case FIX_VEHICLE:
 			return this.isUserRole(user, UserRole.PLAYER);
 		case MAINTENANCE_BY_MONTH:
-			return this.isUserRole(user, UserRole.MANAGER) || this.isUserRole(user, UserRole.ADMIN);
+			return this.isUserRole(user, UserRole.MANAGER);
 		case GET_ALL_WORKERS:
-			return this.isUserRole(user, UserRole.MANAGER) || this.isUserRole(user, UserRole.ADMIN);
+			return this.isUserRole(user, UserRole.MANAGER);
 		default:
 			return false;
 		}
