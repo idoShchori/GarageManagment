@@ -35,7 +35,7 @@ public class FixVehicle {
 		UserId userId = operation.getInvokedBy().getUserId();
 		UserBoundary user = usersService.login(userId.getSpace(), userId.getEmail());
 		
-		user.setRole("ADMIN");
+		user.setRole("MANAGER");
 		usersService.updateUser(userId.getSpace(), userId.getEmail(), user);
 		
 		ArrayList<String> allItems = (ArrayList<String>) operation.getOperationAttributes().get("items");
