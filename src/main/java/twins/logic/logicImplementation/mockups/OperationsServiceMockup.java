@@ -85,8 +85,6 @@ public class OperationsServiceMockup implements OperationsService {
 	@Override
 	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail, int size, int page) {
 		
-		// TODO: validate that `UserRole` == ADMIN, if not -> throws an exception
-		
 		return this.operations
 				.values()
 				.stream()
@@ -97,14 +95,11 @@ public class OperationsServiceMockup implements OperationsService {
 	@Override
 	public void deleteAllOperations(String adminSpace, String adminEmail) {
 		
-		// TODO: validate that `UserRole` == ADMIN, if not -> throws an exception
-		
 		this.operations.clear();
 	}
 
 	@Override
 	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

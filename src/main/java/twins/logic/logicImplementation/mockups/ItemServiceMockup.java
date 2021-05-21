@@ -108,7 +108,6 @@ public class ItemServiceMockup implements ItemsService{
 			return rv;
 
 		} else {
-			// TODO have server return status 404 here
 			throw new RuntimeException("could not find item by userSpace/userEmail/itemSpace/itemId: " + userSpace + "/" + userEmail+"/"+itemSpace+"/"+itemId);// NullPointerException
 		}
 
@@ -116,7 +115,6 @@ public class ItemServiceMockup implements ItemsService{
 
 	@Override
 	public List<ItemBoundary> getAllItems(String userSpace, String userEmail) {
-		//TODO: find specific user
 		return this.items.values()
 				.stream()
 				.map(this.entityConverter::toBoundary)
@@ -136,13 +134,12 @@ public class ItemServiceMockup implements ItemsService{
 
 	@Override
 	public void deleteAllItems(String adminSpace, String adminEmail) {
-		//TODO: check if user is admin
 		this.items.clear();
 	}
 
 	@Override
 	public List<ItemBoundary> getAllItems(String userSpace, String userEmail, int size, int page) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 

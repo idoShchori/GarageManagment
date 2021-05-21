@@ -1,6 +1,5 @@
 package twins.logic.logicImplementation.useCases;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -41,10 +40,6 @@ public class GetRevenueReport {
 		user.setRole("MANAGER");
 		usersService.updateUser(userId.getSpace(), userId.getEmail(), user);
 		
-		//	TODO : check these attributes exists
-		String stringMonth = operation.getOperationAttributes().get("month").toString();
-		String stringYear = operation.getOperationAttributes().get("year").toString();
-		
 		ItemIdBoundary itemId = operation.getItem().getItemId();
 		if (!this.itemsService.getSpecificItem(userId.getSpace(), userId.getEmail(), itemId.getSpace(), itemId.getId())
 				.getType().equals("report")) {
@@ -52,27 +47,36 @@ public class GetRevenueReport {
 		}
 		
 		Date startDate, endDate;
-		
-		String stringStartDate = stringYear + "-" + stringMonth + "-01";
-		String stringEndDate = stringYear + "-" + stringMonth + "-31";
-		
-		System.err.println("strat: " + stringStartDate + ", end: " + stringEndDate);
-		
+		int month, year;
+		String stringStartDate, stringEndDate;
+				
 		try {
+			
+			month = Integer.parseInt(operation.getOperationAttributes().get("month").toString());
+			year = Integer.parseInt(operation.getOperationAttributes().get("year").toString());
+			
+			stringStartDate = year + "-" + month + "-01";
+			stringEndDate = year + "-" + (month + 1) + "-01";
+			
+			if (month == 12)
+				stringEndDate = (year + 1) + "-01-01";
+			
 			startDate = new SimpleDateFormat("yyyy-MM-dd").parse(stringStartDate);
 			endDate = new SimpleDateFormat("yyyy-MM-dd").parse(stringEndDate);
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			throw new IllegalDateException("Illegal month or year");
 		}
-		
-		System.err.println("strat: " + startDate + ", end: " + endDate);
 		
 		String maintenanceType = "car maintenance";
 		
 //		SELECT * WHERE TYPE='something' AND DATE BETWEEN (start_date AND end_date)
 		List<ItemBoundary> items = this.itemsService
-				.getAllItemsByTypeAndDateBetween(userId.getSpace(), userId.getEmail(),
-				maintenanceType, startDate, endDate);
+										.getAllItemsByTypeAndDateBetween(
+												maintenanceType,
+												startDate,
+												endDate);
+		
+		System.err.println(items);
 		
 		double totalPrice = 0;
 		

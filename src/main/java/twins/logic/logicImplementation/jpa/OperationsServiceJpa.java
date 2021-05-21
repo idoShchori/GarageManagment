@@ -230,7 +230,6 @@ public class OperationsServiceJpa implements OperationsService {
 	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail) {
 		throw new RuntimeException("Deprecated method");
 
-//		// TODO: validate that `UserRole` == ADMIN, if not -> throws an exception
 //
 //		Iterable<OperationEntity> allEntities = this.operationsDao.findAll();
 //

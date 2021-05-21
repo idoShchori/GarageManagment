@@ -158,7 +158,6 @@ public class EntityConverterImplementation implements EntityConverter {
 	@Override
 	public UserBoundary toBoundary(UserEntity input) {
 		UserBoundary rv = new UserBoundary();
-		//TODO check that split is WORKING!!!
 		rv.setUsername(input.getUsername());
 		
 		rv.setUserId(new UserId(input.getUserId().getSpace(),input.getUserId().getEmail()));

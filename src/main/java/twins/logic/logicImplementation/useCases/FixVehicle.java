@@ -49,8 +49,6 @@ public class FixVehicle {
 		
 		Double price = null;
 		try {
-			
-			// TODO: verify it works when the input is '500' for example (which is not a double value)
 			price = Double.parseDouble(operation.getOperationAttributes().get("price").toString());
 		} catch (Exception e) {
 			throw new EmptyFieldsException("Price of maintenance is required");

@@ -65,7 +65,6 @@ public class UsersServiceMockup implements UsersService {
 			UserBoundary boundary = entityConverter.toBoundary (entity);
 			return boundary;
 		}else {
-			// TODO have server return status 404 here
 			throw new RuntimeException("Could not find user by userSpace/userEmail : " + userSpace+"/"+userEmail);// NullPointerException
 		}
 	}
@@ -104,7 +103,6 @@ public class UsersServiceMockup implements UsersService {
 			return rv;
 			
 		}else {
-			// TODO have server return status 404 here
 			throw new RuntimeException("could not find user by userSpace/userEmail: " + userSpace+"/"+userEmail);// NullPointerException
 		}
 	}
@@ -126,7 +124,6 @@ public class UsersServiceMockup implements UsersService {
 				throw new RuntimeException("User is not ADMIN,therefore access denied! ");//Not a Manager
 			}
 		}else {
-			// TODO have server return status 404 here
 			throw new RuntimeException("Could not find user by userSpace/userEmail : " + adminSpace+"/"+adminEmail);// NullPointerException
 		}
 		
@@ -144,7 +141,6 @@ public class UsersServiceMockup implements UsersService {
 				throw new RuntimeException("User is not ADMIN,therefore access denied! ");//Not a Manager
 			}
 		}else {
-			// TODO have server return status 404 here
 			throw new RuntimeException("Could not find user by userSpace/userEmail : " + adminSpace+"/"+adminEmail);// NullPointerException
 		}
 		
@@ -152,7 +148,6 @@ public class UsersServiceMockup implements UsersService {
 
 	@Override
 	public List<UserBoundary> getAllUsers(String adminSpace, String adminEmail, int size, int page) {
-		// TODO Ask eyal how to do pagination with MOCKUP
 		UserEntity entity = this.users.get(adminSpace+"/"+adminEmail);
 		if (entity != null) {
 			if(entity.getRole() == UserRole.ADMIN) {
@@ -166,7 +161,6 @@ public class UsersServiceMockup implements UsersService {
 				throw new RuntimeException("User is not ADMIN,therefore access denied! ");//Not a Manager
 			}
 		}else {
-			// TODO have server return status 404 here
 			throw new RuntimeException("Could not find user by userSpace/userEmail : " + adminSpace+"/"+adminEmail);// NullPointerException
 		}
 	}

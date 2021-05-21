@@ -70,45 +70,6 @@ public class UserServiceJpa implements UpdatedUsersService {
 		return userB;
 	}
 
-	/**
-	 * Method which checks UserBoundry's fields. Throws an EmptyFieldException if
-	 * one of fields isn't specified.
-	 * 
-	 * @param user
-	 */
-//	private void checkUserBoundary(UserBoundary user) {
-//
-//		if (user.getUserId().getEmail() == null || user.getUserId().getEmail().isEmpty()) {
-//			throw new EmptyFieldsException("UserEmail must be specified!");
-//		} else if (!validEmail(user.getUserId().getEmail())) {
-//			throw new EmptyFieldsException("UserEmail must be Valid!");
-//		}
-//
-//		if (user.getUsername() == null) {
-//			throw new EmptyFieldsException("UserName must be specified!");
-//		}
-//		if (user.getAvatar() == null || user.getAvatar().isEmpty()) {
-//			throw new EmptyFieldsException("UserAvatar must be specified!");
-//		}
-//		if (user.getRole() == null) {
-//			throw new EmptyFieldsException("UserRole must be specified!");
-//		}
-//
-//		try {
-//			UserRole.valueOf(user.getRole());
-//		} catch (Exception e) {
-//			throw new EmptyFieldsException("UserRole must be PLAYER/MANGAER/ADMIN");
-//		}
-//
-//	}
-
-//	private boolean validEmail(String email) {
-//		// TODO Auto-generated method stub
-//		String regex = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-//		Pattern pat = Pattern.compile(regex);
-//		return pat.matcher(email).matches();
-//	}
-
 	@Override
 	@Transactional(readOnly = true)
 	public UserBoundary login(String userSpace, String userEmail) {
@@ -121,7 +82,6 @@ public class UserServiceJpa implements UpdatedUsersService {
 			UserBoundary boundary = entityConverter.toBoundary(entity);
 			return boundary;
 		} else {
-			// TODO have server return status 404 here
 			throw new UserNotFoundException(
 					"Could not find user by userSpace/userEmail : " + userSpace + "/" + userEmail);// NullPointerException
 		}
@@ -200,7 +160,6 @@ public class UserServiceJpa implements UpdatedUsersService {
 				throw new UserAccessDeniedException("User is not ADMIN,therefore access denied! ");// Not a Manager
 			}
 		}else {
-			// TODO have server return status 404 here
 			throw new UserNotFoundException(
 					"Could not find user by userSpace/userEmail : " + adminSpace + "/" + adminEmail);// NullPointerException
 		}
@@ -220,7 +179,6 @@ public class UserServiceJpa implements UpdatedUsersService {
 				throw new UserAccessDeniedException("User is not ADMIN,therefore access denied! ");// Not a Manager
 			}
 		} else {
-			// TODO have server return status 404 here
 			throw new UserNotFoundException(
 					"Could not find user by userSpace/userEmail : " + adminSpace + "/" + adminEmail);// NullPointerException
 		}

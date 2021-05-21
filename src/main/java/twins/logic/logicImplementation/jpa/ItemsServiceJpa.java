@@ -147,7 +147,6 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 			return rv;
 
 		} else {
-			// TODO have server return status 404 here
 			throw new ItemNotFoundException("could not find item by userSpace/userEmail/itemSpace/itemId: " + userSpace + "/"
 					+ userEmail + "/" + itemSpace + "/" + itemId);// NullPointerException
 		}
@@ -210,7 +209,6 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 			return rv;
 
 		} else {
-			// TODO have server return status 404 here
 			throw new ItemNotFoundException("could not find item by userSpace/userEmail/itemSpace/itemId: " + userSpace + "/"
 					+ userEmail + "/" + itemSpace + "/" + itemId);
 		}
@@ -259,7 +257,6 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 	@Deprecated
 	public List<ItemBoundary> getAllChildren(String userSpace, String userEmail, String itemSpace, String itemId) {
 		throw new RuntimeException("Deprecated method");
-//		// TODO: check if user exist
 //
 //		ItemIdPK id = new ItemIdPK(itemSpace, itemId);
 //
@@ -344,14 +341,12 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 	}
 
 	@Override
-	public List<ItemBoundary> getAllItemsByTypeAndDateBetween(String userSpace, String userEmail,
-			String type, Date startDate, Date stringEndDate) {
-		UserIdPK userId = new UserIdPK(userSpace, userEmail);
-		
-		//		if user does not exits, exception will be thrown inside this method
-		this.usersService.login(userId.getSpace(), userId.getEmail());
+	public List<ItemBoundary> getAllItemsByTypeAndDateBetween(String type, Date startDate, Date endDate) {
 
-		return this.itemsDao.findAllByTypeAndCreatedTimestampBetween(type, startDate, stringEndDate)
+		return this.itemsDao.findAllByTypeAndCreatedTimestampBetween(
+								type,
+								startDate,
+								endDate)
 							.stream()
 							.map(this.entityConverter::toBoundary)
 							.collect(Collectors.toList());
