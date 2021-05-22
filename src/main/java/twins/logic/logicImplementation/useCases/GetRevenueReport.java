@@ -4,13 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import twins.items.ItemBoundary;
 import twins.items.ItemIdBoundary;
-import twins.logic.UpdatedItemsService;
-import twins.logic.UsersService;
 import twins.logic.Exceptions.IllegalDateException;
 import twins.logic.Exceptions.IllegalItemTypeException;
 import twins.operations.OperationBoundary;
@@ -18,19 +15,7 @@ import twins.users.UserBoundary;
 import twins.users.UserId;
 
 @Service
-public class GetRevenueReport {
-	private UsersService usersService;
-	private UpdatedItemsService itemsService;
-	
-	@Autowired
-	public void setItemService(UpdatedItemsService itemService) {
-		this.itemsService = itemService;
-	}
-
-	@Autowired
-	public void setUsersService(UsersService usersService) {
-		this.usersService = usersService;
-	}
+public class GetRevenueReport extends AbstractUseCase{
 	
 	public double invoke(OperationBoundary operation) {
 		UserId userId = operation.getInvokedBy().getUserId();

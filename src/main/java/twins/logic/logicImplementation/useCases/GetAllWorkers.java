@@ -2,39 +2,17 @@ package twins.logic.logicImplementation.useCases;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import twins.data.UserRole;
 import twins.items.ItemIdBoundary;
-import twins.logic.UpdatedItemsService;
-import twins.logic.UpdatedUsersService;
 import twins.logic.Exceptions.IllegalItemTypeException;
-import twins.logic.logicImplementation.Validator;
 import twins.operations.OperationBoundary;
 import twins.users.UserBoundary;
 import twins.users.UserId;
 
 @Service
-public class GetAllWorkers {
-	private UpdatedUsersService usersService;
-	private UpdatedItemsService itemsService;
-	private Validator validator;
-
-	@Autowired
-	public void setItemService(UpdatedItemsService itemService) {
-		this.itemsService = itemService;
-	}
-
-	@Autowired
-	public void setUsersService(UpdatedUsersService usersService) {
-		this.usersService = usersService;
-	}
-	
-	@Autowired
-	public void setValidator(Validator validator) {
-		this.validator = validator;
-	}
+public class GetAllWorkers extends AbstractUseCase {
 
 	public List<UserBoundary> invoke(OperationBoundary operation, UserRole myRole, int page, int size) {
 		UserId userId = operation.getInvokedBy().getUserId();
