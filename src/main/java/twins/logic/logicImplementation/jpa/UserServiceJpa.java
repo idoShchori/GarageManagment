@@ -17,6 +17,7 @@ import twins.data.UserRole;
 import twins.data.dao.UsersDao;
 import twins.logic.UpdatedUsersService;
 import twins.logic.Exceptions.UserAccessDeniedException;
+import twins.logic.Exceptions.UserAlreadyExistsException;
 import twins.logic.Exceptions.UserNotFoundException;
 import twins.logic.logicImplementation.EntityConverter;
 import twins.logic.logicImplementation.Validator;
@@ -58,6 +59,13 @@ public class UserServiceJpa implements UpdatedUsersService {
 	public UserBoundary createUser(UserBoundary user) {
 
 		validator.isValidUser(user);
+		
+		try {
+			if (this.login(springApplicatioName, user.getUserId().getEmail()) != null)
+				throw new UserAlreadyExistsException("This user is already exists");
+		} catch (UserNotFoundException e) {
+			// user does not exists in the database, nothing to do
+		}
 
 		UserEntity entity = this.entityConverter.toEntity(user);
 		entity.getUserId().setSpace(springApplicatioName);

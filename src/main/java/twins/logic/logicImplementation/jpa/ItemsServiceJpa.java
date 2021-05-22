@@ -223,7 +223,7 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 		//		if user does not exits, exception will be thrown inside this method
 		UserEntity user = this.entityConverter.toEntity(this.usersService.login(userId.getSpace(), userId.getEmail()));
 		
-		if (validator.isUserRole(user, UserRole.ADMIN))
+		if (!validator.isUserRole(user, UserRole.ADMIN))
 			throw new UserAccessDeniedException("User's role is not admin");
 
 		this.itemsDao.deleteAll();

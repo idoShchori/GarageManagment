@@ -37,8 +37,6 @@ public class AdminController {
 	public void deleteAllUsersInSpace(
 			@PathVariable("userSpace") String space,
 			@PathVariable("userEmail") String email) {
-		// STUB IMPLEMENTATION
-		System.out.println("all users deleted");
 		this.userService.deleteAllUsers(space, email);
 	}
 
@@ -48,8 +46,6 @@ public class AdminController {
 	public void deleteAllItemsInSpace(
 			@PathVariable("userSpace") String space,
 			@PathVariable("userEmail") String email) {
-		// STUB IMPLEMENTATION.
-		System.out.println("all items deleted");
 		this.itemService.deleteAllItems(space, email);
 	}
 
@@ -59,8 +55,6 @@ public class AdminController {
 	public void deleteAllOperationsInSpace(
 			@PathVariable("userSpace") String space,
 			@PathVariable("userEmail") String email) {
-		// STUB IMPLEMENTATION.
-		System.out.println("all operations deleted");
 		this.operationService.deleteAllOperations(space, email);
 	}
 
@@ -73,7 +67,6 @@ public class AdminController {
 			@PathVariable("userEmail") String email,
 			@RequestParam(name="size", required = false, defaultValue = "20") int size,
 			@RequestParam(name="page", required = false, defaultValue = "0") int page){
-//		return this.userService.getAllUsers(space, email).toArray(new UserBoundary[0]);
 		return this.userService.getAllUsers(space, email, size, page).toArray(new UserBoundary[0]);
 	}
 	
