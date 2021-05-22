@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import twins.items.ItemBoundary;
 import twins.items.Location;
 import twins.logic.Exceptions.EmptyFieldsException;
+import twins.logic.Exceptions.IllegalItemTypeException;
 import twins.operations.OperationBoundary;
 import twins.users.UserBoundary;
 import twins.users.UserId;
@@ -19,8 +20,23 @@ public class FixVehicle extends AbstractUseCase {
 		UserId userId = operation.getInvokedBy().getUserId();
 		UserBoundary user = usersService.login(userId.getSpace(), userId.getEmail());
 		
-		user.setRole("MANAGER");
-		usersService.updateUser(userId.getSpace(), userId.getEmail(), user);
+		ItemBoundary item = itemsService.getSpecificItem(
+				userId.getSpace(),
+				userId.getEmail(),
+				operation.getItem().getItemId().getSpace(),
+				operation.getItem().getItemId().getId());
+		
+		// validate type of item is `vehicle maintenance`
+		if(!item.getType().equals("vehicle maintenance"))
+			throw new IllegalItemTypeException("This item's type is " + item.getType() + ", and not vehicle maintenance");
+		
+		// validate the type of this vehicle maintenance item is exists and is `fix`
+		try {
+			if (!item.getItemAttributes().get("type").equals("fix"))
+				throw new IllegalItemTypeException("This maintenance's type is not fix");
+		} catch (Exception e) {
+			throw new IllegalItemTypeException("Maintenance's type is not specified");
+		}
 		
 		ArrayList<String> allItems = null;
 		try {
@@ -37,23 +53,26 @@ public class FixVehicle extends AbstractUseCase {
 		} catch (Exception e) {
 			throw new EmptyFieldsException("Price of maintenance is required");
 		}
+		
+		user.setRole("MANAGER");
+		usersService.updateUser(userId.getSpace(), userId.getEmail(), user);
 			
 		for (String string : allItems) {
-			ItemBoundary item = new ItemBoundary();
-			item.setName(string);
-			item.setType("car item");
-			item.setActive(true);
-			item.setCreatedBy(operation.getInvokedBy());
-			item.setLocation(new Location(0, 0));
-			item.setActive(false);
-			item = itemsService.createItem(operation.getInvokedBy().getUserId().getSpace(),
-					operation.getInvokedBy().getUserId().getEmail(), item);
+			ItemBoundary carItem = new ItemBoundary();
+			carItem.setName(string);
+			carItem.setType("car item");
+			carItem.setActive(true);
+			carItem.setCreatedBy(operation.getInvokedBy());
+			carItem.setLocation(new Location(0, 0));
+			carItem.setActive(false);
+			carItem = itemsService.createItem(operation.getInvokedBy().getUserId().getSpace(),
+					operation.getInvokedBy().getUserId().getEmail(), carItem);
 			itemsService.addChildToParent(
 					operation.getInvokedBy().getUserId().getSpace(),
 					operation.getInvokedBy().getUserId().getEmail(),
 					operation.getItem().getItemId().getSpace(),
 					operation.getItem().getItemId().getId(),
-					item.getItemId());
+					carItem.getItemId());
 		}
 		
 		ItemBoundary parent = itemsService.getSpecificItem(

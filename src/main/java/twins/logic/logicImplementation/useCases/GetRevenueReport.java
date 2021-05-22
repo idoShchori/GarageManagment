@@ -52,7 +52,7 @@ public class GetRevenueReport extends AbstractUseCase{
 			throw new IllegalDateException("Illegal month or year");
 		}
 		
-		String maintenanceType = "car maintenance";
+		String maintenanceType = "vehicle maintenance";
 		
 //		SELECT * WHERE TYPE='something' AND DATE BETWEEN (start_date AND end_date)
 		List<ItemBoundary> items = this.itemsService
