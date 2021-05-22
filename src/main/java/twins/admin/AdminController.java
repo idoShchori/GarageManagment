@@ -74,7 +74,7 @@ public class AdminController {
 			@RequestParam(name="size", required = false, defaultValue = "20") int size,
 			@RequestParam(name="page", required = false, defaultValue = "0") int page){
 //		return this.userService.getAllUsers(space, email).toArray(new UserBoundary[0]);
-		return this.userService.getAllUsers(space, email,size,page).toArray(new UserBoundary[0]);
+		return this.userService.getAllUsers(space, email, size, page).toArray(new UserBoundary[0]);
 	}
 	
 

@@ -351,4 +351,14 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 							.map(this.entityConverter::toBoundary)
 							.collect(Collectors.toList());
 	}
+	
+	@Override
+	public List<ItemBoundary> getAllItemsByTypeAndActive(String type, boolean active, int size, int page) {
+		
+		return this.itemsDao.findAllByTypeAndActive(type, active,
+										PageRequest.of(page, size, Direction.DESC, "createdTimestamp", "itemIdPK"))
+							.stream()
+							.map(this.entityConverter::toBoundary)
+							.collect(Collectors.toList());
+	}
 }

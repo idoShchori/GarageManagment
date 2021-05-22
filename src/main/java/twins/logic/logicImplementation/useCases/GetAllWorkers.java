@@ -14,7 +14,7 @@ import twins.users.UserId;
 @Service
 public class GetAllWorkers extends AbstractUseCase {
 
-	public List<UserBoundary> invoke(OperationBoundary operation, UserRole myRole, int page, int size) {
+	public List<UserBoundary> invoke(OperationBoundary operation, UserRole myRole, int size, int page) {
 		UserId userId = operation.getInvokedBy().getUserId();
 		
 		String userType = operation.getOperationAttributes().get("user type").toString();

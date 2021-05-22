@@ -17,7 +17,7 @@ import twins.users.UserId;
 @Service
 public class GetMaintenancesByDate extends AbstractUseCase {
 
-	public List<ItemBoundary> invoke(OperationBoundary operation, int page, int size) {
+	public List<ItemBoundary> invoke(OperationBoundary operation, int size, int page) {
 		UserId userId = operation.getInvokedBy().getUserId();
 		UserBoundary user = usersService.login(userId.getSpace(), userId.getEmail());
 

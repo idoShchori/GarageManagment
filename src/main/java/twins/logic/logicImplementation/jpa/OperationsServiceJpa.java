@@ -35,6 +35,7 @@ import twins.logic.logicImplementation.useCases.FixVehicle;
 import twins.logic.logicImplementation.useCases.GetAllWorkers;
 import twins.logic.logicImplementation.useCases.GetMaintenancesByDate;
 import twins.logic.logicImplementation.useCases.GetRevenueReport;
+import twins.logic.logicImplementation.useCases.PendingMaintenanceList;
 import twins.logic.logicImplementation.useCases.UseCase;
 import twins.operations.OperationBoundary;
 
@@ -52,6 +53,7 @@ public class OperationsServiceJpa implements OperationsService {
 	private GetMaintenancesByDate getMaintenancesByDate;
 	private GetAllWorkers getAllWorkers;
 	private GetRevenueReport getRevenueReport;
+	private PendingMaintenanceList pendingMaintenance;
 
 	
 	private UserRole validOperationRole = UserRole.PLAYER;
@@ -111,9 +113,14 @@ public class OperationsServiceJpa implements OperationsService {
 		this.getRevenueReport = getRevenueReport;
 	}
 
+	@Autowired
+	public void setpendingMaintenance(PendingMaintenanceList pendingMaintenance) {
+		this.pendingMaintenance = pendingMaintenance;
+	}
+
 	@Override
 	@Transactional(readOnly = false)
-	public Object invokeOperation(OperationBoundary operation, int page ,int size) {
+	public Object invokeOperation(OperationBoundary operation, int size ,int page) {
 
 		validator.isValidOperation(operation);
 
@@ -155,18 +162,23 @@ public class OperationsServiceJpa implements OperationsService {
 			
 		Object returnedValue = null;
 		
+		System.err.println(operationCase);
+		
 		switch (operationCase) {
 		case FIX_VEHICLE:
 			this.fixVehicle.invoke(operation);
 			break;
 		case MAINTENANCE_BY_MONTH:
-			returnedValue = this.getMaintenancesByDate.invoke(operation, page, size);
+			returnedValue = this.getMaintenancesByDate.invoke(operation, size, page);
 			break;
 		case GET_ALL_WORKERS:
-			returnedValue = this.getAllWorkers.invoke(operation, actualRole, page, size);
+			returnedValue = this.getAllWorkers.invoke(operation, actualRole, size, page);
 			break;
 		case GET_REVENUE_REPORT:
 			returnedValue = this.getRevenueReport.invoke(operation);
+			break;
+		case PENDING_MAINTENANCE:
+			returnedValue = this.pendingMaintenance.invoke(operation, size, page);
 			break;
 		default:
 			throw new IllegalOperationType("Illegal operation type");
@@ -186,7 +198,7 @@ public class OperationsServiceJpa implements OperationsService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public OperationBoundary invokeAsynchronous(OperationBoundary operation, int page, int size) {
+	public OperationBoundary invokeAsynchronous(OperationBoundary operation, int size, int page) {
 
 		validator.isValidOperation(operation);
 

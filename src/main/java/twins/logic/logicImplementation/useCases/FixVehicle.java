@@ -31,12 +31,8 @@ public class FixVehicle extends AbstractUseCase {
 			throw new IllegalItemTypeException("This item's type is " + item.getType() + ", and not vehicle maintenance");
 		
 		// validate the type of this vehicle maintenance item is exists and is `fix`
-		try {
-			if (!item.getItemAttributes().get("type").equals("fix"))
-				throw new IllegalItemTypeException("This maintenance's type is not fix");
-		} catch (Exception e) {
-			throw new IllegalItemTypeException("Maintenance's type is not specified");
-		}
+		if (item.getItemAttributes().get("type") == null || !item.getItemAttributes().get("type").equals("fix"))
+			throw new IllegalItemTypeException("This maintenance's type is not `fix` or not specified");
 		
 		ArrayList<String> allItems = null;
 		try {
