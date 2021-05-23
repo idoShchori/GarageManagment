@@ -5,8 +5,8 @@ import java.util.List;
 import twins.operations.OperationBoundary;
 
 public interface OperationsService {
-	public Object invokeOperation(OperationBoundary operation, int size, int page);
-	public OperationBoundary invokeAsynchronous(OperationBoundary operation, int size, int page);
+	public Object invokeOperation(OperationBoundary operation);
+	public OperationBoundary invokeAsynchronous(OperationBoundary operation);
 	@Deprecated
 	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail);
 	public List<OperationBoundary> getAllOperations(String adminSpace, String adminEmail, int size, int page);

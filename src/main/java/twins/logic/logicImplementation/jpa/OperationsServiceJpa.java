@@ -120,7 +120,7 @@ public class OperationsServiceJpa implements OperationsService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public Object invokeOperation(OperationBoundary operation, int size ,int page) {
+	public Object invokeOperation(OperationBoundary operation) {
 
 		validator.isValidOperation(operation);
 
@@ -159,10 +159,19 @@ public class OperationsServiceJpa implements OperationsService {
 		if(operation.getOperationAttributes().containsKey("operationName")) {
 			this.operationsDao.save(entity);
 		}
-			
-		Object returnedValue = null;
 		
-		System.err.println(operationCase);
+		int size = 20, page = 0;
+		
+		try {
+			size = Integer.parseInt(operation.getOperationAttributes().get("size").toString());
+			page = Integer.parseInt(operation.getOperationAttributes().get("page").toString());
+		} catch (Exception e) {
+			// return to default in case of exception
+			size = 20;
+			page = 0;
+		}
+		
+		Object returnedValue = null;
 		
 		switch (operationCase) {
 		case FIX_VEHICLE:
@@ -198,7 +207,7 @@ public class OperationsServiceJpa implements OperationsService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public OperationBoundary invokeAsynchronous(OperationBoundary operation, int size, int page) {
+	public OperationBoundary invokeAsynchronous(OperationBoundary operation) {
 
 		validator.isValidOperation(operation);
 

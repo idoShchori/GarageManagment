@@ -39,7 +39,7 @@ public class OperationsServiceMockup implements OperationsService {
 	}
 
 	@Override
-	public Object invokeOperation(OperationBoundary operation, int page, int size) {
+	public Object invokeOperation(OperationBoundary operation) {
 		
 		if (operation.getInvokedBy().getUserId() == null)
 			throw new RuntimeException("An operation must be performed by a valid user");
@@ -61,7 +61,7 @@ public class OperationsServiceMockup implements OperationsService {
 	}
 
 	@Override
-	public OperationBoundary invokeAsynchronous(OperationBoundary operation, int page, int size) {
+	public OperationBoundary invokeAsynchronous(OperationBoundary operation) {
 
 		if (operation.getInvokedBy().getUserId() == null)
 			throw new RuntimeException("An operation must be performed by a valid user");
