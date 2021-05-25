@@ -11,7 +11,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PendingMaintenanceList extends AbstractUseCase {
+public class PendingMaintenanceListUseCase extends AbstractUseCase {
 	
 	public List<ItemBoundary> invoke(OperationBoundary operation, int size, int page) {
 		

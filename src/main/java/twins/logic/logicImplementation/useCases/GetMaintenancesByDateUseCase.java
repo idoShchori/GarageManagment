@@ -15,7 +15,7 @@ import twins.users.UserBoundary;
 import twins.users.UserId;
 
 @Service
-public class GetMaintenancesByDate extends AbstractUseCase {
+public class GetMaintenancesByDateUseCase extends AbstractUseCase {
 
 	public List<ItemBoundary> invoke(OperationBoundary operation, int size, int page) {
 		UserId userId = operation.getInvokedBy().getUserId();

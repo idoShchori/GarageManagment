@@ -14,7 +14,7 @@ import twins.users.UserBoundary;
 import twins.users.UserId;
 
 @Service
-public class FixVehicle extends AbstractUseCase {
+public class FixVehicleUseCase extends AbstractUseCase {
 
 	public void invoke(OperationBoundary operation) {
 		UserId userId = operation.getInvokedBy().getUserId();

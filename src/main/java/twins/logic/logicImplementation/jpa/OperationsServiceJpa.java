@@ -31,11 +31,11 @@ import twins.logic.Exceptions.ItemNotFoundException;
 import twins.logic.Exceptions.UserAccessDeniedException;
 import twins.logic.logicImplementation.EntityConverter;
 import twins.logic.logicImplementation.Validator;
-import twins.logic.logicImplementation.useCases.FixVehicle;
-import twins.logic.logicImplementation.useCases.GetAllWorkers;
-import twins.logic.logicImplementation.useCases.GetMaintenancesByDate;
-import twins.logic.logicImplementation.useCases.GetRevenueReport;
-import twins.logic.logicImplementation.useCases.PendingMaintenanceList;
+import twins.logic.logicImplementation.useCases.FixVehicleUseCase;
+import twins.logic.logicImplementation.useCases.GetAllWorkersUseCase;
+import twins.logic.logicImplementation.useCases.GetMaintenancesByDateUseCase;
+import twins.logic.logicImplementation.useCases.GetRevenueReportUseCase;
+import twins.logic.logicImplementation.useCases.PendingMaintenanceListUseCase;
 import twins.logic.logicImplementation.useCases.UseCase;
 import twins.operations.OperationBoundary;
 
@@ -49,11 +49,11 @@ public class OperationsServiceJpa implements OperationsService {
 	private Validator validator;
 	private String springApplicatioName;
 	private JmsTemplate jmsTemplate;
-	private FixVehicle fixVehicle;
-	private GetMaintenancesByDate getMaintenancesByDate;
-	private GetAllWorkers getAllWorkers;
-	private GetRevenueReport getRevenueReport;
-	private PendingMaintenanceList pendingMaintenance;
+	private FixVehicleUseCase fixVehicle;
+	private GetMaintenancesByDateUseCase getMaintenancesByDate;
+	private GetAllWorkersUseCase getAllWorkers;
+	private GetRevenueReportUseCase getRevenueReport;
+	private PendingMaintenanceListUseCase pendingMaintenance;
 
 	
 	private UserRole validOperationRole = UserRole.PLAYER;
@@ -94,27 +94,27 @@ public class OperationsServiceJpa implements OperationsService {
 	}
 
 	@Autowired
-	public void setFixVehicle(FixVehicle fixVehicle) {
+	public void setFixVehicle(FixVehicleUseCase fixVehicle) {
 		this.fixVehicle = fixVehicle;
 	}
 
 	@Autowired
-	public void setGetMaintenancesByDate(GetMaintenancesByDate getMaintenancesByDate) {
+	public void setGetMaintenancesByDate(GetMaintenancesByDateUseCase getMaintenancesByDate) {
 		this.getMaintenancesByDate = getMaintenancesByDate;
 	}
 
 	@Autowired
-	public void setGetAllWorkers(GetAllWorkers getAllWorkers) {
+	public void setGetAllWorkers(GetAllWorkersUseCase getAllWorkers) {
 		this.getAllWorkers = getAllWorkers;
 	}
 	
 	@Autowired
-	public void setGetRevenueReport(GetRevenueReport getRevenueReport) {
+	public void setGetRevenueReport(GetRevenueReportUseCase getRevenueReport) {
 		this.getRevenueReport = getRevenueReport;
 	}
 
 	@Autowired
-	public void setpendingMaintenance(PendingMaintenanceList pendingMaintenance) {
+	public void setpendingMaintenance(PendingMaintenanceListUseCase pendingMaintenance) {
 		this.pendingMaintenance = pendingMaintenance;
 	}
 

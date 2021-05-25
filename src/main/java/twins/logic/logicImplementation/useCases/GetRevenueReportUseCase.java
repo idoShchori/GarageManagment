@@ -15,7 +15,7 @@ import twins.users.UserBoundary;
 import twins.users.UserId;
 
 @Service
-public class GetRevenueReport extends AbstractUseCase{
+public class GetRevenueReportUseCase extends AbstractUseCase{
 	
 	public double invoke(OperationBoundary operation) {
 		UserId userId = operation.getInvokedBy().getUserId();

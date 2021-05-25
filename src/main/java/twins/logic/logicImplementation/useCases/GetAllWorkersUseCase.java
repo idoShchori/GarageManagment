@@ -12,7 +12,7 @@ import twins.users.UserBoundary;
 import twins.users.UserId;
 
 @Service
-public class GetAllWorkers extends AbstractUseCase {
+public class GetAllWorkersUseCase extends AbstractUseCase {
 
 	public List<UserBoundary> invoke(OperationBoundary operation, UserRole myRole, int size, int page) {
 		UserId userId = operation.getInvokedBy().getUserId();
