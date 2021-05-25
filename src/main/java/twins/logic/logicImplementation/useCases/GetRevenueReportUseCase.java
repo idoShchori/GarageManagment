@@ -61,8 +61,6 @@ public class GetRevenueReportUseCase extends AbstractUseCase{
 												startDate,
 												endDate);
 		
-		System.err.println(items);
-		
 		double totalPrice = 0;
 		
 		for (ItemBoundary item : items) {

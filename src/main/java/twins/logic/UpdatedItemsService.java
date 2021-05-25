@@ -18,5 +18,6 @@ public interface UpdatedItemsService extends ItemsService {
 	public List<ItemBoundary> getAllParents(String userSpace, String userEmail, String childSpace, String childId, int size, int page);
 	public List<ItemBoundary> getAllItemsByTypeAndDate(String userSpace, String userEmail, String type, Date date, int size, int page);
 	public List<ItemBoundary> getAllItemsByTypeAndDateBetween(String type, Date startDate, Date endDate);
+	public List<ItemBoundary> getAllItemsByDateBetween(Date startDate, Date endDate);
 	public List<ItemBoundary> getAllItemsByTypeAndActive(String type, boolean active, int size, int page);
 }

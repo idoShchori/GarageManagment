@@ -353,6 +353,17 @@ public class ItemsServiceJpa implements UpdatedItemsService {
 	}
 	
 	@Override
+	public List<ItemBoundary> getAllItemsByDateBetween(Date startDate, Date endDate) {
+
+		return this.itemsDao.findAllByCreatedTimestampBetween(
+								startDate,
+								endDate)
+							.stream()
+							.map(this.entityConverter::toBoundary)
+							.collect(Collectors.toList());
+	}
+	
+	@Override
 	public List<ItemBoundary> getAllItemsByTypeAndActive(String type, boolean active, int size, int page) {
 		
 		return this.itemsDao.findAllByTypeAndActive(type, active,
