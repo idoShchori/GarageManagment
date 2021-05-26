@@ -50,17 +50,17 @@ public class ItemInitializer implements CommandLineRunner {
 	private String generateLicenseNumber() {
 		String num;
 		
-		int temp = rand.nextInt(1000);
+		int temp = rand.nextInt(999) + 1;
 		while (temp < 100)
 			temp *= 10;
 		num = String.valueOf(temp) + "-";
 		
-		temp = rand.nextInt(100);
+		temp = rand.nextInt(99) + 1;
 		while (temp < 10)
 			temp *= 10;
 		num += String.valueOf(temp) + "-";
 		
-		temp = rand.nextInt(1000);
+		temp = rand.nextInt(999) + 1;
 		while (temp < 100)
 			temp *= 10;
 		num += String.valueOf(temp);
