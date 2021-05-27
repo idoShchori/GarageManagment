@@ -25,6 +25,9 @@ public class GetMaintenancesByDateUseCase extends AbstractUseCase {
 		user.setRole("MANAGER");
 		usersService.updateUser(userId.getSpace(), userId.getEmail(), user);
 
+		if (!operation.getOperationAttributes().containsKey("date"))
+			throw new IllegalDateException("Illegal date. Date format is yyyy-MM-dd");
+		
 		String stringDate = operation.getOperationAttributes().get("date").toString();
 		Date date;
 		try {

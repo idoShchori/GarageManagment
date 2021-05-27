@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import twins.data.UserRole;
 import twins.items.ItemIdBoundary;
+import twins.logic.Exceptions.EmptyFieldsException;
 import twins.logic.Exceptions.IllegalItemTypeException;
 import twins.operations.OperationBoundary;
 import twins.users.UserBoundary;
@@ -17,7 +18,10 @@ public class GetAllWorkersUseCase extends AbstractUseCase {
 	public List<UserBoundary> invoke(OperationBoundary operation, UserRole myRole, int size, int page) {
 		UserId userId = operation.getInvokedBy().getUserId();
 		
-		String userType = operation.getOperationAttributes().get("user type").toString();
+		if (!operation.getOperationAttributes().containsKey("userType"))
+			throw new EmptyFieldsException("User type must be specified");
+		
+		String userType = operation.getOperationAttributes().get("userType").toString();
 		if (!validator.isValidUserRole(userType))
 			throw new RuntimeException("Illegal user role for report");
 

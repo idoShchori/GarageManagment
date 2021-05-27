@@ -139,7 +139,7 @@ public class Validator implements Validatorable {
 		switch (usecase) {
 		case FIX_VEHICLE:
 			return this.isUserRole(user, UserRole.PLAYER);
-		case MAINTENANCE_BY_MONTH:
+		case MAINTENANCE_BY_DATE:
 			return this.isUserRole(user, UserRole.MANAGER);
 		case GET_ALL_WORKERS:
 			return this.isUserRole(user, UserRole.MANAGER);

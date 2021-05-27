@@ -184,7 +184,7 @@ public class OperationsServiceJpa implements OperationsService {
 		case FIX_VEHICLE:
 			this.fixVehicle.invoke(operation);
 			break;
-		case MAINTENANCE_BY_MONTH:
+		case MAINTENANCE_BY_DATE:
 			returnedValue = this.getMaintenancesByDate.invoke(operation, size, page);
 			break;
 		case GET_ALL_WORKERS:

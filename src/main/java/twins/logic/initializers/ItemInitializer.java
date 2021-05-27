@@ -18,15 +18,12 @@ import org.springframework.stereotype.Component;
 
 import twins.data.UserRole;
 import twins.data.dao.ItemsDao;
-import twins.items.Item;
 import twins.items.ItemBoundary;
 import twins.items.ItemIdBoundary;
 import twins.items.Location;
 import twins.logic.UpdatedItemsService;
 import twins.logic.UpdatedUsersService;
 import twins.logic.logicImplementation.EntityConverter;
-import twins.logic.logicImplementation.useCases.FixVehicleUseCase;
-import twins.operations.OperationBoundary;
 import twins.users.User;
 import twins.users.UserBoundary;
 import twins.users.UserId;
@@ -94,11 +91,12 @@ public class ItemInitializer implements CommandLineRunner {
 		return num;
 	}
 	
-	private String getRandomDate() {
-		String date = "";
+	private String getRandomDate() {		
+		int endYear = 2021, startYear = 2021;
+		int endMonth = 2, startMonth = 1;
 		
-		int year = rand.nextInt(32) + 1990;
-		int month = rand.nextInt(12) + 1;
+		int year = rand.nextInt(endYear - startYear + 1) + startYear;
+		int month = rand.nextInt(endMonth - startMonth + 1) + startMonth;
 		int day = rand.nextInt(28) + 1;
 		
 		return year + "-" + month + "-" + day;
@@ -134,7 +132,6 @@ public class ItemInitializer implements CommandLineRunner {
 		carTypes.add("Mercedes-Benz A35");
 		carTypes.add("Mercedes-Benz G63");
 		carTypes.add("Mercedes-Benz C43");
-		
 		
 		IntStream.range(0, 20) // Stream<Integer>
 				.mapToObj(i -> {

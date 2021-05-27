@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import twins.items.ItemBoundary;
 import twins.items.ItemIdBoundary;
+import twins.logic.Exceptions.EmptyFieldsException;
 import twins.logic.Exceptions.IllegalDateException;
 import twins.logic.Exceptions.IllegalItemTypeException;
 import twins.operations.OperationBoundary;
@@ -29,6 +30,10 @@ public class GetRevenueReportUseCase extends AbstractUseCase{
 		if (!this.itemsService.getSpecificItem(userId.getSpace(), userId.getEmail(), itemId.getSpace(), itemId.getId())
 				.getType().equals("report")) {
 			throw new IllegalItemTypeException("Item's type is not a report");
+		}
+		
+		if (!operation.getOperationAttributes().containsKey("year") || !operation.getOperationAttributes().containsKey("month")) {
+			throw new EmptyFieldsException("Year and month must be specified");
 		}
 		
 		Date startDate, endDate;
