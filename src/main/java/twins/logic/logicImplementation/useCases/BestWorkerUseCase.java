@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import twins.items.ItemBoundary;
 import twins.items.ItemIdBoundary;
 import twins.logic.Exceptions.IllegalDateException;
@@ -18,6 +20,7 @@ import twins.operations.OperationBoundary;
 import twins.users.UserBoundary;
 import twins.users.UserId;
 
+@Service
 public class BestWorkerUseCase extends AbstractUseCase {
 
 	public UserBoundary invoke(OperationBoundary operation) {
