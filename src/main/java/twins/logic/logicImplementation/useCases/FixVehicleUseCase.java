@@ -56,7 +56,7 @@ public class FixVehicleUseCase extends AbstractUseCase {
 		for (String string : allItems) {
 			ItemBoundary carItem = new ItemBoundary();
 			carItem.setName(string);
-			carItem.setType("car item");
+			carItem.setType("vehicle item");
 			carItem.setActive(true);
 			carItem.setCreatedBy(operation.getInvokedBy());
 			carItem.setLocation(new Location(0, 0));
