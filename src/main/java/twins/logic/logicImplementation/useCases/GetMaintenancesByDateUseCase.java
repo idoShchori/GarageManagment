@@ -39,7 +39,7 @@ public class GetMaintenancesByDateUseCase extends AbstractUseCase {
 			throw new IllegalItemTypeException("Item's type is not a report");
 		}
 
-		String vehicleType = "vehicle";
+		String vehicleType = "vehicle maintenance";
 
 		List<ItemBoundary> cars = this.itemsService
 				.getAllItemsByTypeAndDate(userId.getSpace(), userId.getEmail(),
