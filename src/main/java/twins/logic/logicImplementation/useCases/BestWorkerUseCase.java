@@ -52,23 +52,31 @@ public class BestWorkerUseCase extends AbstractUseCase {
 		}
 		
 		List<ItemBoundary> items = this.itemsService
-				.getAllItemsByDateBetween(
+				.getAllItemsByTypeAndDateBetween(
+						"vehicle maintenance",
 						startDate,
 						endDate);
 		
 		Map<UserBoundary, Double> workersRevenue = new HashMap<>();
 		
 		items.forEach(item -> {
-			UserId id = item.getCreatedBy().getUserId();
-			UserBoundary tempUser = usersService.login(id.getSpace(), id.getSpace());
-			double total = Double.parseDouble(item.getItemAttributes().get("price").toString());
-			if (workersRevenue.containsKey(tempUser)) {
-				total += workersRevenue.get(tempUser);
+			if (item.getItemAttributes().containsKey("workerSpace") && item.getItemAttributes().containsKey("workerEmail")) {
+								
+				String space = item.getItemAttributes().get("workerSpace").toString();
+				String email = item.getItemAttributes().get("workerEmail").toString();
+				
+				System.err.println(space + " " + email);
+
+				UserBoundary tempUser = usersService.login(space, email);
+				if (item.getItemAttributes().containsKey("price")) {
+					double total = Double.parseDouble(item.getItemAttributes().get("price").toString());
+					if (workersRevenue.containsKey(tempUser)) {
+						total += workersRevenue.get(tempUser);
+					}
+					workersRevenue.put(tempUser, total);
+				}
 			}
-			workersRevenue.put(tempUser, total);
 		});
-		
-		
 		
 		user.setRole("PLAYER");
 		usersService.updateUser(userId.getSpace(), userId.getEmail(), user);

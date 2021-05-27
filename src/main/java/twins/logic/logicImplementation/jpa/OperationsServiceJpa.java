@@ -31,6 +31,7 @@ import twins.logic.Exceptions.ItemNotFoundException;
 import twins.logic.Exceptions.UserAccessDeniedException;
 import twins.logic.logicImplementation.EntityConverter;
 import twins.logic.logicImplementation.Validator;
+import twins.logic.logicImplementation.useCases.BestWorkerUseCase;
 import twins.logic.logicImplementation.useCases.FixVehicleUseCase;
 import twins.logic.logicImplementation.useCases.GetAllWorkersUseCase;
 import twins.logic.logicImplementation.useCases.GetMaintenancesByDateUseCase;
@@ -54,6 +55,7 @@ public class OperationsServiceJpa implements OperationsService {
 	private GetAllWorkersUseCase getAllWorkers;
 	private GetRevenueReportUseCase getRevenueReport;
 	private PendingMaintenanceListUseCase pendingMaintenance;
+	private BestWorkerUseCase bestWorker;
 
 	
 	private UserRole validOperationRole = UserRole.PLAYER;
@@ -114,8 +116,13 @@ public class OperationsServiceJpa implements OperationsService {
 	}
 
 	@Autowired
-	public void setpendingMaintenance(PendingMaintenanceListUseCase pendingMaintenance) {
+	public void setPendingMaintenance(PendingMaintenanceListUseCase pendingMaintenance) {
 		this.pendingMaintenance = pendingMaintenance;
+	}
+	
+	@Autowired
+	public void setBestWorkerUseCase(BestWorkerUseCase bestWorker) {
+		this.bestWorker = bestWorker;
 	}
 
 	@Override
@@ -188,6 +195,9 @@ public class OperationsServiceJpa implements OperationsService {
 			break;
 		case PENDING_MAINTENANCE:
 			returnedValue = this.pendingMaintenance.invoke(operation, size, page);
+			break;
+		case BEST_WORKER:
+			returnedValue = this.bestWorker.invoke(operation);
 			break;
 		default:
 			throw new IllegalOperationType("Illegal operation type");

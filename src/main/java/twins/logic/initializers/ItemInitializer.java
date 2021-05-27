@@ -74,7 +74,7 @@ public class ItemInitializer implements CommandLineRunner {
 		int temp = rand.nextInt();
 		String email = "managerTemp" + temp + "@email.com";
 		UserBoundary user = new UserBoundary();
-		user.setUsername("Example ");
+		user.setUsername("Example Manager");
 		user.setAvatar("EP");
 		user.setRole(UserRole.MANAGER.toString());
 		UserId id = new UserId();

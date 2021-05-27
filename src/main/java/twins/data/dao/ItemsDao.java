@@ -29,10 +29,6 @@ public interface ItemsDao extends PagingAndSortingRepository<ItemEntity, ItemIdP
 			@Param("startdate") Date startdate,
 			@Param("enddate") Date enddate);
 	
-	public List<ItemEntity> findAllByCreatedTimestampBetween(
-			@Param("startdate") Date startdate,
-			@Param("enddate") Date enddate);
-	
 	public List<ItemEntity> findAllByTypeAndActive(
 			@Param("type") String type, 
 			@Param("active") boolean active,

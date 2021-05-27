@@ -80,6 +80,8 @@ public class FixVehicleUseCase extends AbstractUseCase {
 		Map<String, Object> attributes = parent.getItemAttributes();
 		attributes.put("isFixed", true);
 		attributes.put("price", price);
+		attributes.put("workerSpace", operation.getInvokedBy().getUserId().getSpace());
+		attributes.put("workerEmail", operation.getInvokedBy().getUserId().getEmail());
 		parent.setItemAttributes(attributes);
 		parent.setActive(false);
 		

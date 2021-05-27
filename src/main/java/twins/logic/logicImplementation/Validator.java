@@ -147,6 +147,8 @@ public class Validator implements Validatorable {
 			return this.isUserRole(user, UserRole.MANAGER);
 		case PENDING_MAINTENANCE:
 			return this.isUserRole(user, UserRole.PLAYER);
+		case BEST_WORKER:
+			return this.isUserRole(user, UserRole.MANAGER);
 		default:
 			return false;
 		}
