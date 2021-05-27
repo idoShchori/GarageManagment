@@ -64,8 +64,6 @@ public class BestWorkerUseCase extends AbstractUseCase {
 								
 				String space = item.getItemAttributes().get("workerSpace").toString();
 				String email = item.getItemAttributes().get("workerEmail").toString();
-				
-				System.err.println(space + " " + email);
 
 				UserBoundary tempUser = usersService.login(space, email);
 				if (item.getItemAttributes().containsKey("price")) {
