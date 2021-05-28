@@ -8,10 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import twins.data.OperationEntity;
 import twins.data.UserEntity;
 import twins.data.UserRole;
-import twins.data.dao.OperationsDao;
 import twins.logic.UsersService;
 import twins.logic.logicImplementation.useCases.FixVehicleUseCase;
 import twins.operations.OperationBoundary;
@@ -21,7 +19,6 @@ import twins.users.UserId;
 public class AsyncOperationHandler {
 	private ObjectMapper jackson;
 	private EntityConverter entityConverter;
-	private OperationsDao operationsDao;
 	private UsersService usersService;
 	private FixVehicleUseCase fixVehicle;
 	
@@ -35,11 +32,6 @@ public class AsyncOperationHandler {
 	@Autowired
 	public void setEntityConverter(EntityConverter entityConverter) {
 		this.entityConverter = entityConverter;
-	}
-
-	@Autowired
-	public void setOperationsDao(OperationsDao operationsDao) {
-		this.operationsDao = operationsDao;
 	}
 	
 	@Autowired
