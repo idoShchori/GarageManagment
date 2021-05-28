@@ -52,24 +52,26 @@ public class FixVehicleUseCase extends AbstractUseCase {
 		
 		user.setRole("MANAGER");
 		usersService.updateUser(userId.getSpace(), userId.getEmail(), user);
-			
-		for (String string : allItems) {
-			ItemBoundary carItem = new ItemBoundary();
-			carItem.setName(string);
-			carItem.setType("vehicle item");
-			carItem.setActive(true);
-			carItem.setCreatedBy(operation.getInvokedBy());
-			carItem.setLocation(new Location(0, 0));
-			carItem.setActive(false);
-			carItem = itemsService.createItem(operation.getInvokedBy().getUserId().getSpace(),
-					operation.getInvokedBy().getUserId().getEmail(), carItem);
+		
+		allItems.forEach(string -> {
+			ItemBoundary vehicleItem = new ItemBoundary();
+			vehicleItem.setName(string);
+			vehicleItem.setType("vehicle item");
+			vehicleItem.setActive(true);
+			vehicleItem.setCreatedBy(operation.getInvokedBy());
+			vehicleItem.setLocation(new Location(0, 0));
+			vehicleItem.setActive(false);
+			vehicleItem = itemsService.createItem(
+					operation.getInvokedBy().getUserId().getSpace(),
+					operation.getInvokedBy().getUserId().getEmail(),
+					vehicleItem);
 			itemsService.addChildToParent(
 					operation.getInvokedBy().getUserId().getSpace(),
 					operation.getInvokedBy().getUserId().getEmail(),
 					operation.getItem().getItemId().getSpace(),
 					operation.getItem().getItemId().getId(),
-					carItem.getItemId());
-		}
+					vehicleItem.getItemId());
+		});
 		
 		ItemBoundary parent = itemsService.getSpecificItem(
 				operation.getInvokedBy().getUserId().getSpace(),

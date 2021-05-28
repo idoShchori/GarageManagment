@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.pbkdf2.RuntimeCryptoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -138,6 +139,9 @@ public class OperationsServiceJpa implements OperationsService {
 //		if user does not exits, exception will be thrown inside this method
 		UserEntity user = this.entityConverter.toEntity(this.usersService.login(userId.getSpace(), userId.getEmail()));
 		
+		if(!operation.getOperationAttributes().containsKey("operationName"))
+			throw new IllegalOperationType("Type of operation must be specified");
+		
 		String opName = (String) operation.getOperationAttributes().get("operationName");
 		validator.isValidUseCase(opName);
 		UseCase operationCase = UseCase.valueOf(opName);
@@ -162,10 +166,6 @@ public class OperationsServiceJpa implements OperationsService {
 		OperationIdPK pk = new OperationIdPK(this.springApplicatioName, UUID.randomUUID().toString());
 		entity.setOperationIdPK(pk);
 		entity.setCreatedTimestamp(new Date());
-		
-		if(operation.getOperationAttributes().containsKey("operationName")) {
-			this.operationsDao.save(entity);
-		}
 		
 		int size = 20, page = 0;
 		
@@ -208,7 +208,9 @@ public class OperationsServiceJpa implements OperationsService {
 				userId.getSpace(),
 				userId.getEmail(),
 				entityConverter.toBoundary(user));
-
+		
+		this.operationsDao.save(entity);
+		
 		if (returnedValue != null)
 			return returnedValue;
 		
@@ -218,41 +220,49 @@ public class OperationsServiceJpa implements OperationsService {
 	@Override
 	@Transactional(readOnly = false)
 	public OperationBoundary invokeAsynchronous(OperationBoundary operation) {
-
+		
 		validator.isValidOperation(operation);
 
 		OperationEntity entity = this.entityConverter.toEntity(operation);
-
+		
 		UserIdPK userId = new UserIdPK(entity.getUserSpace(), entity.getUserEmail());
-
-		// if user does not exits, exception will be thrown inside this method
+		
+//		if user does not exits, exception will be thrown inside this method
 		UserEntity user = this.entityConverter.toEntity(this.usersService.login(userId.getSpace(), userId.getEmail()));
-		if (!validator.isUserRole(user, UserRole.PLAYER))
-			throw new UserAccessDeniedException("User's role is not player");
 
+		if(!operation.getOperationAttributes().containsKey("operationName"))
+			throw new IllegalOperationType("Type of operation must be specified");
+		
+		String opName = (String) operation.getOperationAttributes().get("operationName");
+		validator.isValidUseCase(opName);
+		UseCase operationCase = UseCase.valueOf(opName);
+
+		if (!validator.isValidUserForUseCase(user, operationCase))
+			throw new UserAccessDeniedException("This user can not perform this usecase");
+		
 		ItemIdPK itemId = new ItemIdPK(entity.getItemSpace(), entity.getItemId());
-		ItemBoundary item = this.itemService.getSpecificItem(userId.getSpace(), userId.getEmail(), itemId.getSpace(),
-				itemId.getId());
-
+		ItemBoundary item = this.itemService.getSpecificItem(userId.getSpace(), userId.getEmail(), itemId.getSpace(), itemId.getId());
+		
 		if (!item.isActive())
-			throw new ItemNotFoundException("Item does not exist");
+			throw new ItemNotFoundException("Item does not exist");	
 
 		OperationIdPK pk = new OperationIdPK(this.springApplicatioName, UUID.randomUUID().toString());
 		entity.setOperationIdPK(pk);
-
+		entity.setCreatedTimestamp(new Date());
+		
+		if (operationCase != UseCase.FIX_VEHICLE)
+			throw new RuntimeException("This operation can not be performed a-syncronized");
+		
+		this.operationsDao.save(entity);
+		
 		ObjectMapper jackson = new ObjectMapper();
 		try {
 			String json = jackson.writeValueAsString(operation);
-			this.jmsTemplate.send("asyncInbox", session -> session.createTextMessage(json));
-
-//			entity.setCreatedTimestamp(new Date());
-
-//			this.operationsDao.save(entity);
-
-			return this.entityConverter.toBoundary(entity);
+			this.jmsTemplate.send("asyncInbox", session -> session.createTextMessage(json));			
 		} catch (Exception e) {
 			throw new RuntimeException();
 		}
+		return this.entityConverter.toBoundary(entity);
 	}
 
 	@Override
