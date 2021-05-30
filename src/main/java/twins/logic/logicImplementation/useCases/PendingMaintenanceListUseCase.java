@@ -27,8 +27,6 @@ public class PendingMaintenanceListUseCase extends AbstractUseCase {
 			throw new IllegalItemTypeException("Item's type is not a report");
 		}
 		
-		usersService.login(userId.getSpace(), userId.getEmail());
-		
 		return this.itemsService.getAllItemsByTypeAndActive("vehicle maintenance", true, size, page);
 
 	}

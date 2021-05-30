@@ -28,7 +28,7 @@ public class GetRevenueReportUseCase extends AbstractUseCase{
 		
 		ItemIdBoundary itemId = operation.getItem().getItemId();
 		if (!this.itemsService.getSpecificItem(userId.getSpace(), userId.getEmail(), itemId.getSpace(), itemId.getId())
-				.getType().equals("report")) {
+								.getType().equals("report")) {
 			throw new IllegalItemTypeException("Item's type is not a report");
 		}
 		
@@ -59,7 +59,7 @@ public class GetRevenueReportUseCase extends AbstractUseCase{
 		
 		String maintenanceType = "vehicle maintenance";
 		
-//		SELECT * WHERE TYPE='something' AND DATE BETWEEN (start_date AND end_date)
+//		SELECT * WHERE TYPE='vehicle maintenance' AND DATE BETWEEN (start_date AND end_date)
 		List<ItemBoundary> items = this.itemsService
 										.getAllItemsByTypeAndDateBetween(
 												maintenanceType,

@@ -44,9 +44,10 @@ public class GetMaintenancesByDateUseCase extends AbstractUseCase {
 
 		String vehicleType = "vehicle maintenance";
 
+//		select * from items where date = '2020-05-05' and type='vehicle maintenance'
 		List<ItemBoundary> cars = this.itemsService
-				.getAllItemsByTypeAndDate(userId.getSpace(), userId.getEmail(),
-				vehicleType, date, size, page);
+										.getAllItemsByTypeAndDate(userId.getSpace(), userId.getEmail(),
+										vehicleType, date, size, page);
 
 		user.setRole("PLAYER");
 		usersService.updateUser(userId.getSpace(), userId.getEmail(), user);
